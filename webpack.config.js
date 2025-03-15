@@ -19,7 +19,7 @@ module.exports = {
     },
     liveReload: true,
     //watchContentBase: true,
-    port: 8080,
+    port: 8081,
     open: true,
     hot: true,
     compress: true,
