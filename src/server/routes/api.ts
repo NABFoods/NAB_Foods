@@ -16,4 +16,16 @@ router.post('/', menuController.addMenuItem, (req, res) => {
   });
 });
 
+router.put('/', menuController.updateMenuItem, (req, res) => {
+  res.status(200).json({
+    menu: res.locals.updatedMenuItem,
+  });
+});
+
+router.delete('/', menuController.deleteMenuItem, (req, res) => {
+  res.status(200).json({
+    menu: res.locals.deletedMenuItem,
+  });
+});
+
 module.exports = router;
