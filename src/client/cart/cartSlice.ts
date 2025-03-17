@@ -21,10 +21,16 @@ const cartSlice = createSlice({
             // Otherwise, set qty to 1
             state.items[action.payload] = 1;
         }
+    },
+    updateQuantity(
+        state, action: PayloadAction<{ id: string; quantity: number }>
+    ) {
+        const { id, quantity } = action.payload;
+        state.items[id] = quantity;
     }
   },
 });
 
 // export addToCart action creator 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, updateQuantity } = cartSlice.actions;
 export default cartSlice.reducer;
