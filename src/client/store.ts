@@ -2,11 +2,13 @@
 // Define Root State & Dispatch Types
 
 import { configureStore } from '@reduxjs/toolkit'
-// ...
+import productsReducer from "./product/productsSlice"
 
 export const store = configureStore({
+  //combine slices here to build central store/globabl state
   reducer: {  
-    //... put featuresNames : sliceReducersNames key:value pairs here. BMA 
+    //... add each slice's reducer(s) here
+    products: productsReducer,  // from products slice
   },
 })
 
