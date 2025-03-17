@@ -50,4 +50,61 @@ export const menuController: menu = {
       });
     }
   },
+
+  updateMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {
+        id,
+        product_name,
+        price,
+        sold_out,
+      }: {
+        id: number;
+        product_name: string;
+        price: number;
+        sold_out: boolean;
+      } = req.body;
+      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out} WHERE id=${id}`;
+
+      const result = await db.query(updateMenuItemsString);
+      console.log('RESULT: ', result);
+      res.locals.updatedMenuItem = result.rows;
+      next();
+
+      /**
+       * Example request body: 
+       *    {
+                "id":1,
+                "product_name": "baNAYNAY",
+                "price": 50,
+                "sold_out":true
+            }
+       */
+    } catch (err) {
+      next({
+        log: 'updateMenuItems',
+      });
+    }
+  },
+  deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id }: { id: number } = req.body;
+
+      const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
+      const result = await db.query(deleteMenuItemString);
+
+      console.log(result);
+      res.locals.deletedMenuItem = result.rows;
+    } catch (err) {
+      next({
+        log: 'deleteMenuItems',
+      });
+    }
+    /**
+       * Example request body: 
+       *    {
+            "id":16
+            }
+       */
+  },
 };

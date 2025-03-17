@@ -1,6 +1,5 @@
-export type params =  string | number
+export type params = string | number;
 import { Request, Response, NextFunction } from 'express';
-
 
 // Represents a product & its details/properties
 export interface Product {
@@ -11,6 +10,24 @@ export interface Product {
 }
 
 export interface menu {
-    getMenuItems: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-    addMenuItem: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  getMenuItems: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
+  addMenuItem: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
+  updateMenuItem: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
+  deleteMenuItem: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
 }
