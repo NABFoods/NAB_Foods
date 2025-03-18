@@ -1,11 +1,11 @@
+import React, { FC } from 'react';
 
-
-export function AdminMenu () {
-    return (
-        <div>
-            <h1>Admin Menu</h1>
-        </div>
-    )
-}
+const AdminMenu: FC = () => {
+  return (
+    <div>
+      <h1>Admin Menu</h1>
+    </div>
+  );
+};
 
 export default AdminMenu;

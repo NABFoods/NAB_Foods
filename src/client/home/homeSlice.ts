@@ -3,7 +3,7 @@ import type { Product } from '../../types.ts';
 
 //Using toolkit's createSlice to create reducers for homeSlice
 // const productsSlice = createSlice({
-//   //initialState,
+//   initialState,
 //   name: 'home',
 //   reducers: {
 //     receivedProducts(state, action: PayloadAction<Product[]>) {
@@ -15,6 +15,6 @@ import type { Product } from '../../types.ts';
 //   },
 // });
 
-// extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
-export const { receivedProducts } = homeSlice.actions;
-export default homeSlice.reducer;
+// // extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
+// export const { receivedProducts } = homeSlice.actions;
+// export default homeSlice.reducer;

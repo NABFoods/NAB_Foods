@@ -4,6 +4,7 @@ const TaskBar: FC = () => {
   return (
     <>
       <h1>NAB FOODS</h1>
+      <button>CART</button>
     </>
   );
 };
