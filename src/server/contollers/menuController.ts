@@ -15,8 +15,9 @@ export const menuController: menu = {
       res.locals.menu = menuItems;
       next();
     } catch (err) {
+      console.error("console.error in getMenuItems -", err)
       next({
-        log: 'getMenuItems',
+        log: 'Error in getMenuItems',
       });
     }
   },
