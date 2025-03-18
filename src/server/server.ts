@@ -10,7 +10,7 @@ const apiRouter = require('./routes/api')
 const PORT = 3000;
 
 app.use(cors())
-app.use(express.json());
+app.use(express.json()); 
 // app.get('/', (req, res, next) => {
 //     res.status(200)
 //     res.send("hello")

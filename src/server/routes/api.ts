@@ -5,6 +5,7 @@ import { menuController } from '../contollers/menuController';
 const router = express.Router();
 
 router.get('/', menuController.getMenuItems, (req, res) => {
+  console.log("api.ts - made it back to router.get w/ res.locals.menu = ", res.locals.menu)
   res.status(200).json({
     menu: res.locals.menu,
   });

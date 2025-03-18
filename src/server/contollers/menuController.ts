@@ -11,7 +11,7 @@ export const menuController: menu = {
       const menuResults = await db.query(getMenuItemsString);
       console.log('QUERIED MENU RESULTS', menuResults);
       const menuItems = menuResults.rows;
-      console.log('menuItems- heading into res locals!!', menuItems.rows);
+      console.log('menuItems- heading into res locals!!', menuItems);
       res.locals.menu = menuItems;
       next();
     } catch (err) {

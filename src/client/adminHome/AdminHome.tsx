@@ -1,12 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AdminNavbar from "./components/AdminNavbar"
+import AdminFoodCard from "./components/AdminFoodCard"
 
 
 export function AdminMenu () {
     return (
-        // <AdminFoodCard/>
-        <AdminNavbar/>
+        <div>
+            <AdminNavbar/>
+            <AdminFoodCard/>
+        </div>
 
         // <Router>
         //     <ul>
