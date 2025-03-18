@@ -1,7 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import TaskBar from './components/TaskBar';
 import FoodCard from './components/FoodCard';
+import './styles/index.scss';
 const Home: FC = () => {
+
+
   return (
     <>
       <TaskBar />
