@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { createRoot } from 'react-dom/client';
-import Cart from './cart/Cart'
-import AdminMenu from './adminMenu/adminMenu'
-import Orders from './order/Orders'
+import Cart from './cart/Cart';
+import AdminMenu from './adminHome/AdminHome';
+import Orders from './order/Orders';
 const App: FC = () => {
   return (
     <div>
-      < Cart />
+      <Cart />
       <AdminMenu />
-      <Orders/>
+      <Orders />
       {/* <h1>HELLO THERE!</h1> */}
     </div>
   );

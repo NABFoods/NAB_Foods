@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import { store } from './client/store';
 import Home from './client/home/Home';
-import AdminMenu from './client/adminMenu/AdminMenu'
+import AdminMenu from './client/adminHome/AdminHome';
 import App from './client/App';
 
 const root = createRoot(document.getElementById('root')!);
@@ -20,6 +20,7 @@ root.render(
           <Route path='/' element={<Home />} />
           <Route path='/adminMenu' element={<AdminMenu />} />
           <Route path='/app' element={<App />} />
+        </Routes>
         {/*<App />*/}
       </BrowserRouter>
     </Provider>
