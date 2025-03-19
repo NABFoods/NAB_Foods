@@ -1,30 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { Product } from '../../types';
 
 // Type for ProductState
+// export interface HomeState {
+//   // Object w/ keys equal to product id
+//   foodCard: {
+//     product_name: string;
+//     price: number;
+//     sold_out: boolean;
+//     img_url: string;
+//     description: string;
+//   };
+// }
+
 export interface HomeState {
-    // Object w/ keys equal to product id
-    foodCard: { 
-        product_name : string,
-        price: number,
-        sold_out: boolean
-        img_url: string,
-        description: string
-     };
-  }
-  
-  // Initial state for productsSlice
-  const initialState: HomeState = {
-    foodCard: { 
-        product_name:'',
-        price: 0,
-        sold_out: false,
-        img_url: '',
-        description: ''
-    },
-  };
+  foodCard: { [id: number]: Product };
+}
 
+export type product = {
+  products: {};
+};
 
+// Initial state for productsSlice
+const initialState: HomeState = {
+  foodCard: {},
+};
 
 //Using toolkit's createSlice to create reducers for homeSlice
 const homeSlice = createSlice({
@@ -38,9 +38,16 @@ const homeSlice = createSlice({
     //       console.log(data.menu)
     //       dispatch(getFoodInfo(data.menu))
     //   })
-    getFoodInfo: (state, action) => {
-       
-    }
+    getFoodInfo: (state, action: PayloadAction<any>) => {
+      //state.foodCard = action.payload;
+
+      const products = action.payload;
+      // console.log(products);
+      products.forEach((product: Product) => {
+        state.foodCard[product.id] = product;
+        // console.log('FOOD CARD IS THIS', state.foodCard);
+      });
+    },
     // receivedProducts(state, action: PayloadAction<Product[]>) {
     //   const products = action.payload;
     //   products.forEach((product) => {
