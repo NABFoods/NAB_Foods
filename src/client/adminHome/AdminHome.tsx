@@ -1,27 +1,47 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import AdminNavbar from "./components/AdminNavbar"
-import AdminFoodCard from "./components/AdminFoodCard"
+// import ( useDispatch ) from 'react-redux';
+import { useAppDispatch } from '../hooks'; // import typed useDispatch from hooks.ts
+import AdminNavbar from './components/AdminNavbar';
+import AdminFoodCard from './components/AdminFoodCard';
+import { receivedProducts } from '../product/productsSlice';
 
+const AdminHome: FC = () => {
+  const dispatch = useAppDispatch();
 
-export function AdminMenu () {
-    return (
-        <div>
-            <AdminNavbar/>
-            <AdminFoodCard/>
-        </div>
+  useEffect(() => {
+    // Fetching data from the API and dispatching action to store it in Redux state
+    fetch('http://localhost:3000/api')
+      .then((response) => response.json())
+      .then((data) => {
+        // Dispatch the action to update the products state
+        dispatch(receivedProducts(data.menu)); // Assuming data.menu is the array of products
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+      });
+  }, [dispatch]);
 
-        // <Router>
-        //     <ul>
-        //         <li><Link to="/adminMenu"/></li>
-        //         <li><Link to="/orders"/></li>
-        //     </ul>
-        // <div>
-        //     <h1>Admin Menu</h1>
-        // </div>
+  return (
+    <div>
+      <div>
+        <AdminNavbar />
+      </div>
+      <button>Add Product</button>
+      <AdminFoodCard />
+    </div>
 
-        // </Router>
-    )
-}
+    // <Router>
+    //     <ul>
+    //         <li><Link to="/adminMenu"/></li>
+    //         <li><Link to="/orders"/></li>
+    //     </ul>
+    // <div>
+    //     <h1>Admin Menu</h1>
+    // </div>
 
-export default AdminMenu;
+    // </Router>
+  );
+};
+
+export default AdminHome;
