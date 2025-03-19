@@ -8,15 +8,11 @@ const FoodCard: FC = () => {
   const product = useSelector((state: RootState) => state.home.foodCard);
   const dispatch = useAppDispatch();
 
-  const addFoodItem = (index: number, product: {product_name:string }) => {
-    console.log("Adding Food Item", index)
-    // console.log(product)
+  const addFoodItem = ( product: {product_name:string }) => {
     dispatch(addToCart(product.product_name))
   }
 
-  const removeFoodItem = (index: number, product:{product_name: string}) => {
-    console.log("Adding Food Item", index)
-    // console.log(product)
+  const removeFoodItem = ( product:{product_name: string}) => {
     dispatch(removeFromCart(product.product_name))
   }
  
@@ -28,8 +24,8 @@ const FoodCard: FC = () => {
           <h2>{product.product_name}</h2>
           <p> {product.description}</p>
           <p>{product.price}</p>
-          <button onClick={() => addFoodItem(idx, product)}>+</button>
-          <button onClick={() => removeFoodItem(idx, product)}>-</button>
+          <button onClick={() => addFoodItem( product)}>+</button>
+          <button onClick={() => removeFoodItem( product)}>-</button>
         </div>
       ))}
     </>
