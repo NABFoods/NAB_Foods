@@ -1,5 +1,6 @@
 import React, { FC, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
+import { getFoodInfo } from '../homeSlice';
 
 const FoodCard: FC = () => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const FoodCard: FC = () => {
     .then(response => response.json())
     .then(data => {
       console.log(data.menu)
-      // dispatch(getFoodInfo(data.menu))
+      dispatch(getFoodInfo(data.menu))
   })
       ;
 },[])
