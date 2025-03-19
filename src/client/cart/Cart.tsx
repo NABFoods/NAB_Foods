@@ -7,6 +7,10 @@ export function Cart() {
     const dispatch = useAppDispatch();
     const products = useAppSelector((state) => state.products.products);
     const items = useAppSelector((state) => state.cart.items);
+    console.log("ITEMS IS", items, Object.values(items))
+    for (const [key, value] of Object.entries(items)) {
+      console.log(`${key}: ${value}`);
+    }
     // for getting total price
     // const totalPrice = useAppSelector(getTotalPrice); 
     // Use to know if customer has ordered....??
@@ -16,8 +20,12 @@ export function Cart() {
         <main className="page">
         <h1>Order Items from NAB Foods</h1>
         <ul>
-              <li>Product</li>
-              <li>Quantity</li>
+            {Object.entries(items).map(item => (
+              <div>
+                <li>Product: {item[0]} </li>
+                <li>Quantity : {item[1]} </li>
+              </div>
+            ))}
             </ul>
             <li>Total</li>
 

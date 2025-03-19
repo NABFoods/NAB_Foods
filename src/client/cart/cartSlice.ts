@@ -22,6 +22,15 @@ const cartSlice = createSlice({
             state.items[action.payload] = 1;
         }
     },
+    removeFromCart(state, action:PayloadAction<string>) {
+        //if items is already quantity of 0 - just set to 0
+        if (state.items[action.payload] === 0) {
+          state.items[action.payload] = 0
+        //else decrement quantity of the item
+        } else if (state.items[action.payload]){
+          state.items[action.payload]--
+        }
+    },
     updateQuantity(
         state, action: PayloadAction<{ id: string; quantity: number }>
     ) {
@@ -32,5 +41,5 @@ const cartSlice = createSlice({
 });
 
 // export addToCart action creator 
-export const { addToCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, updateQuantity, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;
