@@ -41,7 +41,7 @@ export const menuController: menu = {
 
       //create a query that inserts into the product table with all of those values
       const addMenuItemsString =
-        'INSERT into product (product_name, price, sold_out) VALUES ($1,$2,$3,$4,$5)';
+        'INSERT into product (product_name, price, sold_out, img_url, description) VALUES ($1,$2,$3,$4,$5)';
 
       //return the newest value
 
