@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFoodInfo } from '../homeSlice';
 import { RootState } from '../../store';
 const FoodCard: FC = () => {
-  const product_name = useSelector((state: RootState) => state.home);
+  const product_name = useSelector((state: RootState) => state.home.foodCard);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const FoodCard: FC = () => {
       .then((data) => {
         //console.log(data.menu);
         dispatch(getFoodInfo(data.menu));
-        console.log(product_name);
+        console.log('FROM USE SELECTOR', product_name[0]);
       })
       .catch((error) => {
         console.error('Error fetching products: ', error);
