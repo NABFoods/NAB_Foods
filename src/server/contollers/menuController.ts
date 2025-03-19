@@ -89,13 +89,15 @@ export const menuController: menu = {
   },
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id }: { id: number } = req.body;
+      const { id } = req.params;
+      console.log("menuController.deleteMenuItem - contents of req.params: ", req.params)
 
       const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
       const result = await db.query(deleteMenuItemString);
 
       console.log(result);
       res.locals.deletedMenuItem = result.rows;
+      return next();
     } catch (err) {
       next({
         log: 'deleteMenuItems',
