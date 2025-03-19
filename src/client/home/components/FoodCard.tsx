@@ -13,8 +13,11 @@ const FoodCard: FC = () => {
         //console.log(data.menu);
         dispatch(getFoodInfo(data.menu));
         console.log(product_name);
+      })
+      .catch((error) => {
+        console.error('Error fetching products: ', error);
       });
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
