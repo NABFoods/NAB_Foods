@@ -29,8 +29,10 @@ const AdminFoodCard: FC = () => {
     <div>
       <h2>Admin Products View</h2>
       <div>
-        {Object.values(products).map((product) => (
-          <div key={product.id}>
+        {Object.values(products).map((product, index) => (
+            // if product.id missing (API delay?) then makes a temp key 'temp-(index)'
+        //   <div key={product.id}>
+          <div key={product.id ?? `temp-${index}`}>
             <h3>Name: {product.product_name}</h3>
             <p>Description: {product.description}</p>
             <p>Price: ${product.price}</p>

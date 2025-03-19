@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useAppDispatch } from '../hooks'; // import typed useDispatch from hooks.ts
 import AdminNavbar from './components/AdminNavbar';
 import AdminFoodCard from './components/AdminFoodCard';
-import { receivedProducts } from '../product/productsSlice';
+import { receivedProducts, addProduct } from '../product/productsSlice';
 
 const AdminHome: FC = () => {
   const dispatch = useAppDispatch();
@@ -30,25 +30,51 @@ const AdminHome: FC = () => {
       });
   }, [dispatch]);
 
+  // Shows add product form if clicked.
   const handleAddProductClick = () => {
     console.log("Add Product Button Clicked!");
     // Toggle from default false to true to show add product form
     setShowForm(true);
   }
 
-  const handleAddProductFormChange = () => {
+  // Collects form inputs updating NewProduct state
+  const handleAddProductFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log("adminHome.tsx - handleProductFormChange invoked")
+    const { name, value } = e.target;
+    console.log(`AdminHome handleAddProductForm - from e.target - name = ${name}, value= ${value}`);
+    setNewProduct((prev) => ({...prev, [name]: value}));
   } 
 
-  const handleSubmitNewProduct = () => {
+  // Submits new product based on provided form inputs
+  const handleSubmitNewProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
     console.log("AdminHome.tsx - handleSubmitNewProduct clicked")
-  }
+    console.log("adminHome handleSubmitNewProduct - Payload being sent = ", newProduct);
+    try{
+        const response = await fetch('http://localhost:3000/api', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(newProduct)
+        });
+
+        if(response.ok) {
+            const createdProduct = await response.json()
+            dispatch(addProduct(createdProduct.menu)); //why .menu?
+            setShowForm(false);  //Hide add product form
+            // reset form to default inputs ready for next add
+            setNewProduct({ product_name: '', price: 0, sold_out: false, description: '', img_url: ''})
+        } else {
+            console.error("AdminHome.tsx handleSubmitNewProduct - Failed to add product");
+        }
+    } catch (error) {
+        console.error("AdminHome handleSubmitNewProduct catch block - Error adding product: ", error);
+    }
+  };
 
   return (
     <div>
       <AdminNavbar />
       <button onClick={handleAddProductClick}>Add Product</button>
-      <AdminFoodCard />
 {/* Render add new products form if showForm = true from clickign add product button */}
 {showForm && (
     <form onSubmit={handleSubmitNewProduct}>
@@ -56,10 +82,10 @@ const AdminHome: FC = () => {
         <input type="number" name="price" value={newProduct.price} onChange={handleAddProductFormChange} placeholder="Product Price" required />
         <textarea name="description" value={newProduct.description} onChange={handleAddProductFormChange} placeholder="Product Description" required />
         <input type="text" name="img_url" value={newProduct.img_url} onChange={handleAddProductFormChange} placeholder="Image URL" /> 
-
+        <button type="submit">Submit</button>
     </form>
 )}
-
+      <AdminFoodCard />
     </div>
   );
 };

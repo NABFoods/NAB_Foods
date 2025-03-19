@@ -29,11 +29,19 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
-      }: { product_name: string; price: number; sold_out: boolean } = req.body;
+        img_url,
+        description,
+      }: {
+        product_name: string;
+        price: number;
+        sold_out: boolean;
+        img_url: string;
+        description: string;
+      } = req.body;
 
       //create a query that inserts into the product table with all of those values
       const addMenuItemsString =
-        'INSERT into product (product_name, price, sold_out) VALUES ($1,$2,$3)';
+        'INSERT into product (product_name, price, sold_out) VALUES ($1,$2,$3,$4,$5)';
 
       //return the newest value
 
@@ -41,6 +49,8 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
+        img_url,
+        description,
       ]);
       //console.log('RESULT ROWS', result.rows);
       res.locals.addedItem = result.rows;
@@ -59,13 +69,17 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
+        img_url,
+        description,
       }: {
         id: number;
         product_name: string;
         price: number;
         sold_out: boolean;
+        img_url: string;
+        description: string;
       } = req.body;
-      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out} WHERE id=${id}`;
+      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out}, img_url = ${img_url}, description = ${description} WHERE id=${id}`;
 
       const result = await db.query(updateMenuItemsString);
       console.log('RESULT: ', result);
@@ -90,7 +104,10 @@ export const menuController: menu = {
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log("menuController.deleteMenuItem - contents of req.params: ", req.params)
+      console.log(
+        'menuController.deleteMenuItem - contents of req.params: ',
+        req.params
+      );
 
       const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
       const result = await db.query(deleteMenuItemString);
