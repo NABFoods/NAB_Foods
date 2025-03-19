@@ -15,8 +15,8 @@ const initialState: ProductsState = {
 
 //Using toolkit's createSlice to create reducers for productsSlice
 const productsSlice = createSlice({
-  initialState,
   name: 'products',
+  initialState,
   reducers: {
     receivedProducts(state, action: PayloadAction<Product[]>) {
       const products = action.payload;
