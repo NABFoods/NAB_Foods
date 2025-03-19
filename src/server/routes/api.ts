@@ -23,7 +23,8 @@ router.put('/', menuController.updateMenuItem, (req, res) => {
   }); 
 });
 
-router.delete('/', menuController.deleteMenuItem, (req, res) => {
+router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
+  console.log("api.ts - made it to router.delete response w/ status 200 & res.locals.deleteMenuItem = ", res.locals.deleteMenuItem)
   res.status(200).json({
     menu: res.locals.deletedMenuItem,
   });
