@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
+import { useNavigate } from 'react-router';
 
 const AdminNavbar: FC = () => {
-  return (
+  const navigate = useNavigate()
+    return (
     <>
       <h1>NAB FOODS (Admin)</h1>
-      <p>Admin Navbar:  
-      <button>Home</button>
-      <button>Orders</button>
+      <p> 
+      <button onClick ={() => navigate('/Orders')}>Go To Orders</button>
       </p>
     </>
   );

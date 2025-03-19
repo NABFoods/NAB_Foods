@@ -1,9 +1,28 @@
 import React, { FC } from 'react';
-import { useAppSelector } from '../../hooks';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { removeProduct } from '../../product/productsSlice';
 
 const AdminFoodCard: FC = () => {
   //use typed useSelector from hooks.ts to pull products from store
   const products = useAppSelector((state) => state.products.products);
+  const dispatch = useAppDispatch();
+
+    const handleRemoveProduct = async (id: number) => {
+        console.log("handleRemoveProduct button clicked")
+        try {
+            const response = await fetch(`http://localhost:3000/api/${id}`, {
+                method: 'DELETE',
+            })
+            if (response.ok) {
+                dispatch(removeProduct(id));
+            } else {
+                console.error("AdminFoodCard- handleRemoveProduct failed to remove product");
+            } 
+        }
+        catch (error) {
+            console.error("AdminFoodCard - handleRemoveProduct catch block:  Error deleting product: ", error)
+        }
+    }
 
   return (
     <div>
@@ -18,7 +37,7 @@ const AdminFoodCard: FC = () => {
               Status: {product.sold_out ? 'Sold Out' : 'Available'}
               {!product.sold_out && <button>Mark sold out?</button>}
             </p>
-            <button>Remove Product</button>
+            <button onClick = {() => handleRemoveProduct(product.id)}>Remove Product</button>
           </div>
         ))}
       </div>
