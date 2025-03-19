@@ -7,6 +7,7 @@ export interface Product {
     product_name: string;
     price: number;
     sold_out: boolean;  // availability.  True if sold out.
+    description: string;
 }
 
 export interface menu {
