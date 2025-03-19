@@ -1,6 +1,6 @@
 // Slice of state for all (plural) products
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Product } from '../../types.ts';
+import type { Product } from '../../types';
 
 // Type for ProductState
 export interface ProductsState {

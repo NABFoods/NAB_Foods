@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import productsReducer from "./product/productsSlice"
 import cartReducer from "./cart/cartSlice"
 import homeReducer from "./home/homeSlice"
-
+import ordersReducer from './adminOrders/orderSlice'
 
 export const store = configureStore({
   //combine slices here to build central store/globabl state
@@ -14,6 +14,7 @@ export const store = configureStore({
     products: productsReducer,  // from products slice
     cart: cartReducer,
     home: homeReducer,
+    orders: ordersReducer,
   },
   devTools: true,
 })

@@ -5,7 +5,7 @@ const MenuBar: FC = () => {
     const navigate = useNavigate();
     return (
       <>
-        <button onClick={() => navigate('/adminMenu')}>Menu</button>
+        <button onClick={() => navigate('/adminHome')}>Menu</button>
       </>
     );
 }
