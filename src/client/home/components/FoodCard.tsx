@@ -49,7 +49,7 @@ const FoodCard: FC = () => {
     <>
       {Object.values(product).map((product) => (
         <div className='FoodCard'>
-          <h2>{product.product_name}</h2>
+          <h2 className='text-4xl text-blue-700'>{product.product_name}</h2>
           <p> {product.description}</p>
           <p>{product.price}</p>
           <button onClick={() => addFoodItem(product)}>+</button>
