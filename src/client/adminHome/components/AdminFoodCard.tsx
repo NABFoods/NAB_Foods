@@ -14,7 +14,7 @@ const AdminFoodCard: FC = () => {
                 method: 'DELETE',
             })
             if (response.ok) {
-                dispatch(removeProduct(id));
+                dispatch(removeProduct(id));  // replace with addProduct moving removeProduct
             } else {
                 console.error("AdminFoodCard- handleRemoveProduct failed to remove product");
             } 
