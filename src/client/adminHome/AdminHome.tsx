@@ -9,6 +9,8 @@ import { receivedProducts, addProduct } from '../product/productsSlice';
 const AdminHome: FC = () => {
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState(false);
+  // lock submit button to only 1 click until submission is complete
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newProduct, setNewProduct] = useState({
     product_name: '',
     price: 0,
@@ -50,6 +52,17 @@ const AdminHome: FC = () => {
     e.preventDefault();
     console.log("AdminHome.tsx - handleSubmitNewProduct clicked")
     console.log("adminHome handleSubmitNewProduct - Payload being sent = ", newProduct);
+
+    // if is submitting is true return/exit
+    if(isSubmitting) {
+        console.log("AdminHome handleNewProductSubmit - only 1 click allowed (if submit button clicked more than once)");
+        return;
+    };
+    setIsSubmitting(true); // lock form to allow only 1 click
+
+    const optimisticProduct = { ...newProduct, id: Math.floor(Math.random()*1000000)};
+    dispatch(addProduct(optimisticProduct));
+
     try{
         const response = await fetch('http://localhost:3000/api', {
             method: 'POST',
@@ -59,6 +72,7 @@ const AdminHome: FC = () => {
 
         if(response.ok) {
             const createdProduct = await response.json()
+            // dispatches addProdcut again replacing whats in slice for the product w/ what came from db for the product replacing temp id w/ id from db.
             dispatch(addProduct(createdProduct.menu)); //why .menu?
             setShowForm(false);  //Hide add product form
             // reset form to default inputs ready for next add
