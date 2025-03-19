@@ -1,19 +1,20 @@
-import React, { FC, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
-
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFoodInfo } from '../homeSlice';
+import { RootState } from '../../store';
 const FoodCard: FC = () => {
+  const product_name = useSelector((state: RootState) => state.home);
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetch('http://localhost:3000/api')
-    .then(response => response.json())
-    .then(data => {
-      console.log(data.menu)
-      // dispatch(getFoodInfo(data.menu))
-  })
-      ;
-},[])
-
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log(data.menu);
+        dispatch(getFoodInfo(data.menu));
+        console.log(product_name);
+      });
+  }, []);
 
   return (
     <>
