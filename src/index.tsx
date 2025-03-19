@@ -8,6 +8,8 @@ import Home from './client/home/Home';
 import AdminHome from './client/adminHome/AdminHome';
 import App from './client/App';
 import Orders from './client/adminOrders/Orders'
+import Cart from './client/cart/Cart';
+
 const root = createRoot(document.getElementById('root')!);
 
 // Wrapping App w/ Provider to give access to Redux store
@@ -21,6 +23,7 @@ root.render(
           <Route path='/orders' element = {<Orders/>} />
           <Route path='/adminHome' element={<AdminHome />} />
           <Route path='/app' element={<App />} />
+          <Route path='/cart' element={<Cart/>}/>
         </Routes>
         {/*<App />*/}
       </BrowserRouter>

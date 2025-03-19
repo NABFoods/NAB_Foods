@@ -22,25 +22,16 @@ const AdminHome: FC = () => {
       });
   }, [dispatch]);
 
+  const handleAddProduct = () => {
+    console.log("Add Product Clicked!");
+  }
+
   return (
     <div>
-      <div>
-        <AdminNavbar />
-      </div>
-      <button>Add Product</button>
+      <AdminNavbar />
+      <button onClick={() => handleAddProduct}>Add Product</button>
       <AdminFoodCard />
     </div>
-
-    // <Router>
-    //     <ul>
-    //         <li><Link to="/adminMenu"/></li>
-    //         <li><Link to="/orders"/></li>
-    //     </ul>
-    // <div>
-    //     <h1>Admin Menu</h1>
-    // </div>
-
-    // </Router>
   );
 };
 

@@ -17,16 +17,21 @@ const initialState: ProductsState = {
 const productsSlice = createSlice({
   name: 'products',
   initialState,
+  // define reducers here
   reducers: {
     receivedProducts(state, action: PayloadAction<Product[]>) {
       const products = action.payload;
       products.forEach((product) => {
         state.products[product.id] = product;
       });
-    }, // define reducers here}
+    }, 
+    removeProduct(state, action: PayloadAction<number>) {
+      // Delete product from state using its ID
+      delete state.products[action.payload];
+    },
   },
 });
 
 // extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
-export const { receivedProducts } = productsSlice.actions;
+export const { receivedProducts, removeProduct } = productsSlice.actions;
 export default productsSlice.reducer;

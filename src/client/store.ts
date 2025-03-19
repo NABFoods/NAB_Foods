@@ -9,17 +9,17 @@ import ordersReducer from './adminOrders/orderSlice'
 
 export const store = configureStore({
   //combine slices here to build central store/globabl state
-  reducer: {  
+  reducer: {
     //... add each slice's reducer(s) here
-    products: productsReducer,  // from products slice
+    products: productsReducer, // from products slice
     cart: cartReducer,
     home: homeReducer,
     orders: ordersReducer,
   },
   devTools: true,
-})
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;

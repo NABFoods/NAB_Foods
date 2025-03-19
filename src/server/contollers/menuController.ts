@@ -7,15 +7,15 @@ export const menuController: menu = {
   getMenuItems: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const getMenuItemsString = 'SELECT * FROM product';
-      console.log('QUERIED', getMenuItemsString);
+      //console.log('QUERIED', getMenuItemsString);
       const menuResults = await db.query(getMenuItemsString);
-      console.log('QUERIED MENU RESULTS', menuResults);
+      //console.log('QUERIED MENU RESULTS', menuResults);
       const menuItems = menuResults.rows;
-      console.log('menuItems- heading into res locals!!', menuItems);
+      //console.log('menuItems- heading into res locals!!', menuItems);
       res.locals.menu = menuItems;
       next();
     } catch (err) {
-      console.error("console.error in getMenuItems -", err)
+      console.error('console.error in getMenuItems -', err);
       next({
         log: 'Error in getMenuItems',
       });
@@ -89,13 +89,15 @@ export const menuController: menu = {
   },
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id }: { id: number } = req.body;
+      const { id } = req.params;
+      console.log("menuController.deleteMenuItem - contents of req.params: ", req.params)
 
       const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
       const result = await db.query(deleteMenuItemString);
 
       console.log(result);
       res.locals.deletedMenuItem = result.rows;
+      return next();
     } catch (err) {
       next({
         log: 'deleteMenuItems',
