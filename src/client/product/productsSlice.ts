@@ -29,9 +29,13 @@ const productsSlice = createSlice({
       // Delete product from state using its ID
       delete state.products[action.payload];
     },
+    addProduct(state, action: PayloadAction<Product>) {
+      const product = action.payload;
+      state.products[product.id] = product;
+    }
   },
 });
 
-// extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
-export const { receivedProducts, removeProduct } = productsSlice.actions;
+// extracts & exports action creators (ie receivedProducts) from .actions object containing all action creators of productsSlice
+export const { receivedProducts, removeProduct, addProduct } = productsSlice.actions;
 export default productsSlice.reducer;

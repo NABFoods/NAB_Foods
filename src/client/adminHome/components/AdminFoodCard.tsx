@@ -13,8 +13,9 @@ const AdminFoodCard: FC = () => {
             const response = await fetch(`http://localhost:3000/api/${id}`, {
                 method: 'DELETE',
             })
-            if (response.ok) {
-                dispatch(removeProduct(id));  // replace with addProduct moving removeProduct
+            // change to if(!response.ok) to trigger adding product back
+            if (response.ok) {  
+                dispatch(removeProduct(id));  // replace with addProduct moving removeProduct prior to fetch so UI updates immediately, but adds product back if fetch fails.
             } else {
                 console.error("AdminFoodCard- handleRemoveProduct failed to remove product");
             } 
