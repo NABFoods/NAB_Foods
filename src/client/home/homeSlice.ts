@@ -45,7 +45,7 @@ const homeSlice = createSlice({
       console.log(products);
       products.forEach((product: Product) => {
         state.foodCard[product.id] = product;
-        console.log('FOOD CARD IS THIS', state.foodCard);
+        //console.log('FOOD CARD IS THIS', state.foodCard);
       });
     },
     // receivedProducts(state, action: PayloadAction<Product[]>) {
