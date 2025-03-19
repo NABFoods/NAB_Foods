@@ -7,6 +7,7 @@ import { store } from './client/store';
 import Home from './client/home/Home';
 import AdminHome from './client/adminHome/AdminHome';
 import App from './client/App';
+import Orders from './client/adminOrders/Orders'
 import Cart from './client/cart/Cart';
 
 const root = createRoot(document.getElementById('root')!);
@@ -19,6 +20,7 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/orders' element = {<Orders/>} />
           <Route path='/adminHome' element={<AdminHome />} />
           <Route path='/app' element={<App />} />
           <Route path='/cart' element={<Cart/>}/>
