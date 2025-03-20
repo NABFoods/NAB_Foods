@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from '../../types';
+const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 export const orderController = {
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
@@ -32,4 +33,32 @@ export const orderController = {
     res.locals.paymentSession = session.id;
     return next();
   },
+  getOrders: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const getOrdersQuery = `
+        SELECT 
+          "order".id AS order_id, "order".order_date, "order".order_status, "order".order_price, "order".pickup,
+          customer.id AS customer_id, customer.name AS customer_name, customer.address, customer.phone,
+          product.id AS product_id, product.product_name, product.price, order_product.product_quantity, order_product.product_subtotal
+        FROM "order"
+        JOIN customer ON "order".customer_id = customer.id
+        JOIN order_product ON "order".id = order_product.order_id
+        JOIN product ON order_product.product_id = product.id
+      `;
+
+      console.log('Executing Query:', getOrdersQuery);
+      const orderResults = await db.query(getOrdersQuery);
+      console.log('Query Results:', orderResults.rows);
+
+      res.locals.orders = orderResults.rows;
+      next();
+    } catch (err) {
+      console.error('Error in getOrders:', err);
+      next({
+        log: 'Error occurred in getOrders',
+      });
+    }
+  },
 };
+
+

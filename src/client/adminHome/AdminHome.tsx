@@ -14,6 +14,7 @@ const AdminHome: FC = () => {
     fetch('http://localhost:3000/api')
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.menu)
         // Dispatch the action to update the products state
         dispatch(receivedProducts(data.menu)); // Assuming data.menu is the array of products
       })
