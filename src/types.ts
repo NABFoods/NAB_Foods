@@ -11,6 +11,12 @@ export interface Product {
   description: string;
 }
 
+export interface Link {
+  id: number;
+  link: string;
+  name: string;
+  icon?: string;
+}
 export interface menu {
   getMenuItems: (
     req: Request,

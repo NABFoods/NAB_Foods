@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router';
 import { p } from 'react-router/dist/development/fog-of-war-CvttGpNz';
-import menu from '../assets/menus.png';
+import menu from '../assets/menu.png';
+import Menu from './menu/Menu';
 const TaskBar: FC = () => {
   const navigate = useNavigate();
 
@@ -11,7 +12,7 @@ const TaskBar: FC = () => {
 
   return (
     <>
-      <div className='h-12 text-[#DB162F] p-4 flex justify-between items-center border-b-2 border-b-[#c59299] uppercase'>
+      <div className='h-12 text-[#DB162F] p-4 flex justify-between items-center border-b-2 border-b-[#c59299] uppercase bg'>
         <div>
           <a
             href='/'
@@ -20,7 +21,9 @@ const TaskBar: FC = () => {
             NAB Foods
           </a>
         </div>
-        <img src={menu} alt='Menu' width={20} height={20} />
+        <div>
+          <Menu />
+        </div>
       </div>
       <button onClick={goToCart}>CART</button>
     </>
