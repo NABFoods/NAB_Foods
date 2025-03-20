@@ -90,7 +90,8 @@ const AdminHome: FC = () => {
   return (
     <div>
       <AdminNavbar />
-      <button onClick={handleAddProductClick}>Add Product</button>
+      <button className="bg-blue-500 text-white px-2 ml-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+onClick={handleAddProductClick}>Add Product</button>
 {/* Render add new products form if showForm = true from clickign add product button */}
 {showForm && (
     <form onSubmit={handleSubmitNewProduct}>
@@ -98,7 +99,8 @@ const AdminHome: FC = () => {
         <input type="number" name="price" value={newProduct.price} onChange={handleAddProductFormChange} placeholder="Product Price" required />
         <textarea name="description" value={newProduct.description} onChange={handleAddProductFormChange} placeholder="Product Description" required />
         <input type="text" name="img_url" value={newProduct.img_url} onChange={handleAddProductFormChange} placeholder="Image URL" /> 
-        <button type="submit">Submit</button>
+        <button type="submit" className="bg-green-500 text-white px-2 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >Submit</button>
     </form>
 )}
       <AdminFoodCard />
