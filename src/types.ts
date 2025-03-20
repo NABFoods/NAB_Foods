@@ -53,6 +53,11 @@ export interface menu {
     res: Response,
     next: NextFunction
   ) => Promise<void>;
+  updateProduct: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
 }
 
 export interface order {

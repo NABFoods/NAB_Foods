@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import { removeProduct, toggleSoldOut } from '../../product/productsSlice';
+import { removeProduct, toggleSoldOut, updateProduct } from '../../product/productsSlice';
+import { _ } from 'react-router/dist/development/fog-of-war-CvttGpNz';
+import { Product } from '../../../types';
 
 const AdminFoodCard: FC = () => {
   //use typed useSelector from hooks.ts to pull products from store
@@ -54,9 +56,26 @@ const AdminFoodCard: FC = () => {
       );
     }
   };
-
-  const handleUpdateProduct = (id: number, currentValue: any) => {
+  // Explicitly type field parameter as a type that is a key of the Product type.
+  const handleUpdateProduct = async (id: number, field: keyof Product, currentValue: any) => {
     console.log("Update Product button clicked!")
+    const newValue = prompt(`Enter a new value for ${field}:`, currentValue);
+    if (newValue === null) return;  // exits out
+    try {
+      const response = await fetch(`http://localhost:3000/api/update-product/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ field, value: newValue })
+      })
+      if(response.ok) {
+        // const updatedProduct = await response.json(); // not using
+        dispatch(updateProduct({ id, field, value: newValue }))
+      } else {
+        console.error("AdminFoodCard handUpdateProduct - Failed to update product")
+      }
+    } catch (error) {
+      console.error("AdminFoodCard handUpdateProduct - catch block caught error updating product: ", error);
+    }
   }
 
   return (
@@ -73,7 +92,7 @@ const AdminFoodCard: FC = () => {
               <button
                 className="button-std"
                 onClick={() =>
-                  handleUpdateProduct(product.id, product.product_name)
+                  handleUpdateProduct(product.id, 'product_name', product.product_name)
                 }
               >
                 Update{' '}
@@ -86,7 +105,7 @@ const AdminFoodCard: FC = () => {
               <button 
                 className="button-std"
                 onClick={() =>
-                  handleUpdateProduct(product.id, product.description)
+                  handleUpdateProduct(product.id, 'description', product.description)
                 }
                 >
                 Update{' '}
@@ -96,7 +115,7 @@ const AdminFoodCard: FC = () => {
             <p>
               <button
                 className="button-std"
-                onClick={() => handleUpdateProduct(product.id, product.price)}
+                onClick={() => handleUpdateProduct(product.id, 'price', product.price)}
               >
                 Update{' '}
               </button>

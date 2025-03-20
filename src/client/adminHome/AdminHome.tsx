@@ -71,11 +71,11 @@ const AdminHome: FC = () => {
     setIsSubmitting(true); // lock form to allow only 1 click
 
     // create a temp id for the new product until it can be updated from the server's response from db
-    const optimisticProduct = {
+    const optimisticAddProduct = {
       ...newProduct,
       id: Math.floor(Math.random() * 1000000),
     };
-    dispatch(addProduct(optimisticProduct));
+    dispatch(addProduct(optimisticAddProduct));
 
     try {
       const response = await fetch('http://localhost:3000/api', {
@@ -86,8 +86,9 @@ const AdminHome: FC = () => {
 
       if (response.ok) {
         const createdProduct = await response.json();
+        console.log('Dispatching created product to Redux: ', createdProduct.menu);
         // dispatches addProdcut again replacing whats in slice for the product w/ what came from db for the product replacing temp id w/ id from db.
-        dispatch(addProduct(createdProduct.menu)); //why .menu?
+        dispatch(addProduct(createdProduct.menu)); 
         setShowForm(false); //Hide add product form
         // reset form to default inputs ready for next add
         setNewProduct({
