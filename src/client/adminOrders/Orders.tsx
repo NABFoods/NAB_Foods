@@ -1,13 +1,30 @@
-import React from 'react';
-import OrderCard from './components/OrderCard';
+import OrderCard  from './components/OrderCard';
 import MenuBar from './components/MenuBar';
-export function Orders() {
+import React, { FC, useEffect } from 'react';
+import { useAppDispatch } from '../hooks';
+import { getOrders } from './orderSlice';
+const Orders: FC = () => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/getOrders')
+        const data = await response.json()
+        console.log(data.orders)
+        dispatch(getOrders(data.orders))
+        
+      } catch (error) {
+      console.error('error fetching orders',error)
+    };
+    } 
+  fetchOrders()
+  },[dispatch])
   return (
     <>
       <MenuBar />
       <OrderCard />
     </>
   );
-}
+};
 
 export default Orders;

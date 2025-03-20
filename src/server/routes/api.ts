@@ -4,7 +4,11 @@ import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
 
 const router = express.Router();
-
+router.get('/getOrders', orderController.getOrders, (req, res) => {
+  res.status(200).json({
+    orders:res.locals.orders,
+  })
+})
 router.post('/createCheckout', orderController.createCheckout, (req, res) => {
   res.json({ id: res.locals.paymentSession });
 });
@@ -23,6 +27,11 @@ router.post('/', menuController.addMenuItem, (req, res) => {
     menu: res.locals.addedItem,
   });
 });
+
+router.patch('/:id/sold-out', menuController.toggleSoldOut, (req, res) => {
+  console.log("api router.patch for sold_out - got response back to route handler. res.locals = ", res.locals)
+  res.status(200).json({ menu: res.locals.updatedMenuItemSoldOut })
+})
 
 router.put('/', menuController.updateMenuItem, (req, res) => {
   res.status(200).json({

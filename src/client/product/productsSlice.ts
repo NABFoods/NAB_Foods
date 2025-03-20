@@ -29,9 +29,22 @@ const productsSlice = createSlice({
       // Delete product from state using its ID
       delete state.products[action.payload];
     },
+    addProduct(state, action: PayloadAction<Product>) {
+      const product = action.payload;
+      // update slice's draft of state w/ new product
+      state.products[product.id] = product;
+    },
+    toggleSoldOut(state, action: PayloadAction<{ id: number; sold_out: boolean }>) {
+      //access product by its id
+      const product = state.products[action.payload.id];
+      // If the product exists, update its 'sold_out' status based on the payload's 'sold_out' value
+      if (product) {
+        product.sold_out = action.payload.sold_out;
+      }
+    }
   },
 });
 
-// extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
-export const { receivedProducts, removeProduct } = productsSlice.actions;
+// extracts & exports action creators (ie receivedProducts) from .actions object containing all action creators of productsSlice
+export const { receivedProducts, removeProduct, addProduct, toggleSoldOut } = productsSlice.actions;
 export default productsSlice.reducer;
