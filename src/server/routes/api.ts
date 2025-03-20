@@ -4,7 +4,11 @@ import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
 
 const router = express.Router();
-
+router.get('/getOrders', orderController.getOrders, (req, res) => {
+  res.status(200).json({
+    orders:res.locals.orders,
+  })
+})
 router.post('/createCheckout', orderController.createCheckout, (req, res) => {
   res.json({ id: res.locals.paymentSession });
 });
