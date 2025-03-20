@@ -2,8 +2,16 @@ import React, { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { loadStripe } from '@stripe/stripe-js';
 import { RootState } from '../../store';
+import { addToCart, removeFromCart } from '../../cart/cartSlice';
+import { useAppDispatch } from '../../hooks';
+
+
+
 const FoodCard: FC = () => {
   const product = useSelector((state: RootState) => state.home.foodCard);
+  console.log("PRODUCT," ,product)
+  const dispatch = useAppDispatch();
+
   const StripeKey: string | undefined =
     'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
   const makePayment = async () => {
@@ -32,6 +40,16 @@ const FoodCard: FC = () => {
     //   console.log(result.error)
     // }
   };
+
+  const addFoodItem = (product: { product_name: string}) => {
+    dispatch(addToCart(product.product_name))
+  }
+
+  const removeFoodItem = (product: { product_name: string}) => {
+    dispatch(removeFromCart(product.product_name))
+  }
+
+
   return (
     <>
       {Object.values(product).map((product) => (
@@ -39,8 +57,8 @@ const FoodCard: FC = () => {
           <h2>{product.product_name}</h2>
           <p> {product.description}</p>
           <p>{product.price}</p>
-          <button>+</button>
-          <button>-</button>
+          <button onClick={() => addFoodItem(product)}>+</button>
+          <button onClick={() => removeFoodItem(product)}>-</button>
           <button onClick={makePayment}>PAY *TESTING*</button>
         </div>
       ))}

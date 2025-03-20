@@ -7,6 +7,8 @@ export function Cart() {
     const dispatch = useAppDispatch();
     const products = useAppSelector((state) => state.products.products);
     const items = useAppSelector((state) => state.cart.items);
+    const fullItems= useAppSelector((state) => state.cart)
+    console.log('ITEMS FULL CART', items, fullItems)
 
     // for getting total price
     // const totalPrice = useAppSelector(getTotalPrice); 

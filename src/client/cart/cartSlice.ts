@@ -15,8 +15,8 @@ const cartSlice = createSlice({
     addToCart(state, action: PayloadAction<string>) {
         // is item already in cart?
         if (state.items[action.payload]) {
-            // if yes, increment qty
-            state.items[action.payload]++;
+            // if yes, increment qtyA
+            state.items[action.payload]+=1;
         } else {
             // Otherwise, set qty to 1
             state.items[action.payload] = 1;
