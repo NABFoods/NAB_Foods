@@ -119,11 +119,11 @@ const AdminHome: FC = () => {
       >
         Add New Product
       </button>
-      {/* Render add new products form if showForm = true from clickign add product button */}
+      {/* Render add new products form if showForm = true from clicking add product button */}
       {showForm && (
         <form
-          className='bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl m-2'
-          onSubmit={handleSubmitNewProduct}
+        className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
+        onSubmit={handleSubmitNewProduct}
         >
           <input
             className='input-field'

@@ -41,7 +41,16 @@ const productsSlice = createSlice({
       if (product) {
         product.sold_out = action.payload.sold_out;
       }
-    }
+    },
+    // // Reducer for updating a specific field dynamically
+    // updateProduct<T extends keyof Product>(
+    //   state, action: PayloadAction<{ id: number; field: keyof Product; value: any }>
+    // ) {
+    //   const { id, field, value } = action.payload;
+    //   if (state.products[id]) {
+    //     state.products[id][field] = value;
+    //   }
+    // }
   },
 });
 

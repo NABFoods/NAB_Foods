@@ -30,30 +30,34 @@ const AdminFoodCard: FC = () => {
   };
 
   //Toggle sold out state for the product
-  const handleToggleSoldOut = async (id: number, currentSoldOut: boolean) => {
+  const handleToggleSoldOut = async (id: number, currentValue: any) => {
     console.log(
-      'AdminFoodCard handleToggleSoldOut - Toggle Sold Out button clicked!'
+      'AdminFoodCard handleUpdateProduct - Toggle Sold Out button clicked!'
     );
     //Dispatch toggleSoldout action prior to API call to update UI w/out waiting
-    dispatch(toggleSoldOut({ id, sold_out: !currentSoldOut }));
+    dispatch(toggleSoldOut({ id, sold_out: !currentValue }));
     try {
       const response = await fetch(`http://localhost:3000/api/${id}/sold-out`, {
         method: 'PATCH',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ sold_out: !currentSoldOut }),
+        body: JSON.stringify({ sold_out: !currentValue }),
       });
       if (!response.ok) {
         console.error(
-          'AdminFoodCard handleToggleSoldOut - Failed to update product sold_out in database'
+          'AdminFoodCard handleUpdateProduct - Failed to update product sold_out in database'
         );
       }
     } catch (error) {
       console.error(
-        'AdminFoodCard handleToggleSoldOut - Hit catch block - Error updating product sold_out: ',
+        'AdminFoodCard handleUpdateProduct - Hit catch block - Error updating product sold_out: ',
         error
       );
     }
   };
+
+  const handleUpdateProduct = (id: number, currentValue: any) => {
+    console.log("Update Product button clicked!")
+  }
 
   return (
     <div>
@@ -66,19 +70,34 @@ const AdminFoodCard: FC = () => {
             className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
           >
             <h3>
-              <button className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'>
+              <button
+                className="button-std"
+                onClick={() =>
+                  handleUpdateProduct(product.id, product.product_name)
+                }
+              >
                 Update{' '}
               </button>
-              <span className='text-lg font-semibold'>Name: {product.product_name}</span>
+              <span className='text-lg font-semibold'>
+                Name: {product.product_name}
+              </span>
             </h3>
             <p>
-              <button className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'>
+              <button 
+                className="button-std"
+                onClick={() =>
+                  handleUpdateProduct(product.id, product.description)
+                }
+                >
                 Update{' '}
               </button>
               Description: {product.description}
             </p>
             <p>
-              <button className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'>
+              <button
+                className="button-std"
+                onClick={() => handleUpdateProduct(product.id, product.price)}
+              >
                 Update{' '}
               </button>
               Price: ${product.price}
@@ -86,22 +105,27 @@ const AdminFoodCard: FC = () => {
             <p>
               {
                 <button
-                  className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className="button-std"
                   onClick={() =>
                     handleToggleSoldOut(product.id, product.sold_out)
                   }
                 >
-                  Update
+                  Toggle
                 </button>
               }
-              Status: {product.sold_out ? 'Sold Out' : 'Available'}
+                Status: {product.sold_out ? 'Sold Out' : 'Available'}
             </p>
             <button
-              className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className="button-std"
               onClick={() => handleRemoveProduct(product.id)}
             >
               Remove Product
             </button>
+            {/* <button
+              className="button-std"
+            >
+              Update Product
+            </button> */}
           </div>
         ))}
       </div>
