@@ -40,17 +40,17 @@ const FoodCard: FC = () => {
           className='flex w-full h-auto border-b-2 sm:w-1/2 lg:w-1/3 bg-white justify-between items-stretch gap-4 p-4'
         >
           <div className='flex flex-col flex-1'>
-            <h1 className=' lg:text-2xl uppercase font-semibold text-wrap'>
+            <h1 className=' lg:text-lg uppercase font-semibold text-wrap'>
               {product.product_name}
             </h1>
-            <p className='lg:text-lg text-gray-400 font-bold mb-1'>
+            <p className='lg:text-base text-gray-400 font-bold mb-1'>
               ${product.price}
             </p>
             <div className='overflow-y-auto max-h-16 lg:max-h-32'>
               <p
                 className={`text-xs text-gray-600 lg:text-lg ${
                   fullText ? '' : 'line-clamp-3'
-                }  w-18 md:w-32 lg:w-72 text-wrap`}
+                }  w-12 md:w-22 lg:w-40 text-wrap`}
                 onClick={() => setFullText(!fullText)}
               >
                 {product.description}

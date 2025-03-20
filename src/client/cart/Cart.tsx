@@ -48,7 +48,7 @@ export function Cart() {
   // const checkoutState = useAppSelector((state) => state.cart.checkoutState);
 
   return (
-    <div className='my-20 flex flex-col text-[#DB162F] '>
+    <div className='mt-20 flex flex-col text-[#DB162F] '>
       {Object.entries(items).map((item, idx) => (
         <div className='h-1/2 p-4' key={idx}>
           <div>
