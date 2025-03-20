@@ -5,6 +5,7 @@ import { openMenu, createLinks } from './menuSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { Link } from '../../../../types';
+import CartIcon from '../../../cart/CartIcon';
 
 const Menu: FC = () => {
   const dispatch = useDispatch();
@@ -28,13 +29,33 @@ const Menu: FC = () => {
         )}
       </button>
 
-      <div className='bg-[#DB162F] text-white absolute left-0 top-12'>
-        {Object.values(menuLinks).map((link: Link) => (
-          <a key={link.id} href={link.link}>
-            {link.name}
-          </a>
-        ))}
-      </div>
+      {isOpen && (
+        <div className='bg-[#DB162F] text-white absolute left-0 top-12 w-full h-[calc(100vh-3rem)] flex flex-col gap-8 items-start justify-center z-10 px-4'>
+          {Object.values(menuLinks).map((link: Link) => (
+            <div className='flex flex-row justify-between gap-4'>
+              {link.name === 'Cart' ? (
+                <CartIcon />
+              ) : (
+                <a
+                  key={link.id}
+                  href={link.link}
+                  onClick={() => dispatch(openMenu(isOpen))}
+                >
+                  {link.name}
+                </a>
+              )}
+              {/* <a key={link.id} href={link.link}>
+              {link.name}
+            </a> */}
+              {/* {link.icon ? (
+              <img src={cart} width={20} height={20} alt='Cart'></img>
+            ) : (
+              <></>
+            )} */}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
