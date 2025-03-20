@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import TaskBar from './components/TaskBar';
 import FoodCard from './components/FoodCard';
-import './styles/index.scss';
 import { useDispatch } from 'react-redux';
 import { getFoodInfo } from './homeSlice';
 const Home: FC = () => {

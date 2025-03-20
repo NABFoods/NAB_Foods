@@ -48,6 +48,7 @@ const homeSlice = createSlice({
         // console.log('FOOD CARD IS THIS', state.foodCard);
       });
     },
+
     // receivedProducts(state, action: PayloadAction<Product[]>) {
     //   const products = action.payload;
     //   products.forEach((product) => {

@@ -21,6 +21,12 @@ export interface Order {
   phone?: string; // Optional, if exists
   items: string[]; // Assuming it's an array of strings (you can adjust this type as needed)
 }
+export interface Link {
+  id: number;
+  link: string;
+  name: string;
+  icon?: string;
+}
 export interface menu {
   getMenuItems: (
     req: Request,
