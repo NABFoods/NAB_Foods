@@ -34,6 +34,14 @@ const productsSlice = createSlice({
       // update slice's draft of state w/ new product
       state.products[product.id] = product;
     },
+    // Couldn't get the following to work with optinmistic update
+    replaceProductOptimisticIdWithRealId(state, action: PayloadAction<Product>) {
+      const product = action.payload;
+      // Replace the optimistic product with the real one
+      if (state.products[product.id]) {
+        state.products[product.id] = product;
+      }
+    },
     toggleSoldOut(state, action: PayloadAction<{ id: number; sold_out: boolean }>) {
       //access product by its id
       const product = state.products[action.payload.id];
@@ -60,5 +68,5 @@ const productsSlice = createSlice({
 });
 
 // extracts & exports action creators (ie receivedProducts) from .actions object containing all action creators of productsSlice
-export const { receivedProducts, removeProduct, addProduct, toggleSoldOut, updateProduct } = productsSlice.actions;
+export const { receivedProducts, removeProduct, addProduct, toggleSoldOut, updateProduct, replaceProductOptimisticIdWithRealId } = productsSlice.actions;
 export default productsSlice.reducer;

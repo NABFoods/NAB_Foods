@@ -75,7 +75,7 @@ const AdminHome: FC = () => {
       ...newProduct,
       id: Math.floor(Math.random() * 1000000),
     };
-    dispatch(addProduct(optimisticAddProduct));
+    // dispatch(addProduct(optimisticAddProduct));
 
     try {
       const response = await fetch('http://localhost:3000/api', {
@@ -89,6 +89,7 @@ const AdminHome: FC = () => {
         console.log('Dispatching created product to Redux: ', createdProduct.menu);
         // dispatches addProdcut again replacing whats in slice for the product w/ what came from db for the product replacing temp id w/ id from db.
         dispatch(addProduct(createdProduct.menu)); 
+        // dispatch(replaceProductOptimisticIdWithRealId(...createdProduct.menu, id: optimisticAddProduct.id)); 
         setShowForm(false); //Hide add product form
         // reset form to default inputs ready for next add
         setNewProduct({
