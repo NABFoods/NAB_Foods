@@ -16,9 +16,9 @@ const Menu: FC = () => {
     { id: 2, link: '/cart', name: 'Cart' },
   ];
   useEffect(() => {
-    dispatch(createLinks(links));
-  }, [dispatch]);
-  console.log(isOpen);
+    if (Object.keys(menuLinks).length === 0) dispatch(createLinks(links));
+  }, [dispatch, menuLinks]);
+  //   console.log(isOpen);
   return (
     <div>
       <button onClick={() => dispatch(openMenu(isOpen))}>
@@ -30,7 +30,7 @@ const Menu: FC = () => {
       </button>
 
       {isOpen && (
-        <div className='bg-[#DB162F] text-white absolute left-0 top-12 w-full h-[calc(100vh-3rem)] flex flex-col gap-8 items-start justify-center z-10 px-4'>
+        <div className='bg-[#DB162F] text-white absolute left-0 top-12 w-full h-[calc(100vh-3rem)] flex flex-col gap-8 items-start justify-center z-10 px-4 overflow-hidden'>
           {Object.values(menuLinks).map((link: Link) => (
             <div className='flex flex-row justify-between gap-4'>
               {link.name === 'Cart' ? (

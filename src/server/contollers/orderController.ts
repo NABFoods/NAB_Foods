@@ -4,22 +4,26 @@ const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 export const orderController = {
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
-    const { products } = req.body;
-
-    const lineItems = Object.values(products).map((product: any) => ({
+    const { products, quantity, defaultImage } = req.body;
+    if (quantity === 0) {
+      return next();
+    }
+    const filteredProducts = (Object.values(products) as Product[]).filter(
+      (product: Product) => product.quantity != null
+    );
+    console.log(defaultImage);
+    const lineItems = filteredProducts.map((product: any) => ({
       price_data: {
         currency: 'USD',
         product_data: {
           name: product.product_name,
-          images: [
-            'https://www.google.com/imgres?q=banana&imgurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F31oubF6SdeL._AC_UF894%2C1000_QL80_.jpg&imgrefurl=https%3A%2F%2Fwww.amazon.com%2FFresh-Produce-Brands-Vary-0000000940115%2Fdp%2FB0787Y4V6T&docid=sWh2P4MLgHvFJM&tbnid=IGHU2tuTv26RRM&vet=12ahUKEwijvavXjpWMAxWXk4kEHcVtOhIQM3oECBcQAA..i&w=894&h=490&hcb=2&ved=2ahUKEwijvavXjpWMAxWXk4kEHcVtOhIQM3oECBcQAA',
-          ],
+          images: [`${product.img_url ? product.img_url : defaultImage}`],
         },
         unit_amount: Math.round(product.price * 100),
       },
-      quantity: 3,
+      quantity: product.quantity,
     }));
-    console.log(JSON.stringify(lineItems, null, 2));
+    //console.log(JSON.stringify(lineItems, null, 2));
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -60,5 +64,3 @@ export const orderController = {
     }
   },
 };
-
-

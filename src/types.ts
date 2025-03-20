@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   sold_out: boolean; // availability.  True if sold out.
   description: string;
+  quantity?: number;
 }
 export interface Order {
   order_id: number; // Update to match the field in your data

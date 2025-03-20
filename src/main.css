@@ -22,3 +22,14 @@
 html {
   font-family: 'Poppins', sans-serif;
 }
+
+button {
+  cursor: pointer;
+}
+p {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  font: inherit;
+  color: inherit;
+}
