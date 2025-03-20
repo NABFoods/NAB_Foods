@@ -42,18 +42,23 @@ const productsSlice = createSlice({
         product.sold_out = action.payload.sold_out;
       }
     },
-    // // Reducer for updating a specific field dynamically
-    // updateProduct<T extends keyof Product>(
-    //   state, action: PayloadAction<{ id: number; field: keyof Product; value: any }>
-    // ) {
-    //   const { id, field, value } = action.payload;
-    //   if (state.products[id]) {
-    //     state.products[id][field] = value;
-    //   }
-    // }
+    // Reducer for updating a specific field dynamically
+    // Using generics to enforce type safety for dynamic updates:
+    // -> `T extends keyof Product` ensures `T` can only be a valid key of `Product`.
+    updateProduct<T extends keyof Product>(  
+      // requires explicit typing of state because of using generics (T)
+      state: ProductsState, 
+      // -> `PayloadAction<{ id: number; field: T; value: Product[T] }>` dynamically adapts to the expected type of the field being updated.
+      action: PayloadAction<{ id: number; field: T; value: Product[T] }>
+    ) {
+      const { id, field, value } = action.payload;
+      if (state.products[id]) {
+        state.products[id][field] = value;
+      }
+    }
   },
 });
 
 // extracts & exports action creators (ie receivedProducts) from .actions object containing all action creators of productsSlice
-export const { receivedProducts, removeProduct, addProduct, toggleSoldOut } = productsSlice.actions;
+export const { receivedProducts, removeProduct, addProduct, toggleSoldOut, updateProduct } = productsSlice.actions;
 export default productsSlice.reducer;

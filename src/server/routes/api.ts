@@ -33,6 +33,11 @@ router.patch('/:id/sold-out', menuController.toggleSoldOut, (req, res) => {
   res.status(200).json({ menu: res.locals.updatedMenuItemSoldOut })
 })
 
+// router.patch('/:id', menuController.updateProduct, (req, res) => {
+//   console.log("api router.patch - updating product field. res.locals = ", res.locals);
+//   res.status(200).json({ updatedProduct: res.locals.updatedProduct });
+// });
+
 router.put('/', menuController.updateMenuItem, (req, res) => {
   res.status(200).json({
     menu: res.locals.updatedMenuItem,
