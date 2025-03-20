@@ -24,6 +24,11 @@ router.post('/', menuController.addMenuItem, (req, res) => {
   });
 });
 
+router.patch('/:id/sold-out', menuController.toggleSoldOut, (req, res) => {
+  console.log("api router.patch for sold_out - got response back to route handler. res.locals = ", res.locals)
+  res.status(200).json({ menu: res.locals.updatedMenuItemSoldOut })
+})
+
 router.put('/', menuController.updateMenuItem, (req, res) => {
   res.status(200).json({
     menu: res.locals.updatedMenuItem,
