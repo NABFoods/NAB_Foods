@@ -57,14 +57,13 @@ const AdminFoodCard: FC = () => {
 
   return (
     <div>
-      <h2 className='text-lg font-semibold p-2'>Admin Products View</h2>
       <div className='space-y-4'>
         {Object.values(products).map((product, index) => (
           // if product.id missing (API delay?) then makes a temp key 'temp-(index)'
           //   <div key={product.id}>
           <div
             key={product.id ?? `temp-${index}`}
-            className='border border-gray-300 rounded-lg p-4 shadow-md'
+            className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
           >
             <h3>
               <button className='bg-blue-500 text-white px-2 m-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'>
