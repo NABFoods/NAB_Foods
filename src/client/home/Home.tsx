@@ -3,6 +3,7 @@ import TaskBar from './components/TaskBar';
 import FoodCard from './components/FoodCard';
 import { useDispatch } from 'react-redux';
 import { getFoodInfo } from './homeSlice';
+import Footer from './components/Footer';
 const Home: FC = () => {
   const dispatch = useDispatch();
 
@@ -22,6 +23,7 @@ const Home: FC = () => {
     <>
       <TaskBar />
       <FoodCard />
+      <Footer />
     </>
   );
 };
