@@ -1,56 +1,85 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { loadStripe } from '@stripe/stripe-js';
 import { RootState } from '../../store';
+import {
+  addToCart,
+  removeFromCart,
+  selectTotalQuantity,
+} from '../../cart/cartSlice';
+import { useAppDispatch } from '../../hooks';
+import { updateAmount } from '../homeSlice';
+
 const FoodCard: FC = () => {
+  const [fullText, setFullText] = useState(false);
+  const itemNumber = useSelector((state: RootState) => state.cart.items);
   const product = useSelector((state: RootState) => state.home.foodCard);
-  const StripeKey: string | undefined =
-    'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
-  const makePayment = async () => {
-    const stripe = await loadStripe(StripeKey!);
-    console.log(StripeKey);
-    const body = {
-      products: product,
-    };
+  const quantity = useSelector((state: RootState) => state.cart.quantity);
+  const dispatch = useAppDispatch();
 
-    const header = {
-      'Content-type': 'application/json',
-    };
-
-    const response = await fetch(`http://localhost:3000/api/createCheckout`, {
-      method: 'POST',
-      headers: header,
-      body: JSON.stringify(body),
-    });
-
-    const session = await response.json();
-    const result = stripe?.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    // if(result.error){
-    //   console.log(result.error)
-    // }
+  const addFoodItem = (product: { product_name: string }) => {
+    dispatch(addToCart(product.product_name));
+    dispatch(selectTotalQuantity());
   };
+
+  const removeFoodItem = (product: { product_name: string }) => {
+    dispatch(removeFromCart(product.product_name));
+    dispatch(selectTotalQuantity());
+  };
+
+  useEffect(() => {
+    console.log('Updated cart:', itemNumber);
+    console.log('Updated quantity:', quantity);
+    dispatch(updateAmount(itemNumber));
+  }, [itemNumber, quantity, dispatch]);
+
   return (
-    <div className='flex flex-wrap'>
+    <div className='flex flex-wrap my-14 lg:my-20'>
       {Object.values(product).map((product) => (
         <div
           key={product.id}
-          className='w-full h-[60vh] border-r-2 border-b-2 border-[#DB162F] md:w-1/2'
+          className='flex w-full h-auto border-b-2 sm:w-1/2 lg:w-1/3 bg-white justify-between items-stretch gap-4 p-4'
         >
-          {product.img_url && (
-            <div>
-              <img src={`${product.img_url}`}></img>
+          <div className='flex flex-col flex-1'>
+            <h1 className=' lg:text-lg uppercase font-semibold text-wrap'>
+              {product.product_name}
+            </h1>
+            <p className='lg:text-base text-gray-400 font-bold mb-1'>
+              ${product.price}
+            </p>
+            <div className='overflow-y-auto max-h-16 lg:max-h-32'>
+              <p
+                className={`text-xs text-gray-600 lg:text-lg ${
+                  fullText ? '' : 'line-clamp-3'
+                }  w-12 md:w-22 lg:w-40 text-wrap`}
+                onClick={() => setFullText(!fullText)}
+              >
+                {product.description}
+              </p>
             </div>
-          )}
-
-          <h2>{product.product_name}</h2>
-          <p> {product.description}</p>
-          <p>{product.price}</p>
-          <button>+</button>
-          <button>-</button>
-          <button onClick={makePayment}>PAY *TESTING*</button>
+          </div>
+          <div className='relative p-2'>
+            {product.img_url && (
+              <img
+                src={`${product.img_url}`}
+                className='w-full  max-w-[400px] h-full object-contain  rounded-md'
+                alt={product.product_name}
+              />
+            )}
+            <div className='absolute bottom-[0.80rem] right-2 flex gap-2 lg:bottom-2'>
+              <button
+                onClick={() => addFoodItem(product)}
+                className='text-sm uppercase bg-[#E3B505] text-white p-[0.2rem] lg:p-2 rounded-full z-5 hover:bg-[#e3d391] active:bg-[#746112]'
+              >
+                +
+              </button>
+              <button
+                onClick={() => removeFoodItem(product)}
+                className={`text-sm uppercase bg-[#ef7e32] text-white p-[0.2rem] lg:p-2 rounded-full z-5 hover:bg-[#dfa37b] active:bg-[#DB162F]`}
+              >
+                -
+              </button>
+            </div>
+          </div>
         </div>
       ))}
     </div>
