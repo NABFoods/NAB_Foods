@@ -27,6 +27,7 @@ const Menu: FC = () => {
           <img src={close} alt='close' width={15} height={15} />
         )}
       </button>
+
       <div className='bg-[#DB162F] text-white absolute left-0 top-12'>
         {Object.values(menuLinks).map((link: Link) => (
           <a key={link.id} href={link.link}>
