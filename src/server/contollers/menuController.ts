@@ -29,11 +29,19 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
-      }: { product_name: string; price: number; sold_out: boolean } = req.body;
+        img_url,
+        description,
+      }: {
+        product_name: string;
+        price: number;
+        sold_out: boolean;
+        img_url: string;
+        description: string;
+      } = req.body;
 
       //create a query that inserts into the product table with all of those values
       const addMenuItemsString =
-        'INSERT into product (product_name, price, sold_out) VALUES ($1,$2,$3)';
+        'INSERT into product (product_name, price, sold_out, img_url, description) VALUES ($1,$2,$3,$4,$5)';
 
       //return the newest value
 
@@ -41,6 +49,8 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
+        img_url,
+        description,
       ]);
       //console.log('RESULT ROWS', result.rows);
       res.locals.addedItem = result.rows;
@@ -59,13 +69,17 @@ export const menuController: menu = {
         product_name,
         price,
         sold_out,
+        img_url,
+        description,
       }: {
         id: number;
         product_name: string;
         price: number;
         sold_out: boolean;
+        img_url: string;
+        description: string;
       } = req.body;
-      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out} WHERE id=${id}`;
+      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out}, img_url = ${img_url}, description = ${description} WHERE id=${id}`;
 
       const result = await db.query(updateMenuItemsString);
       console.log('RESULT: ', result);
@@ -87,10 +101,14 @@ export const menuController: menu = {
       });
     }
   },
+
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log("menuController.deleteMenuItem - contents of req.params: ", req.params)
+      console.log(
+        'menuController.deleteMenuItem - contents of req.params: ',
+        req.params
+      );
 
       const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
       const result = await db.query(deleteMenuItemString);
@@ -109,5 +127,38 @@ export const menuController: menu = {
             "id":16
             }
        */
+  },
+
+  toggleSoldOut: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      console.log('menuController.toggleSoldOut - req.params: ', req.params);
+      const { sold_out } = req.body;
+      console.log('menuController.toggleSoldOut - req.body: ', req.body);
+
+      const updateQuery =
+        'UPDATE product SET sold_out = $1 WHERE id = $2 RETURNING *';
+      const values = [sold_out, id];
+      const result = await db.query(updateQuery, values);
+      console.log('menuController.toggleSoldOut - db.query result.rows = ', result.rows);
+
+      if (result.rowCount === 0) {
+        return next({
+          log: 'menuController.toggleSoldOut - Product not found',
+          status: 404,
+          message: 'Product not found',
+        });
+      }
+
+      res.locals.updatedMenuItemSoldOut = result.rows[0];
+      console.log("menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ", res.locals.updateMenuItemSoldOut);
+      return next();
+    } catch (err) {
+      next({
+        log: 'Error in toggleSoldOut middleware',
+        status: 500,
+        message: { err: 'toggleSoldOut database update failed' },
+      });
+    }
   },
 };
