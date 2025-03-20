@@ -60,6 +60,7 @@ const AdminHome: FC = () => {
     };
     setIsSubmitting(true); // lock form to allow only 1 click
 
+    // create a temp id for the new product until it can be updated from the server's response from db
     const optimisticProduct = { ...newProduct, id: Math.floor(Math.random()*1000000)};
     dispatch(addProduct(optimisticProduct));
 

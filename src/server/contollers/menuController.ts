@@ -101,6 +101,7 @@ export const menuController: menu = {
       });
     }
   },
+
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -126,5 +127,38 @@ export const menuController: menu = {
             "id":16
             }
        */
+  },
+
+  toggleSoldOut: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      console.log('menuController.toggleSoldOut - req.params: ', req.params);
+      const { sold_out } = req.body;
+      console.log('menuController.toggleSoldOut - req.body: ', req.body);
+
+      const updateQuery =
+        'UPDATE product SET sold_out = $1 WHERE id = $2 RETURNING *';
+      const values = [sold_out, id];
+      const result = await db.query(updateQuery, values);
+      console.log('menuController.toggleSoldOut - db.query result.rows = ', result.rows);
+
+      if (result.rowCount === 0) {
+        return next({
+          log: 'menuController.toggleSoldOut - Product not found',
+          status: 404,
+          message: 'Product not found',
+        });
+      }
+
+      res.locals.updatedMenuItemSoldOut = result.rows[0];
+      console.log("menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ", res.locals.updateMenuItemSoldOut);
+      return next();
+    } catch (err) {
+      next({
+        log: 'Error in toggleSoldOut middleware',
+        status: 500,
+        message: { err: 'toggleSoldOut database update failed' },
+      });
+    }
   },
 };

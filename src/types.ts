@@ -32,6 +32,11 @@ export interface menu {
     res: Response,
     next: NextFunction
   ) => Promise<void>;
+  toggleSoldOut: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
 }
 
 export interface order {
