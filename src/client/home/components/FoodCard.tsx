@@ -33,9 +33,18 @@ const FoodCard: FC = () => {
     // }
   };
   return (
-    <>
+    <div className='flex flex-wrap'>
       {Object.values(product).map((product) => (
-        <div className='FoodCard' key={product.id}>
+        <div
+          key={product.id}
+          className='w-full h-[60vh] border-r-2 border-b-2 border-[#DB162F] md:w-1/2'
+        >
+          {product.img_url && (
+            <div>
+              <img src={`${product.img_url}`}></img>
+            </div>
+          )}
+
           <h2>{product.product_name}</h2>
           <p> {product.description}</p>
           <p>{product.price}</p>
@@ -44,7 +53,7 @@ const FoodCard: FC = () => {
           <button onClick={makePayment}>PAY *TESTING*</button>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
