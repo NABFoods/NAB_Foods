@@ -86,7 +86,7 @@ const AdminFoodCard: FC = () => {
           //   <div key={product.id}>
           <div
             key={product.id ?? `temp-${index}`}
-            className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
+            className='m-2 bg-slate-100 border border-gray-300 rounded-lg p-4 shadow-xl'
           >
             <h3>
               <button
