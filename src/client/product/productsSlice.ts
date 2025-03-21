@@ -34,6 +34,14 @@ const productsSlice = createSlice({
       // update slice's draft of state w/ new product
       state.products[product.id] = product;
     },
+    // Couldn't get the following to work with optinmistic update
+    replaceProductOptimisticIdWithRealId(state, action: PayloadAction<Product>) {
+      const product = action.payload;
+      // Replace the optimistic product with the real one
+      if (state.products[product.id]) {
+        state.products[product.id] = product;
+      }
+    },
     toggleSoldOut(state, action: PayloadAction<{ id: number; sold_out: boolean }>) {
       //access product by its id
       const product = state.products[action.payload.id];
@@ -41,10 +49,24 @@ const productsSlice = createSlice({
       if (product) {
         product.sold_out = action.payload.sold_out;
       }
+    },
+    // Reducer for updating a specific field dynamically
+    // Using generics to enforce type safety for dynamic updates:
+    // -> `T extends keyof Product` ensures `T` can only be a valid key of `Product`.
+    updateProduct<T extends keyof Product>(  
+      // requires explicit typing of state because of using generics (T)
+      state: ProductsState, 
+      // -> `PayloadAction<{ id: number; field: T; value: Product[T] }>` dynamically adapts to the expected type of the field being updated.
+      action: PayloadAction<{ id: number; field: T; value: Product[T] }>
+    ) {
+      const { id, field, value } = action.payload;
+      if (state.products[id]) {
+        state.products[id][field] = value;
+      }
     }
   },
 });
 
 // extracts & exports action creators (ie receivedProducts) from .actions object containing all action creators of productsSlice
-export const { receivedProducts, removeProduct, addProduct, toggleSoldOut } = productsSlice.actions;
+export const { receivedProducts, removeProduct, addProduct, toggleSoldOut, updateProduct, replaceProductOptimisticIdWithRealId } = productsSlice.actions;
 export default productsSlice.reducer;

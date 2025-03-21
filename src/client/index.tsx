@@ -19,6 +19,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
+      {/* <TaskBar /> */}
         <Routes>
           <TaskBar />
           <Route path='/' element={<Home />} />
