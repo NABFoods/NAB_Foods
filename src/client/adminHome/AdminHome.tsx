@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 // import ( useDispatch ) from 'react-redux';
 import { useAppDispatch } from '../hooks'; // import typed useDispatch from hooks.ts
 import AdminNavbar from './components/AdminNavbar';
@@ -7,6 +8,7 @@ import AdminFoodCard from './components/AdminFoodCard';
 import { receivedProducts, addProduct } from '../product/productsSlice';
 
 const AdminHome: FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState(false);
   // lock submit button to only 1 click until submission is complete
@@ -42,7 +44,7 @@ const AdminHome: FC = () => {
 
   // Collects form inputs updating NewProduct state
   const handleAddProductFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     console.log('adminHome.tsx - handleProductFormChange invoked');
     const { name, value } = e.target;
@@ -52,7 +54,7 @@ const AdminHome: FC = () => {
     setNewProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submits new product based on provided form inputs
+  // Submits/POSTs new product based on provided form inputs
   const handleSubmitNewProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('AdminHome.tsx - handleSubmitNewProduct clicked');
@@ -121,14 +123,16 @@ const AdminHome: FC = () => {
   };
 
   return (
-    <div className='bg-gray-100'>
+    <div className='bg-gray-200'>
       <AdminNavbar />
-      <button
-        className='bg-[#DB162F] text-white px-2 ml-4 mb-2 py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500'
-        onClick={handleAddProductClick}
-      >
-        Add New Product
-      </button>
+      <div className="flex flex-col">
+        <button
+          className='w-fit bg-[#DB162F] text-white px-2 ml-4 mb-0 mt-2  py-2 rounded hover:bg-blue-700'
+          onClick={handleAddProductClick}
+        >
+          Add New Product
+        </button>
+      </div>
       {/* Render add new products form if showForm = true from clicking add product button */}
       {showForm && (
         <form
@@ -167,11 +171,11 @@ const AdminHome: FC = () => {
             name='img_url'
             value={newProduct.img_url}
             onChange={handleAddProductFormChange}
-            placeholder='Image URL'
+            placeholder='Image'
           />
           <div className='py-1'>
             <button
-            // using .button-std from @apply in main.css
+              // using .button-std from @apply in main.css
               className='button-std'
               // className='bg-[#DB162F] text-white px-2 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
               onClick={() => setShowForm(false)}

@@ -145,7 +145,7 @@ const AdminFoodCard: FC = () => {
               >
                 Update{' '}
               </button>
-              <span className='font-bold'>Image URL:</span> {product.img_url}
+              <span className='font-bold'>Image:</span> {product.img_url}
             </p>
             <p>
               <button
