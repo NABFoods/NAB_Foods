@@ -50,7 +50,7 @@ const FoodCard: FC = () => {
               <p
                 className={`text-xs text-gray-600 lg:text-lg ${
                   fullText ? '' : 'line-clamp-3'
-                }  w-12 md:w-22 lg:w-40 text-wrap`}
+                }  w-12 md:w-22 lg:w-40 text-wrap `}
                 onClick={() => setFullText(!fullText)}
               >
                 {product.description}
