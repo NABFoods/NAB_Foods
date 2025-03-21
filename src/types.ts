@@ -11,7 +11,7 @@ export interface Product {
   description: string;
   quantity?: number;
 }
-// used this put products inside of an array 
+// used this put products inside of an array
 interface OrderProduct {
   product_id: number;
   product_name: string;
@@ -28,9 +28,9 @@ export interface Order {
   customer_name?: string; // Optional, if exists
   address?: string; // Optional, if exists
   phone?: string; // Optional, if exists
-  products: OrderProduct[]; 
+  products: OrderProduct[];
 }
-export interface Link {
+export interface Links {
   id: number;
   link: string;
   name: string;

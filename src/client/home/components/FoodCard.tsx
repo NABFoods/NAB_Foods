@@ -8,6 +8,7 @@ import {
 } from '../../cart/cartSlice';
 import { useAppDispatch } from '../../hooks';
 import { updateAmount } from '../homeSlice';
+import TaskBar from './TaskBar';
 
 const FoodCard: FC = () => {
   const [fullText, setFullText] = useState(false);
@@ -34,10 +35,11 @@ const FoodCard: FC = () => {
 
   return (
     <div className='flex flex-wrap my-14 lg:my-20'>
+      <TaskBar />
       {Object.values(product).map((product) => (
         <div
           key={product.id}
-          className='flex w-full h-auto border-b-2 sm:w-1/2 lg:w-1/3 bg-white justify-between items-stretch gap-4 p-4'
+          className='flex w-full h-auto border-b-2 border-r-2 sm:w-1/2 lg:w-1/3 bg-white justify-between items-stretch gap-4 p-4 rounded-md'
         >
           <div className='flex flex-col flex-1'>
             <h1 className=' lg:text-lg uppercase font-semibold text-wrap'>
@@ -50,7 +52,7 @@ const FoodCard: FC = () => {
               <p
                 className={`text-xs text-gray-600 lg:text-lg ${
                   fullText ? '' : 'line-clamp-3'
-                }  w-12 md:w-22 lg:w-40 text-wrap`}
+                }  w-12 md:w-22 lg:w-40 text-wrap `}
                 onClick={() => setFullText(!fullText)}
               >
                 {product.description}
@@ -61,7 +63,7 @@ const FoodCard: FC = () => {
             {product.img_url && (
               <img
                 src={`${product.img_url}`}
-                className='w-full  max-w-[400px] h-full object-contain  rounded-md'
+                className='w-full  max-w-[400px] max-h-16 lg:max-h-44 object-contain  rounded-md'
                 alt={product.product_name}
               />
             )}

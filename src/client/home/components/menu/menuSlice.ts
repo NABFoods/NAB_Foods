@@ -1,10 +1,10 @@
 import { createSlice, isAction, PayloadAction } from '@reduxjs/toolkit';
-import { Link } from '../../../../types';
+import { Links } from '../../../../types';
 
 export interface MenuState {
   isOpen: boolean;
   links: {
-    [id: number]: Link;
+    [id: number]: Links;
   };
 }
 
@@ -27,7 +27,7 @@ const menuSlice = createSlice({
     createLinks: (state, action: PayloadAction<any>) => {
       const menuLinks = action.payload;
 
-      menuLinks.forEach((link: Link) => {
+      menuLinks.forEach((link: Links) => {
         state.links[link.id] = link;
       });
     },

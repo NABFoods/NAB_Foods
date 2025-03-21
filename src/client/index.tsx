@@ -7,10 +7,9 @@ import { createRoot } from 'react-dom/client';
 import { store } from './store';
 import Home from './home/Home';
 import AdminHome from './adminHome/AdminHome';
-import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
-import TaskBar from './home/components/TaskBar';
+import FoodCard from './home/components/FoodCard';
 const root = createRoot(document.getElementById('root')!);
 
 // Wrapping App w/ Provider to give access to Redux store
@@ -19,12 +18,11 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-      {/* <TaskBar /> */}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/orders' element={<Orders />} />
           <Route path='/adminHome' element={<AdminHome />} />
-          <Route path='/app' element={<App />} />
+          <Route path='/menu' element={<FoodCard />} />
           <Route path='/cart' element={<Cart />} />
         </Routes>
         {/*<App />*/}

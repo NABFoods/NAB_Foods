@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of 
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
+import { Link } from 'react-router';
 
 export function Cart() {
   const items = useAppSelector((state) => state.cart.items);
@@ -48,34 +49,39 @@ export function Cart() {
   // const checkoutState = useAppSelector((state) => state.cart.checkoutState);
 
   return (
-    <div className='mt-20 flex flex-col text-[#DB162F] '>
-      {Object.entries(items).map((item, idx) => (
-        <div className='h-1/2 p-4' key={idx}>
-          <div>
-            <img src={icon} alt='' width={100} height={100} />
+    <>
+      <div className='mt-20 flex flex-col text-[#DB162F] '>
+        <Link to='/'>
+          <button>BACK</button>
+        </Link>
+        {Object.entries(items).map((item, idx) => (
+          <div className='h-1/2 p-4' key={idx}>
             <div>
-              <h1>Product: {item[0]} </h1>
-              <span>Quantity {item[1]}</span>
-              <h2>$15.99</h2>
-              <button>X</button>
+              <img src={icon} alt='' width={100} height={100} />
+              <div>
+                <h1>Product: {item[0]} </h1>
+                <span>Quantity {item[1]}</span>
+                <h2>$15.99</h2>
+                <button>X</button>
+              </div>
             </div>
           </div>
+        ))}
+        <div className='h-1/2 p-4 bg-fuchsia-50'>
+          <div>
+            <span>Subtotal({quantity})</span>
+            <span>$15.99</span>
+          </div>
+          <hr />
+          <button
+            onClick={makePayment}
+            className='bg-[#DB162F] text-white p-3 rounded-md w-1/2'
+          >
+            CHECKOUT
+          </button>
         </div>
-      ))}
-      <div className='h-1/2 p-4 bg-fuchsia-50'>
-        <div>
-          <span>Subtotal({quantity})</span>
-          <span>$15.99</span>
-        </div>
-        <hr />
-        <button
-          onClick={makePayment}
-          className='bg-[#DB162F] text-white p-3 rounded-md w-1/2'
-        >
-          CHECKOUT
-        </button>
       </div>
-    </div>
+    </>
   );
 }
 
