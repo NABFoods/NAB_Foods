@@ -8,6 +8,7 @@ import {
 } from '../../cart/cartSlice';
 import { useAppDispatch } from '../../hooks';
 import { updateAmount } from '../homeSlice';
+import TaskBar from './TaskBar';
 
 const FoodCard: FC = () => {
   const [fullText, setFullText] = useState(false);
@@ -34,6 +35,7 @@ const FoodCard: FC = () => {
 
   return (
     <div className='flex flex-wrap my-14 lg:my-20'>
+      <TaskBar />
       {Object.values(product).map((product) => (
         <div
           key={product.id}

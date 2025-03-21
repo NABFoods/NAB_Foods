@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import nabFoodsLogo from '../assets/nabFoodsLogo.jpeg';
 import Menu from './menu/Menu';
 
@@ -33,7 +33,7 @@ const TaskBar: FC = () => {
           <Menu />
         </div>
         <div className='hidden md:flex gap-4 items-center justify-content:endflex-1'>
-          <a href='/'>Menu</a>
+          <Link to='/menu'>Menu</Link>
           <div className=' flex items-center gap-2 cursor-pointer'>
             <CartIcon />
           </div>

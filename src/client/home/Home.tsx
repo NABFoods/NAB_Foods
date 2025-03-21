@@ -1,10 +1,12 @@
 import React, { FC, useEffect } from 'react';
 import TaskBar from './components/TaskBar';
-import FoodCard from './components/FoodCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFoodInfo } from './homeSlice';
 import Footer from './components/Footer';
 import { RootState } from '../store';
+import Featured from './components/Featured';
+import Slider from './components/Slider';
+import Offer from './components/Offer';
 const Home: FC = () => {
   const foodCard = useSelector((state: RootState) => state.home.foodCard);
   const dispatch = useDispatch();
@@ -26,7 +28,9 @@ const Home: FC = () => {
   return (
     <>
       <TaskBar />
-      <FoodCard />
+      <Slider />
+      <Featured />
+      <Offer />
       <Footer />
     </>
   );
