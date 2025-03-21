@@ -1,7 +1,10 @@
 import React, { FC } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import { removeProduct, toggleSoldOut, updateProduct } from '../../product/productsSlice';
-import { _ } from 'react-router/dist/development/fog-of-war-CvttGpNz';
+import {
+  removeProduct,
+  toggleSoldOut,
+  updateProduct,
+} from '../../product/productsSlice';
 import { Product } from '../../../types';
 
 const AdminFoodCard: FC = () => {
@@ -57,26 +60,38 @@ const AdminFoodCard: FC = () => {
     }
   };
   // Explicitly type field parameter as a type that is a key of the Product type.
-  const handleUpdateProduct = async (id: number, field: keyof Product, currentValue: any) => {
-    console.log("Update Product button clicked!")
+  const handleUpdateProduct = async (
+    id: number,
+    field: keyof Product,
+    currentValue: any
+  ) => {
+    console.log('Update Product button clicked!');
     const newValue = prompt(`Enter a new value for ${field}:`, currentValue);
-    if (newValue === null) return;  // exits out
+    if (newValue === null) return; // exits out
     try {
-      const response = await fetch(`http://localhost:3000/api/update-product/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({ field, value: newValue })
-      })
-      if(response.ok) {
+      const response = await fetch(
+        `http://localhost:3000/api/update-product/${id}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ field, value: newValue }),
+        }
+      );
+      if (response.ok) {
         // const updatedProduct = await response.json(); // not using
-        dispatch(updateProduct({ id, field, value: newValue }))
+        dispatch(updateProduct({ id, field, value: newValue }));
       } else {
-        console.error("AdminFoodCard handUpdateProduct - Failed to update product")
+        console.error(
+          'AdminFoodCard handUpdateProduct - Failed to update product'
+        );
       }
     } catch (error) {
-      console.error("AdminFoodCard handUpdateProduct - catch block caught error updating product: ", error);
+      console.error(
+        'AdminFoodCard handUpdateProduct - catch block caught error updating product: ',
+        error
+      );
     }
-  }
+  };
 
   return (
     <div>
@@ -90,9 +105,13 @@ const AdminFoodCard: FC = () => {
           >
             <h3>
               <button
-                className="button-std"
+                className='button-std'
                 onClick={() =>
-                  handleUpdateProduct(product.id, 'product_name', product.product_name)
+                  handleUpdateProduct(
+                    product.id,
+                    'product_name',
+                    product.product_name
+                  )
                 }
               >
                 Update{' '}
@@ -102,20 +121,26 @@ const AdminFoodCard: FC = () => {
               </span>
             </h3>
             <p>
-              <button 
-                className="button-std"
+              <button
+                className='button-std'
                 onClick={() =>
-                  handleUpdateProduct(product.id, 'description', product.description)
+                  handleUpdateProduct(
+                    product.id,
+                    'description',
+                    product.description
+                  )
                 }
-                >
+              >
                 Update{' '}
               </button>
               Description: {product.description}
             </p>
             <p>
               <button
-                className="button-std"
-                onClick={() => handleUpdateProduct(product.id, 'price', product.price)}
+                className='button-std'
+                onClick={() =>
+                  handleUpdateProduct(product.id, 'price', product.price)
+                }
               >
                 Update{' '}
               </button>
@@ -124,7 +149,7 @@ const AdminFoodCard: FC = () => {
             <p>
               {
                 <button
-                className="button-std"
+                  className='button-std'
                   onClick={() =>
                     handleToggleSoldOut(product.id, product.sold_out)
                   }
@@ -132,10 +157,10 @@ const AdminFoodCard: FC = () => {
                   Toggle
                 </button>
               }
-                Status: {product.sold_out ? 'Sold Out' : 'Available'}
+              Status: {product.sold_out ? 'Sold Out' : 'Available'}
             </p>
             <button
-                className="button-std"
+              className='button-std'
               onClick={() => handleRemoveProduct(product.id)}
             >
               Remove Product

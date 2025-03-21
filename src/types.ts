@@ -11,6 +11,14 @@ export interface Product {
   description: string;
   quantity?: number;
 }
+// used this put products inside of an array 
+interface OrderProduct {
+  product_id: number;
+  product_name: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
 export interface Order {
   order_id: number; // Update to match the field in your data
   order_date: string;
@@ -20,7 +28,7 @@ export interface Order {
   customer_name?: string; // Optional, if exists
   address?: string; // Optional, if exists
   phone?: string; // Optional, if exists
-  items: string[]; // Assuming it's an array of strings (you can adjust this type as needed)
+  products: OrderProduct[]; 
 }
 export interface Link {
   id: number;
