@@ -4,8 +4,9 @@ import React, { FC, useEffect } from 'react';
 import { openMenu, createLinks } from './menuSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { Link } from '../../../../types';
+import { Links } from '../../../../types';
 import CartIcon from '../../../cart/CartIcon';
+import { Link } from 'react-router-dom';
 
 const Menu: FC = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,8 @@ const Menu: FC = () => {
   const menuLinks = useSelector((state: RootState) => state.menu.links);
   const links = [
     { id: 1, link: '/', name: 'Homepage' },
-    { id: 2, link: '/cart', name: 'Cart' },
+    { id: 2, link: '/menu', name: 'Menu' },
+    { id: 3, link: '/cart', name: 'Cart' },
   ];
   useEffect(() => {
     if (Object.keys(menuLinks).length === 0) dispatch(createLinks(links));
@@ -31,18 +33,18 @@ const Menu: FC = () => {
 
       {isOpen && (
         <div className='bg-[#DB162F] text-white absolute left-0 top-12 w-full h-[calc(100vh-3rem)] flex flex-col gap-8 items-start justify-center z-10 px-4 overflow-hidden'>
-          {Object.values(menuLinks).map((link: Link) => (
+          {Object.values(menuLinks).map((link: Links) => (
             <div className='flex flex-row justify-between gap-4'>
               {link.name === 'Cart' ? (
                 <CartIcon />
               ) : (
-                <a
+                <Link
                   key={link.id}
-                  href={link.link}
+                  to={link.link}
                   onClick={() => dispatch(openMenu(isOpen))}
                 >
                   {link.name}
-                </a>
+                </Link>
               )}
               {/* <a key={link.id} href={link.link}>
               {link.name}

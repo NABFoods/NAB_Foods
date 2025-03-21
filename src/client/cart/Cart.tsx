@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of 
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
+import { Link } from 'react-router';
 
 export function Cart() {
   const items = useAppSelector((state) => state.cart.items);
@@ -49,6 +50,9 @@ export function Cart() {
 
   return (
     <div className='mt-20 h-[calc(100vh-6rem)] md:h-calc(100vh-9rem)] flex flex-col text-[#DB162F] lg:flex-row'>
+      {/* <Link to='/'>
+          <button>BACK</button>
+        </Link> */}
       {Object.entries(items).map((item, idx) => (
         // Products Container
         <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40' key={idx}>

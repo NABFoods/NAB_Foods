@@ -3,7 +3,8 @@ import cart from '../home/assets/shopping-cart.png';
 import { selectTotalQuantity } from './cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { Link } from 'react-router-dom'
+
+import { Link } from 'react-router-dom';
 
 const CartIcon: FC = () => {
   const quantity = useSelector((state: RootState) => {
