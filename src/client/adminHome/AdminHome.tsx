@@ -61,20 +61,22 @@ const AdminHome: FC = () => {
       newProduct
     );
 
-    // if is submitting is true return/exit
+    // if 'is submitting' is true return/exit
     if (isSubmitting) {
       console.log(
         'AdminHome handleNewProductSubmit - only 1 click allowed (if submit button clicked more than once)'
       );
       return;
     }
-    setIsSubmitting(true); // lock form to allow only 1 click
+    // Toggle to true to lock form to allow only 1 click
+    setIsSubmitting(true);
 
+    // ***--> Having issues  w/ the temp id created to optinmistically/immediately update UI from state & the final id generated & returned from the db API call.  It was crating 2 products in the store.  Need to solve how to get returned db id to overwrite/replace optimistic updated product w/ temp id in the productsSlice  - BMA <-***
     // create a temp id for the new product until it can be updated from the server's response from db
-    const optimisticAddProduct = {
-      ...newProduct,
-      id: Math.floor(Math.random() * 1000000),
-    };
+    // const optimisticAddProduct = {
+    //   ...newProduct,
+    //   id: Math.floor(Math.random() * 1000000),
+    // };
     // dispatch(addProduct(optimisticAddProduct));
 
     try {
@@ -86,11 +88,17 @@ const AdminHome: FC = () => {
 
       if (response.ok) {
         const createdProduct = await response.json();
-        console.log('Dispatching created product to Redux: ', createdProduct.menu);
+        console.log(
+          'Dispatching created product to Redux: ',
+          createdProduct.menu
+        );
         // dispatches addProdcut again replacing whats in slice for the product w/ what came from db for the product replacing temp id w/ id from db.
-        dispatch(addProduct(createdProduct.menu)); 
-        // dispatch(replaceProductOptimisticIdWithRealId(...createdProduct.menu, id: optimisticAddProduct.id)); 
-        setShowForm(false); //Hide add product form
+        dispatch(addProduct(createdProduct.menu));
+        // **-> Tried creating a reducer to replace product's temp id w/ db's created & returned real id.
+        // dispatch(replaceProductOptimisticIdWithRealId(...createdProduct.menu, id: optimisticAddProduct.id));
+
+        //Hide add product form
+        setShowForm(false);
         // reset form to default inputs ready for next add
         setNewProduct({
           product_name: '',
@@ -116,7 +124,7 @@ const AdminHome: FC = () => {
     <div className='bg-gray-100'>
       <AdminNavbar />
       <button
-        className='bg-blue-500 text-white px-2 ml-4 mb-2 py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500'
+        className='bg-[#DB162F] text-white px-2 ml-4 mb-2 py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500'
         onClick={handleAddProductClick}
       >
         Add New Product
@@ -124,8 +132,8 @@ const AdminHome: FC = () => {
       {/* Render add new products form if showForm = true from clicking add product button */}
       {showForm && (
         <form
-        className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
-        onSubmit={handleSubmitNewProduct}
+          className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
+          onSubmit={handleSubmitNewProduct}
         >
           <input
             className='input-field'
@@ -161,20 +169,22 @@ const AdminHome: FC = () => {
             onChange={handleAddProductFormChange}
             placeholder='Image URL'
           />
-          <div className="py-1">
+          <div className='py-1'>
             <button
-              className='bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            // using .button-std from @apply in main.css
+              className='button-std'
+              // className='bg-[#DB162F] text-white px-2 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
               onClick={() => setShowForm(false)}
             >
               Cancel
             </button>
             <button
               type='submit'
-              className='bg-blue-500 text-white px-2 ml-1 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='button-std'
+              // className='bg-[#DB162F] text-white ml-1 px-2 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
               Submit
             </button>
-
           </div>
         </form>
       )}
