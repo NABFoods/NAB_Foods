@@ -18,8 +18,8 @@ root.render(
   // Using React.StrictMode as best practice for assisting w/ development w/out impacting production
   <React.StrictMode>
     <Provider store={store}>
-      <TaskBar />
       <BrowserRouter>
+      {/* <TaskBar /> */}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/orders' element={<Orders />} />

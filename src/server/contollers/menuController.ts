@@ -41,7 +41,7 @@ export const menuController: menu = {
 
       //create a query that inserts into the product table with all of those values
       const addMenuItemsString =
-        'INSERT into product (product_name, price, sold_out, img_url, description) VALUES ($1,$2,$3,$4,$5)';
+        'INSERT into product (product_name, price, sold_out, img_url, description) VALUES ($1,$2,$3,$4,$5) RETURNING *';
 
       //return the newest value
 
@@ -53,7 +53,8 @@ export const menuController: menu = {
         description,
       ]);
       //console.log('RESULT ROWS', result.rows);
-      res.locals.addedItem = result.rows;
+      res.locals.addedItem = result.rows[0];
+      console.log("result.rows[0] = ", result.rows[0]);
       next();
     } catch (err) {
       next({
@@ -161,4 +162,46 @@ export const menuController: menu = {
       });
     }
   },
+
+  updateProduct: async(req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      console.log("menuController.updateProduct - req.params = ", req.params)
+      const { field, value } = req.body
+      console.log("menuController.updateProduct - req.body = ", req.body)
+      console.log(`Updating product ${id}: field=${field}, value=${value}`);
+      // Lock down/explicitly define what fields will be permitted
+      const allowedFields = ["product_name", "price", "sold_out", "img_url", "description"];
+      // Validate field from client against allowed fields to prevent SQL injection into the string literal since SQL won't allow parameterizing a column/field name.
+      if (!allowedFields.includes(field)) {
+        return next({
+          log: "menuController.updateProduct - Invalid field update attempt",
+          status: 400,
+          message: "Invalid field update",
+        });
+      }
+      const updateQuery = `UPDATE product SET ${field} = $1 WHERE id = $2 RETURNING *`;
+      const values = [value, id];
+  
+      const result = await db.query(updateQuery, values);
+  
+      if(result.rowCount === 0) {
+        return next({
+          log: `menuController.updateProduct - No product found with id = ${id}`,
+          status: 404,
+          message: `No product found with id = ${id}`,
+        })
+      }
+      console.log("menuController.updateProduct - result.rows[0] = ", result.rows[0])
+      res.locals.updatedProduct = result.rows[0];
+      console.log("menuController.updateProduct - res.locals.updatedProduct = ", res.locals.updatedProduct)
+      return next();
+    } catch (error) {
+      return next({
+        log: `menuController.updateProduct - Database error: ${error}`,
+        status: 500,
+        message: "Error updating product",
+      })
+    }
+  }
 };
