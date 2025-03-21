@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   sold_out: boolean; // availability.  True if sold out.
   description: string;
+  quantity?: number;
 }
 // used this put products inside of an array 
 interface OrderProduct {
@@ -57,6 +58,11 @@ export interface menu {
     next: NextFunction
   ) => Promise<void>;
   toggleSoldOut: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
+  updateProduct: (
     req: Request,
     res: Response,
     next: NextFunction

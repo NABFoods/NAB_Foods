@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { Product } from '../../types';
 
 // Type for ProductState
@@ -49,6 +49,17 @@ const homeSlice = createSlice({
       });
     },
 
+    updateAmount: (state, action: PayloadAction<any>) => {
+      const itemsObject = action.payload;
+
+      for (let keys in state.foodCard) {
+        if (itemsObject[state.foodCard[keys].product_name]) {
+          state.foodCard[keys].quantity =
+            itemsObject[state.foodCard[keys].product_name];
+        }
+      }
+    },
+
     // receivedProducts(state, action: PayloadAction<Product[]>) {
     //   const products = action.payload;
     //   products.forEach((product) => {
@@ -59,5 +70,5 @@ const homeSlice = createSlice({
 });
 
 // extracts & exports action creator (receivedProducts) as a .actions object containing all action creators of productsSlice
-export const { getFoodInfo } = homeSlice.actions;
+export const { getFoodInfo, updateAmount } = homeSlice.actions;
 export default homeSlice.reducer;

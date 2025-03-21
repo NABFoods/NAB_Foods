@@ -5,9 +5,11 @@ const AdminNavbar: FC = () => {
   const navigate = useNavigate()
     return (
     <>
-      <h1>NAB FOODS (Admin)</h1>
+      <h1 className='flex justify-center bg-gray-100 text-3xl font-semibold p-2' >NAB FOODS Admin Dashboard</h1>
       <p> 
-      <button onClick ={() => navigate('/Orders')}>Go To Orders</button>
+      <button 
+      className="bg-blue-500 text-white ml-4 mb-1 px-2 py-2 rounded-md hover:bg-blue-700"
+ onClick ={() => navigate('/Orders')}>Go To Orders</button>
       </p>
     </>
   );
