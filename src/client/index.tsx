@@ -10,7 +10,6 @@ import AdminHome from './adminHome/AdminHome';
 import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
-import TaskBar from './home/components/TaskBar';
 const root = createRoot(document.getElementById('root')!);
 
 // Wrapping App w/ Provider to give access to Redux store
@@ -19,9 +18,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-      {/* <TaskBar /> */}
         <Routes>
-          <TaskBar />
           <Route path='/' element={<Home />} />
           <Route path='/orders' element={<Orders />} />
           <Route path='/adminHome' element={<AdminHome />} />

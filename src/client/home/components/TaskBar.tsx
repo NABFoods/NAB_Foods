@@ -13,7 +13,7 @@ const TaskBar: FC = () => {
 
   return (
     <>
-      <div className='h-16 lg:h-20 text-[#DB162F] p-4 flex justify-between items-center border-b-2 border-b-[#c59299] uppercase bg-white w-full fixed top-0 left-0 z-50'>
+      <div className='pt-px-5 h-16 lg:h-20 text-[#DB162F] p-4 flex justify-between items-center border-b-2 border-b-[#c59299] uppercase bg-white w-full fixed top-0 left-0 z-50'>
         <div className='hidden md:flex gap-4 items-center flex-1'>
           <a href='/'>Homepage</a>
         </div>
@@ -25,7 +25,7 @@ const TaskBar: FC = () => {
             <img
               src={nabFoodsLogo}
               alt=''
-              className='object-contain w-20 lg:w-32 cursor-pointer'
+              className='object-contain w-20 lg:w-24 cursor-pointer'
             />
           </a>
         </div>
