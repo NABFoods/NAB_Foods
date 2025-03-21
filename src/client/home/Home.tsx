@@ -25,6 +25,7 @@ const Home: FC = () => {
 
   return (
     <>
+      <TaskBar />
       <FoodCard />
       <Footer />
     </>
