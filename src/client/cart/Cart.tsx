@@ -49,39 +49,51 @@ export function Cart() {
   // const checkoutState = useAppSelector((state) => state.cart.checkoutState);
 
   return (
-    <>
-      <div className='mt-20 flex flex-col text-[#DB162F] '>
-        <Link to='/'>
+    <div className='mt-20 h-[calc(100vh-6rem)] md:h-calc(100vh-9rem)] flex flex-col text-[#DB162F] lg:flex-row'>
+      {/* <Link to='/'>
           <button>BACK</button>
-        </Link>
-        {Object.entries(items).map((item, idx) => (
-          <div className='h-1/2 p-4' key={idx}>
+        </Link> */}
+      {Object.entries(items).map((item, idx) => (
+        // Products Container
+        <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40' key={idx}>
+          <div className="flex items-center justify-between mb-4">
+            <img src={icon} alt='' width={100} height={100} />
             <div>
-              <img src={icon} alt='' width={100} height={100} />
-              <div>
-                <h1>Product: {item[0]} </h1>
-                <span>Quantity {item[1]}</span>
-                <h2>$15.99</h2>
-                <button>X</button>
-              </div>
+              <h1 className="uppercase text-xl font-bold">Product: {item[0]} </h1>
+              <span>Quantity {item[1]}</span>
             </div>
+              <h2 className="font-bold">$15.99</h2>
+              <button className="cursor-pointer">X</button>
           </div>
-        ))}
-        <div className='h-1/2 p-4 bg-fuchsia-50'>
-          <div>
-            <span>Subtotal({quantity})</span>
-            <span>$15.99</span>
-          </div>
-          <hr />
-          <button
-            onClick={makePayment}
-            className='bg-[#DB162F] text-white p-3 rounded-md w-1/2'
-          >
-            CHECKOUT
-          </button>
         </div>
+      ))}
+      {/* Payments Container */}
+      <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6' >
+        <div className= "flex justify-between">
+          <span>Subtotal({quantity})</span>
+          <span>$15.99</span>
+        </div>
+        <div className= "flex justify-between">
+          <span>Service Cost({quantity})</span>
+          <span>$0.00</span>
+        </div>
+        <div className= "flex justify-between">
+          <span>Delivery Cost({quantity})</span>
+          <span className='text-green-500'>Free</span>
+        </div>
+        <hr className="my-2"/>
+        <div className= "flex justify-between">
+          <span>TOTAL (INCL.VAT)({quantity})</span>
+          <span className="font-bold">$81.70</span>
+        </div>
+        <button
+          onClick={makePayment}
+          className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
+        >
+          CHECKOUT
+        </button>
       </div>
-    </>
+    </div>
   );
 }
 
