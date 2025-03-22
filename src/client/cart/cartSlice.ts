@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartState {
-  items: { [productID: string]: number };
+  items: { [productID: string]: number[] };
   quantity: number;
 }
 
@@ -14,24 +14,31 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<string>) {
+    addToCart(state, action: PayloadAction<{ product_name: string, price: number }>) {
       // is item already in cart?
-      if (state.items[action.payload]) {
+      if (state.items[action.payload.product_name]) {
         // if yes, increment qtyA
-        ++state.items[action.payload];
+        ++state.items[action.payload.product_name][0];
+        //multiply the quantity of the items [0] byt the price of the item
+        const newTotal = state.items[action.payload.product_name][0] * state.items[action.payload.product_name][1]
+        console.log("did we update??", newTotal)
+
+        state.items[action.payload.product_name][1] = newTotal 
       } else {
         // Otherwise, set qty to 1
-        state.items[action.payload] = 1;
+        state.items[action.payload.product_name] = [1, action.payload.price];
       }
     },
-    removeFromCart(state, action: PayloadAction<string>) {
+    removeFromCart(state, action: PayloadAction<{ product_name: string, price: number }>) {
       //if items is already quantity of 0 - just set to 0
-      if (state.items[action.payload] === 0) {
-        state.items[action.payload] = 0;
-        delete state.items[action.payload];
+      if (state.items[action.payload.product_name][0] === 0) {
+        state.items[action.payload.product_name][0] = 0;
+        delete state.items[action.payload.product_name][0];
         //else decrement quantity of the item
-      } else if (state.items[action.payload]) {
-        --state.items[action.payload];
+      } else if (state.items[action.payload.product_name][0]) {
+        --state.items[action.payload.product_name][0];
+        const newTotal = state.items[action.payload.product_name][0] * state.items[action.payload.product_name][1]
+        state.items[action.payload.product_name][1] = newTotal 
       }
     },
     updateQuantity(
@@ -39,13 +46,13 @@ const cartSlice = createSlice({
       action: PayloadAction<{ id: string; quantity: number }>
     ) {
       const { id, quantity } = action.payload;
-      state.items[id] = quantity;
+      // state.items[id] = quantity;
     },
 
     selectTotalQuantity(state) {
       state.quantity = 0;
       Object.values(state.items).forEach((itemAmount) => {
-        state.quantity += itemAmount;
+        // state.quantity += itemAmount;
       });
     },
   },

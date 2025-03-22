@@ -7,15 +7,22 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router';
+import {
+  addToCart,
+  removeFromCart,
+  selectTotalQuantity,
+} from './cartSlice'
 
 export function Cart() {
+  const dispatch = useAppDispatch()
+
   const items = useAppSelector((state) => state.cart.items);
   const fullItems = useAppSelector((state) => state.cart);
   const product = useSelector((state: RootState) => state.home.foodCard);
   const quantity = useSelector((state: RootState) => {
     return state.cart.quantity;
   });
-  console.log('ITEMS FULL CART', items, fullItems);
+  console.log('ITEMS FULL CART', items);
   const StripeKey: string | undefined =
     'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
   const makePayment = async () => {
@@ -59,11 +66,14 @@ export function Cart() {
           <div className="flex items-center justify-between mb-4">
             <img src={icon} alt='' width={100} height={100} />
             <div>
-              <h1 className="uppercase text-xl font-bold">Product: {item[0]} </h1>
-              <span>Quantity {item[1]}</span>
+              <h1 className="uppercase text-xl font-bold">{item[0]} </h1>
+              <span>Quantity {item[1][0]}</span>
             </div>
-              <h2 className="font-bold">$15.99</h2>
-              <button className="cursor-pointer">X</button>
+              <h2 className="font-bold">{item[1][1]}</h2>
+              {/* <button className="cursor-pointer">X</button> */}
+              {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
+              <button className="cursor-pointer" onClick={() => dispatch(addToCart({product_name: item[0], price:item[1][0] }))}>+</button>
+              <button className="cursor-pointer" onClick={() => dispatch(removeFromCart({product_name: item[0], price:item[1][0] }))}>-</button>
           </div>
         </div>
       ))}
