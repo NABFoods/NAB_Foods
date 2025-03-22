@@ -24,7 +24,7 @@ export const authController = {
           message: 'Invalid token',
         });
       }
-      const allowedEmails = ['brianmichaelanderson@yahoo.com'];
+      const allowedEmails = ['brianmichaelanderson@yahoo.com', 'vaseanannin@gmail.com'];
 
       if (!allowedEmails.includes(userEmail)) {
         return next({
