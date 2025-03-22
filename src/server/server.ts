@@ -15,7 +15,7 @@ const PORT = 3000;
 app.use(cors({
   origin: "http://localhost:8081", // Allow requests from 8081
   credentials: true,  // Allow cookies/auth headers
-  methods: ["GET", "POST", "PUT", "DELETE"],  // Allowed  methods
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],  // Allowed  methods
   allowedHeaders: ["Content-Type", "Authorization"],  // Allowed headers
 }));
 
