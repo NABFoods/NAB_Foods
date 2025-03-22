@@ -50,9 +50,9 @@ export function Cart() {
 
   return (
     <div className='mt-20 h-[calc(100vh-6rem)] md:h-calc(100vh-9rem)] flex flex-col text-[#DB162F] lg:flex-row'>
-      {/* <Link to='/'>
+      <Link to='/'>
           <button>BACK</button>
-        </Link> */}
+        </Link>
       {Object.entries(items).map((item, idx) => (
         // Products Container
         <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40' key={idx}>
