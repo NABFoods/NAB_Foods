@@ -16,12 +16,16 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = createRoot(document.getElementById('root')!);
 
+// Google Client ID from environment variables
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; 
+// console.log('index.tsx - Google Client ID:', process.env.REACT_APP_GOOGLE_CLIENT_ID);
+
 // Wrapping App w/ Provider to give access to Redux store
 root.render(
   // Using React.StrictMode as best practice for assisting w/ development w/out impacting production
   <React.StrictMode>
     <Provider store={store}>
-    <GoogleOAuthProvider clientId="GOOGLE_CLIENT_ID_GOES_HERE">
+    <GoogleOAuthProvider clientId={clientId!}>
       <BrowserRouter>
         {/* <TaskBar /> */}
         <Routes>

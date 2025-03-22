@@ -3,14 +3,21 @@ import path from 'path';
 //TypeScript complained about global error handler's req, res, next parameters unless the following is imported
 import { Request, Response, NextFunction } from 'express';
 import session from 'express-session';
+import dotenv from 'dotenv';
 const cors = require('cors')
 const apiRouter = require('./routes/api')
 
 const app = express();
-
 const PORT = 3000;
+dotenv.config();
 
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:8081", // Allow requests from 8081
+  credentials: true,  // Allow cookies/auth headers
+  methods: ["GET", "POST", "PUT", "DELETE"],  // Allowed  methods
+  allowedHeaders: ["Content-Type", "Authorization"],  // Allowed headers
+}));
+
 app.use(express.json()); 
 app.use(session({
   secret: 'put secret key here',

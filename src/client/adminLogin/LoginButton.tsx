@@ -6,9 +6,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 
 const LoginButton = () => {
-    console.log("LoginButton clicked!")
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;  // For React
+
 
     const handleSuccess = async (response: any) => {
         try {
