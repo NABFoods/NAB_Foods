@@ -7,16 +7,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router';
-import {
-  addToCart,
-  removeFromCart,
-  selectTotalQuantity,
-} from './cartSlice'
+import { addToCart, removeFromCart, selectTotalQuantity } from './cartSlice';
 
 import { updateAmount } from '../home/homeSlice';
 
 export function Cart() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const items = useAppSelector((state) => state.cart.items);
   const [customerInfo, setCustomerInfo] = useState({
@@ -43,6 +39,7 @@ export function Cart() {
   const StripeKey: string | undefined =
     'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
   const makePayment = async () => {
+    console.log('This is product', product);
     const stripe = await loadStripe(StripeKey!);
     console.log(StripeKey);
     const body = {
@@ -50,17 +47,14 @@ export function Cart() {
       quantity: quantity,
       defaultImage: `../home/assets/restaurant.png`,
     };
-
     const header = {
       'Content-type': 'application/json',
     };
-
     const response = await fetch(`http://localhost:3000/api/createCheckout`, {
       method: 'POST',
       headers: header,
       body: JSON.stringify(body),
     });
-
     const session = await response.json();
     const result = stripe?.redirectToCheckout({
       sessionId: session.id,
@@ -97,15 +91,33 @@ export function Cart() {
           <div className='flex items-center justify-between mb-4'>
             <img src={icon} alt='' width={100} height={100} />
             <div>
-              <h1 className="uppercase text-xl font-bold">{item[0]} </h1>
+              <h1 className='uppercase text-xl font-bold'>{item[0]} </h1>
             </div>
-              {/* Price of Individual Item */}
-              <h2 className="font-bold">{item[1][2]}</h2>
-              <button className="cursor-pointer">X</button>
-              {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
-              <button className="cursor-pointer" onClick={() => dispatch(addToCart({product_name: item[0], price:item[1][0] }))}>+</button>
-              <span>{item[1][0]}</span>
-              <button className="cursor-pointer" onClick={() => dispatch(removeFromCart({product_name: item[0], price:item[1][0] }))}>-</button>
+            {/* Price of Individual Item */}
+            <h2 className='font-bold'>{item[1][2]}</h2>
+            <button className='cursor-pointer'>X</button>
+            {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
+            <button
+              className='cursor-pointer'
+              onClick={() =>
+                dispatch(
+                  addToCart({ product_name: item[0], price: item[1][0] })
+                )
+              }
+            >
+              +
+            </button>
+            <span>{item[1][0]}</span>
+            <button
+              className='cursor-pointer'
+              onClick={() =>
+                dispatch(
+                  removeFromCart({ product_name: item[0], price: item[1][0] })
+                )
+              }
+            >
+              -
+            </button>
           </div>
         </div>
       ))}

@@ -21,7 +21,7 @@ export const orderController = {
         },
         unit_amount: Math.round(product.price * 100),
       },
-      quantity: product.quantity,
+      quantity: Number(product.quantity[0]),
     }));
     //console.log(JSON.stringify(lineItems, null, 2));
     const session = await stripe.checkout.sessions.create({
