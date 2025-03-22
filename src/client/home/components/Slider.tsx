@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import shito from '../assets/shito.jpg';
 import springRollFlyer from '../assets/springRollFlyer.jpeg';
 import springRoll from '../assets/springRolls.jpg';
+import { Link } from 'react-router';
 const Slider: FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideItems = [
@@ -37,7 +38,7 @@ const Slider: FC = () => {
           {slideItems[currentSlide].title}
         </h1>
         <button className='bg-fuchsia-50 text-[#DB162F] py-4 px-8'>
-          ORDER NOW
+          <Link to='/menu'>ORDER NOW</Link>
         </button>
       </div>
       <div className='w-full flex-1 relative'>
