@@ -12,6 +12,8 @@ import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
 import TaskBar from './home/components/TaskBar';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 const root = createRoot(document.getElementById('root')!);
 
 // Wrapping App w/ Provider to give access to Redux store
@@ -19,6 +21,7 @@ root.render(
   // Using React.StrictMode as best practice for assisting w/ development w/out impacting production
   <React.StrictMode>
     <Provider store={store}>
+    <GoogleOAuthProvider clientId="GOOGLE_CLIENT_ID_GOES_HERE">
       <BrowserRouter>
         {/* <TaskBar /> */}
         <Routes>
@@ -31,6 +34,7 @@ root.render(
         </Routes>
         {/*<App />*/}
       </BrowserRouter>
+      </GoogleOAuthProvider>
     </Provider>
   </React.StrictMode>
 );

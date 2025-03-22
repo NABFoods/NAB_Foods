@@ -1,14 +1,20 @@
 import React, { FC } from 'react';
 import { useAppSelector, useAppDispatch } from '../hooks';
+import LoginButton from './LoginButton'
 
 const AdminLogin: FC = () => {
 
 
-  
+
   return (
-    <div className='flex flex-col justify-start items-start px-4 py-4 min-h-screen bg-gray-100'>
-      <div className=' max-w-80'>
-        <input
+    <div className='flex justify-center p-6 min-h-screen bg-gray-100'>
+      <div className='text-[#DB162F] text-center'>
+        <span className="mb-4 block text-2xl font-bold">
+        Welcome NAB Foods Admin!
+        <br />
+        Please login.
+        </span>
+        {/* <input
           className='input-field'
           type='text'
           placeholder='Username'
@@ -16,8 +22,8 @@ const AdminLogin: FC = () => {
           // value={newProduct.product_name}
           // onChange={handleUsernameChange}
           required
-        />
-        <span>
+        /> */}
+        {/* <span>
           <input
             className='input-field'
             type='password'
@@ -28,6 +34,9 @@ const AdminLogin: FC = () => {
             required
           />
           <button className='button-std'>Login</button>
+        </span> */}
+        <span className='mt-2'>
+        <LoginButton />
         </span>
       </div>
     </div>
