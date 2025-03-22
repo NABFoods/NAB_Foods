@@ -13,6 +13,7 @@ import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
 import TaskBar from './home/components/TaskBar';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import FoodCard from './home/components/FoodCard';
 
 const root = createRoot(document.getElementById('root')!);
 
@@ -27,16 +28,14 @@ root.render(
     <Provider store={store}>
     <GoogleOAuthProvider clientId={clientId!}>
       <BrowserRouter>
-        {/* <TaskBar /> */}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/orders' element={<Orders />} />
           <Route path='/adminLogin' element={<AdminLogin />} />
           <Route path='/adminHome' element={<AdminHome />} />
-          <Route path='/app' element={<App />} />
+          <Route path='/menu' element={<FoodCard />} />
           <Route path='/cart' element={<Cart />} />
         </Routes>
-        {/*<App />*/}
       </BrowserRouter>
       </GoogleOAuthProvider>
     </Provider>
