@@ -7,9 +7,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router';
+
 import { addToCart, removeFromCart, selectTotalQuantity } from './cartSlice';
 
 import { updateAmount } from '../home/homeSlice';
+import TaskBar from '../home/components/TaskBar';
 
 export function Cart() {
   const dispatch = useAppDispatch();
@@ -83,13 +85,13 @@ export function Cart() {
       {/* <Link to='/'>
           <button>BACK</button>
         </Link> */}
-
+      <TaskBar />
       {Object.entries(items).map((item, idx) => (
         <div
           className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
           key={idx}
         >
-          // Products Container
+          {/* // Products Container */}
           <div className='flex items-center justify-between mb-4'>
             <img src={icon} alt='' width={100} height={100} />
             <div>
