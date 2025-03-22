@@ -9,11 +9,10 @@ const initialState: CartState = {
   items: {},
   quantity: 0,
 };
-
-//items : {apple: [2, 4, 8], banana: [1, 5]}
+//items : {apple: [2, 4, 8]}, 
 //item quantity = apple[0]
 //item price = apple[1]
-//item total = apple[3]
+//item total = apple[2]
 
 const cartSlice = createSlice({
   name: 'cart',
