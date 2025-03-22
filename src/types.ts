@@ -1,6 +1,11 @@
 export type params = string | number;
 import { Request, Response, NextFunction } from 'express';
 
+declare module 'express-session' {
+  interface Session {
+    user?: { email: string };  
+  }
+}
 // Represents a product & its details/properties
 export interface Product {
   img_url: string;

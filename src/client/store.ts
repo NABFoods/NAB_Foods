@@ -7,6 +7,7 @@ import cartReducer from './cart/cartSlice';
 import homeReducer from './home/homeSlice';
 import ordersReducer from './adminOrders/orderSlice';
 import menuReducer from './home/components/menu/menuSlice';
+import authReducer from './adminLogin/authSlice';
 
 export const store = configureStore({
   //combine slices here to build central store/globabl state
@@ -17,6 +18,7 @@ export const store = configureStore({
     home: homeReducer,
     orders: ordersReducer,
     menu: menuReducer,
+    auth: authReducer,
   },
   devTools: true,
 });
