@@ -8,7 +8,7 @@ import { store } from './store';
 import Home from './home/Home';
 import AdminHome from './adminHome/AdminHome';
 import AdminLogin from './adminLogin/AdminLogin';
-import App from './App';
+// import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
 import TaskBar from './home/components/TaskBar';

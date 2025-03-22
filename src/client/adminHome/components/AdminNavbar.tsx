@@ -21,13 +21,16 @@ const AdminNavbar: FC = () => {
           src={nabFoodsLogo}
           alt=''
           />
-        <span className='flex-1 text-center'>Manage Products Dashboard</span>
-        {/* <button
+        <span className='flex-1 text-center'>
+          {isOnAdminHome ? 'Manage Products Dashboard' : 'Manage Orders Dashboard'}
+
+          </span>
+        <button
           className='w-fit text-xs bg-[#DB162F] text-white mb-1 mt-1 px-1 py-1.5 rounded-md hover:bg-blue-700'
-          onClick={() => navigate(isOnAdminHome ? '/Orders' : '/adminHome")}
+          onClick={() => navigate(isOnAdminHome ? '/Orders' : '/adminHome')}
         >
           {isOnAdminHome ? 'Orders' : 'Menu'}
-        </button> */}
+        </button>
         <span className="text-sm py-0">
         <LogoutButton />
         </span>
