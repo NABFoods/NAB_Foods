@@ -3,6 +3,8 @@ import MenuBar from './components/MenuBar';
 import React, { FC, useEffect } from 'react';
 import { useAppDispatch } from '../hooks';
 import { getOrders } from './orderSlice';
+import AdminNavbar from "../adminHome/components/AdminNavbar"
+
 const Orders: FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -20,7 +22,7 @@ const Orders: FC = () => {
   }, [dispatch]);
   return (
     <div className='bg-gray-200 min-h-screen'>
-      <MenuBar />
+      <AdminNavbar />
       <OrderCard />
     </div>
   );
