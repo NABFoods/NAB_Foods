@@ -52,8 +52,9 @@ const cartSlice = createSlice({
     ) {
       const item = state.items[action.payload.product_name];
       //if items is already quantity of 0 - just set to 0
-      if (typeof item[0] === 'string') {
-        item[0] = Number[item[0]];
+      if (!item) {
+        console.warn('Tried to remove item that is not in cart');
+        return;
       }
       if (item[0] <= 0) {
         item[0] = 0;
