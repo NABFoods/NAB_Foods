@@ -24,7 +24,7 @@ export const authController = {
           message: 'Invalid token',
         });
       }
-      // Get allowed emails from .env & split them into an array
+      // Get allowed emails from .env & split them into an array or assigning to empty array if no .env variable found
       const allowedEmails = process.env.ALLOWED_EMAILS?.split(',') || [];
 
       if (!allowedEmails.includes(userEmail)) {
