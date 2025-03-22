@@ -18,12 +18,15 @@ const OrderCard: FC = () => {
   };
 
   return (
-    <div>
-      <h2>Orders View</h2>
-      <ul>
+    <div className="p-2 bg-[#FFFFFF] rounded-lg shadow-lg">
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Object.values(orders).map((order) => (
-          <li key={order.order_id} className='order-card'>
-            <h3>Order ID: {order.order_id}</h3>
+          <li key={order.order_id} className='m-2 bg-slate-100 border border-gray-300 rounded-lg p-4 shadow-xl'
+          >
+            <h3 className="text-[#000000] font-bold text-lg"><span>
+              Order ID: 
+              </span>
+              {order.order_id}</h3>
             <p>Customer: {order.customer_name}</p>
             <p>Address: {order.address}</p>
             <p>Phone: {order.phone}</p>
@@ -42,18 +45,20 @@ const OrderCard: FC = () => {
             </ul>
 
             {/* Dynamic Status Change Buttons */}
-            <div className='status-buttons'>
-              <button
+            <div  className="status-buttons mt-2 flex gap-2">
+              <button className="bg-green-500 text-white px-2 py-1 rounded-lg text-xs hover:bg-green-600 transition"
                 onClick={() => handleStatusChange(order.order_id, 'accepted')}
               >
                 Accept
               </button>
               <button
+                className="bg-[#DB162F] text-white px-2 py-1 rounded-lg text-xs hover:bg-[#C31427] transition"
                 onClick={() => handleStatusChange(order.order_id, 'declined')}
               >
                 Decline
               </button>
               <button
+                className="bg-[#1098F7] text-white px-2 py-1 rounded-lg text-xs hover:bg-[#0D82D2] transition"
                 onClick={() =>
                   handleStatusChange(order.order_id, 'in progress')
                 }
@@ -61,6 +66,7 @@ const OrderCard: FC = () => {
                 In Progress
               </button>
               <button
+                className="bg-[#000000] text-white px-2 py-1 rounded-lg text-xs hover:bg-[#333333] transition"
                 onClick={() => handleStatusChange(order.order_id, 'done')}
               >
                 Done
