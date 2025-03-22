@@ -1,6 +1,6 @@
 // Component corresponding to order_products table tracking products added to cart
 
-import React from 'react';
+import React, { useState } from 'react';
 import icon from '../home/assets/restaurant.png';
 import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of userSelector & useDispatch from hooks.ts
 import { useSelector } from 'react-redux';
@@ -10,6 +10,12 @@ import { Link } from 'react-router';
 
 export function Cart() {
   const items = useAppSelector((state) => state.cart.items);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    address: '',
+    phone: 0,
+  });
+  const [pickup, setPickup] = useState(false);
   const fullItems = useAppSelector((state) => state.cart);
   const product = useSelector((state: RootState) => state.home.foodCard);
   const quantity = useSelector((state: RootState) => {
@@ -43,6 +49,17 @@ export function Cart() {
     });
   };
 
+  const handleCustomerInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const checkoutButton = () => {
+    makePayment();
+    console.log(customerInfo);
+  };
+
   // for getting total price
   // const totalPrice = useAppSelector(getTotalPrice);
   // Use to know if customer has ordered....??
@@ -55,39 +72,105 @@ export function Cart() {
         </Link> */}
       {Object.entries(items).map((item, idx) => (
         // Products Container
-        <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40' key={idx}>
-          <div className="flex items-center justify-between mb-4">
+        <div
+          className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
+          key={idx}
+        >
+          <div className='flex items-center justify-between mb-4'>
             <img src={icon} alt='' width={100} height={100} />
             <div>
-              <h1 className="uppercase text-xl font-bold">Product: {item[0]} </h1>
+              <h1 className='uppercase text-xl font-bold'>
+                Product: {item[0]}{' '}
+              </h1>
               <span>Quantity {item[1]}</span>
             </div>
-              <h2 className="font-bold">$15.99</h2>
-              <button className="cursor-pointer">X</button>
+            <h2 className='font-bold'>$15.99</h2>
+            <button className='cursor-pointer'>X</button>
           </div>
         </div>
       ))}
       {/* Payments Container */}
-      <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6' >
-        <div className= "flex justify-between">
+      <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6'>
+        <div>
+          <div className='flex gap-2'>
+            <button
+              className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
+              onClick={() => setPickup(true)}
+            >
+              PICKUP
+            </button>
+            <button
+              className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
+              onClick={() => setPickup(false)}
+            >
+              DELIVERY
+            </button>
+          </div>
+          {!pickup && (
+            <div className='flex flex-col'>
+              <h1>Delivery Details</h1>
+              <input
+                type='text'
+                className='input-field text-black'
+                name='name'
+                placeholder='Name'
+                onChange={handleCustomerInfo}
+              />
+              <input
+                type='text'
+                className='input-field text-black'
+                name='address'
+                placeholder='Address'
+                onChange={handleCustomerInfo}
+              />
+              <input
+                type='text'
+                className='input-field text-black'
+                name='phone'
+                placeholder='Phone'
+                onChange={handleCustomerInfo}
+              />
+            </div>
+          )}
+          {pickup && (
+            <div className='flex flex-col'>
+              <h1>Pickup Details</h1>
+              <input
+                type='text'
+                className='input-field text-black'
+                name='name'
+                placeholder='Name'
+                onChange={handleCustomerInfo}
+              />
+              <input
+                type='text'
+                className='input-field text-black'
+                name='phone'
+                placeholder='Phone'
+                onChange={handleCustomerInfo}
+              />
+            </div>
+          )}
+        </div>
+        <div className='flex justify-between'>
           <span>Subtotal({quantity})</span>
           <span>$15.99</span>
         </div>
-        <div className= "flex justify-between">
+        <div className='flex justify-between'>
           <span>Service Cost({quantity})</span>
           <span>$0.00</span>
         </div>
-        <div className= "flex justify-between">
+        <div className='flex justify-between'>
           <span>Delivery Cost({quantity})</span>
           <span className='text-green-500'>Free</span>
         </div>
-        <hr className="my-2"/>
-        <div className= "flex justify-between">
+        <hr className='my-2' />
+        <div className='flex justify-between'>
           <span>TOTAL (INCL.VAT)({quantity})</span>
-          <span className="font-bold">$81.70</span>
+          <span className='font-bold'>$81.70</span>
         </div>
         <button
-          onClick={makePayment}
+          onClick={checkoutButton}
           className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
         >
           CHECKOUT

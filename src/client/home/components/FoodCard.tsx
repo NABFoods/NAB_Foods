@@ -28,8 +28,6 @@ const FoodCard: FC = () => {
   };
 
   useEffect(() => {
-    console.log('Updated cart:', itemNumber);
-    console.log('Updated quantity:', quantity);
     dispatch(updateAmount(itemNumber));
   }, [itemNumber, quantity, dispatch]);
 
