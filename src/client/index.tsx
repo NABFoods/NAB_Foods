@@ -11,7 +11,6 @@ import AdminLogin from './adminLogin/AdminLogin';
 // import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
-import TaskBar from './home/components/TaskBar';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FoodCard from './home/components/FoodCard';
 
