@@ -1,10 +1,17 @@
 import React, { FC } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import nabFoodsLogo from '../..//home/assets/nabFoodsLogo.jpeg';
 import LogoutButton from '../../adminLogin/LogoutButton'
 
 const AdminNavbar: FC = () => {
   const navigate = useNavigate();
+  // Use 
+  const location = useLocation();
+
+  // Keep track of where user is currently using useLocation whether it has a trailing / or not.  Applying regex may be a more scalable solution
+  const isOnAdminHome = location.pathname === '/adminHome' || location.pathname === '/adminHome/';
+
+
   return (
     <div className="">
     {/* Using md (medium size screens & above - >=768px width) breakpoint to use flex-row (keeping image and title text inline), defaulting to flex-col to stack image and title text for all other/smaller screens*/}
@@ -15,12 +22,12 @@ const AdminNavbar: FC = () => {
           alt=''
           />
         <span className='flex-1 text-center'>Manage Products Dashboard</span>
-        <button
+        {/* <button
           className='w-fit text-xs bg-[#DB162F] text-white mb-1 mt-1 px-1 py-1.5 rounded-md hover:bg-blue-700'
-          onClick={() => navigate('/Orders')}
+          onClick={() => navigate(isOnAdminHome ? '/Orders' : '/adminHome")}
         >
-          Orders
-        </button>
+          {isOnAdminHome ? 'Orders' : 'Menu'}
+        </button> */}
         <span className="text-sm py-0">
         <LogoutButton />
         </span>
