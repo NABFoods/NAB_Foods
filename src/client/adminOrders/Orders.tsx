@@ -1,29 +1,28 @@
-import OrderCard  from './components/OrderCard';
+import OrderCard from './components/OrderCard';
 import MenuBar from './components/MenuBar';
 import React, { FC, useEffect } from 'react';
 import { useAppDispatch } from '../hooks';
 import { getOrders } from './orderSlice';
 const Orders: FC = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/getOrders')
-        const data = await response.json()
-        console.log(data.orders)
-        dispatch(getOrders(data.orders))
-        
+        const response = await fetch('http://localhost:3000/api/getOrders');
+        const data = await response.json();
+        console.log(data.orders);
+        dispatch(getOrders(data.orders));
       } catch (error) {
-      console.error('error fetching orders',error)
+        console.error('error fetching orders', error);
+      }
     };
-    } 
-  fetchOrders()
-  },[dispatch])
+    fetchOrders();
+  }, [dispatch]);
   return (
-    <>
+    <div className='bg-gray-200 min-h-screen'>
       <MenuBar />
       <OrderCard />
-    </>
+    </div>
   );
 };
 
