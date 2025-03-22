@@ -17,13 +17,13 @@ const FoodCard: FC = () => {
   const quantity = useSelector((state: RootState) => state.cart.quantity);
   const dispatch = useAppDispatch();
 
-  const addFoodItem = (product: { product_name: string }) => {
-    dispatch(addToCart(product.product_name));
+  const addFoodItem = (product: { product_name: string, price: number }) => {
+    dispatch(addToCart(product));
     dispatch(selectTotalQuantity());
   };
 
-  const removeFoodItem = (product: { product_name: string }) => {
-    dispatch(removeFromCart(product.product_name));
+  const removeFoodItem = (product: { product_name: string, price: number }) => {
+    dispatch(removeFromCart(product));
     dispatch(selectTotalQuantity());
   };
 
