@@ -12,12 +12,23 @@ const CartIcon: FC = () => {
   });
 
   return (
-    <Link to='/cart' className='flex items-center gap-1'>
-      <span>Cart ({quantity})</span>
-      <div className='relative w-8 h-8 top-1 z-10 md:top-0 md:w-5 md:h-5'>
-        <img src={cart} width={25} height={25} alt='Cart' />
-      </div>
-    </Link>
+    <>
+      {quantity != Number(0) ? (
+        <Link to='/cart' className='flex items-center gap-1'>
+          <span>Cart ({quantity})</span>
+          <div className='relative w-8 h-8 top-1 z-10 md:top-0 md:w-5 md:h-5'>
+            <img src={cart} width={25} height={25} alt='Cart' />
+          </div>
+        </Link>
+      ) : (
+        <div className='flex items-center gap-1'>
+          <span>Cart ({quantity})</span>
+          <div className='relative w-8 h-8 top-1 z-10 md:top-0 md:w-5 md:h-5'>
+            <img src={cart} width={25} height={25} alt='Cart' />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

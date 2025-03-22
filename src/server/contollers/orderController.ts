@@ -3,9 +3,29 @@ import { Product } from '../../types';
 const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 export const orderController = {
+  createOrder: async (req: Request, res: Response, next: NextFunction) => {
+    const { name, address, phone } = req.body;
+    try {
+      const insertCustomerInfo =
+        'INSERT into customer (address, phone, name) VALUES ($1, $2, $3) RETURNING *';
+
+      const result = await db.query(insertCustomerInfo, [address, phone, name]);
+      res.locals.customerInfo = result.rows[0];
+      console.log('result.rows[0] = ', result.rows[0]);
+      next();
+    } catch (err) {
+      console.error('Error in getOrders:', err);
+      next({
+        log: 'Error occurred in getOrders',
+      });
+    }
+    console.log('THIS IS CUSTOMER INFO', name, address, phone);
+
+    return next();
+  },
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
     const { products, quantity, defaultImage } = req.body;
-    if (quantity === 0) {
+    if (!req.body || !products || quantity === 0) {
       return next();
     }
     const filteredProducts = (Object.values(products) as Product[]).filter(
@@ -70,7 +90,6 @@ export const orderController = {
       const orderResults = await db.query(getOrdersQuery);
       console.log('Query Results:', orderResults.rows);
 
-      // ✅ Use the query results directly
       res.locals.orders = orderResults.rows;
       next();
     } catch (err) {
