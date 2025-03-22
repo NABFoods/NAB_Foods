@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client';
 import { store } from './store';
 import Home from './home/Home';
 import AdminHome from './adminHome/AdminHome';
+import AdminLogin from './adminLogin/AdminLogin';
 import App from './App';
 import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
@@ -19,10 +20,11 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-      {/* <TaskBar /> */}
+        {/* <TaskBar /> */}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/orders' element={<Orders />} />
+          <Route path='/adminLogin' element={<AdminLogin />} />
           <Route path='/adminHome' element={<AdminHome />} />
           <Route path='/app' element={<App />} />
           <Route path='/cart' element={<Cart />} />

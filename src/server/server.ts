@@ -2,20 +2,21 @@ import express from 'express';
 import path from 'path';
 //TypeScript complained about global error handler's req, res, next parameters unless the following is imported
 import { Request, Response, NextFunction } from 'express';
-
-const app = express();
+import session from 'express-session';
 const cors = require('cors')
 const apiRouter = require('./routes/api')
+
+const app = express();
 
 const PORT = 3000;
 
 app.use(cors())
 app.use(express.json()); 
-// app.get('/', (req, res, next) => {
-//     res.status(200)
-//     res.send("hello")
-// });
-
+app.use(session({
+  secret: 'put secret key here',
+  resave: false,
+  saveUninitialized: true,
+}))
 
 app.use('/api', apiRouter)
 

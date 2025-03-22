@@ -2,6 +2,7 @@ import express from 'express';
 // const menuController = require('../contollers/menuController')
 import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
+import { authController } from '../contollers/authController';
 
 const router = express.Router();
 router.get('/getOrders', orderController.getOrders, (req, res) => {
@@ -45,7 +46,7 @@ router.put('/', menuController.updateMenuItem, (req, res) => {
 });
 
 router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
-  console.log("api.ts - made it to router.delete response w/ status 200 & res.locals.deleteMenuItem = ", res.locals.deleteMenuItem)
+  console.log("api.ts - made it to router.delete response w/ status 200")
   res.status(200).json({
     menu: res.locals.deletedMenuItem,
   });
