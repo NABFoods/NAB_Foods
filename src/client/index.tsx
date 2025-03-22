@@ -25,7 +25,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <GoogleOAuthProvider clientId={clientId!}>
-        <BrowserRouter>
+        <BrowserRouter>styling
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/orders' element={<Orders />} />
