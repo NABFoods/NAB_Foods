@@ -1,6 +1,6 @@
 // Component corresponding to order_products table tracking products added to cart
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import icon from '../home/assets/restaurant.png';
 import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of userSelector & useDispatch from hooks.ts
 import { useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ import {
   removeFromCart,
   selectTotalQuantity,
 } from './cartSlice'
+
+import { updateAmount } from '../home/homeSlice';
 
 export function Cart() {
   const dispatch = useAppDispatch()
@@ -28,6 +30,15 @@ export function Cart() {
   const quantity = useSelector((state: RootState) => {
     return state.cart.quantity;
   });
+  const itemNumber = useSelector((state: RootState) => state.cart.items);
+
+  //Every time items update we get fresh quantity information
+ useEffect(() => {
+    dispatch(selectTotalQuantity());
+  }, [itemNumber, quantity, dispatch]);
+
+
+
   console.log('ITEMS FULL CART', items);
   const StripeKey: string | undefined =
     'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
