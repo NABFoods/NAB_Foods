@@ -87,12 +87,13 @@ export function Cart() {
             <img src={icon} alt='' width={100} height={100} />
             <div>
               <h1 className="uppercase text-xl font-bold">{item[0]} </h1>
-              <span>Quantity {item[1][0]}</span>
             </div>
-              <h2 className="font-bold">{item[1][1]}</h2>
-              {/* <button className="cursor-pointer">X</button> */}
+              {/* Price of Individual Item */}
+              <h2 className="font-bold">{item[1][2]}</h2>
+              <button className="cursor-pointer">X</button>
               {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
               <button className="cursor-pointer" onClick={() => dispatch(addToCart({product_name: item[0], price:item[1][0] }))}>+</button>
+              <span>{item[1][0]}</span>
               <button className="cursor-pointer" onClick={() => dispatch(removeFromCart({product_name: item[0], price:item[1][0] }))}>-</button>
           </div>
         </div>
