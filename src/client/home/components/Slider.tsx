@@ -27,7 +27,7 @@ const Slider: FC = () => {
       setCurrentSlide((prev) =>
         prev === slideItems.length - 1 ? 0 : (prev += 1)
       );
-    }, 2000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
   return (

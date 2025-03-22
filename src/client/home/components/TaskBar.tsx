@@ -18,8 +18,8 @@ const TaskBar: FC = () => {
           <a href='/'>Homepage</a>
         </div>
         <div className='text-2xl md:font-bold flex-1 '>
-          <a
-            href='/'
+          <Link
+            to='/'
             //className='h-12 text-4xl font-bold text-[#DB162F] mb-4 px-4 flex items-center justify-center text-center md:text-base cursor-pointer'
           >
             <img
@@ -27,7 +27,7 @@ const TaskBar: FC = () => {
               alt=''
               className='object-contain w-20 lg:w-24 cursor-pointer'
             />
-          </a>
+          </Link>
         </div>
         <div className='md:hidden'>
           <Menu />

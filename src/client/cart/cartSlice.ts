@@ -52,17 +52,11 @@ const cartSlice = createSlice({
     ) {
       const item = state.items[action.payload.product_name];
       //if items is already quantity of 0 - just set to 0
-      if (!item) {
-        console.warn('Tried to remove item that is not in cart');
-        return;
-      }
-      if (item[0] <= 0) {
-        item[0] = 0;
-        item[2] = 0;
-        // delete state.items[action.payload.product_name][0];
-        //else decrement quantity of the item
+      if (!item) return;
+      if (item[0] <= 1) {
+        delete state.items[action.payload.product_name];
       } else {
-        --item[0];
+        item[0]--;
         console.log('ITEMS STATE', item[0]);
         item[2] = item[0] * item[1];
         console.log('Decremented Item', item[0]);
