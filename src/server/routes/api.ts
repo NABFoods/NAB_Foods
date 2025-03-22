@@ -9,7 +9,7 @@ const router = express.Router();
 // Route for admin login using Google
 router.post('/auth/google', authController.googleLogin);
 
-router.post('auth/logout', authController.logout);
+router.post('/auth/logout', authController.logout);
 
 router.get('/getOrders', orderController.getOrders, (req, res) => {
   res.status(200).json({
