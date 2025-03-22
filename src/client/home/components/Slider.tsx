@@ -7,12 +7,12 @@ const Slider: FC = () => {
   const slideItems = [
     {
       id: 1,
-      title: 'Authentic Ghanian food made with love',
+      title: 'Authentic African food made with love',
       img_url: shito,
     },
     {
       id: 2,
-      title: 'You can place orders for pickup delivery or shipping',
+      title: 'place orders for pickup or delivery',
       img_url: springRollFlyer,
     },
     {
@@ -31,8 +31,8 @@ const Slider: FC = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className='mt-20 flex flex-col h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] lg:flex-row'>
-      <div className='h-1/2 flex items-center justify-center flex-col gap-8 text-[#DB162F] font-bold lg:h-full'>
+    <div className='mt-20 flex flex-col h-full md:h-[calc(100vh-5rem)] lg:flex-row'>
+      <div className='flex-1 flex items-center justify-center flex-col gap-8 text-[#DB162F] font-bold'>
         <h1 className='text-5xl text-center uppercase p-4 md:p-10 md:text-6xl xl:text-7xl'>
           {slideItems[currentSlide].title}
         </h1>
@@ -40,11 +40,11 @@ const Slider: FC = () => {
           ORDER NOW
         </button>
       </div>
-      <div className='w-full h-1/2 relative lg:h-full'>
+      <div className='w-full flex-1 relative'>
         <img
           src={slideItems[currentSlide].img_url}
           alt=''
-          className='object-cover'
+          className='w-full h-full object-cover'
         />
       </div>
     </div>
