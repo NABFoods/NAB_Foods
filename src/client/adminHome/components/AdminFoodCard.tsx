@@ -101,7 +101,7 @@ const AdminFoodCard: FC = () => {
           //   <div key={product.id}>
           <div
             key={product.id ?? `temp-${index}`}
-            className='m-2 bg-slate-100 border border-gray-400 rounded-lg p-4 shadow-xl'
+            className='m-2 bg-slate-100 border border-gray-300 rounded-lg p-4 shadow-xl'
           >
             <h3>
               <button
@@ -116,7 +116,7 @@ const AdminFoodCard: FC = () => {
               >
                 Update{' '}
               </button>
-              <span className='text-lg font-semibold'>
+              <span className='text-[#DB162F] text-lg font-semibold'>
                 Name: {product.product_name}
               </span>
             </h3>
@@ -133,7 +133,19 @@ const AdminFoodCard: FC = () => {
               >
                 Update{' '}
               </button>
-              Description: {product.description}
+              <span className='font-bold'>Description:</span>{' '}
+              {product.description}
+            </p>
+            <p>
+              <button
+                className='button-std'
+                onClick={() =>
+                  handleUpdateProduct(product.id, 'img_url', product.img_url)
+                }
+              >
+                Update{' '}
+              </button>
+              <span className='font-bold'>Image:</span> {product.img_url}
             </p>
             <p>
               <button
@@ -144,7 +156,8 @@ const AdminFoodCard: FC = () => {
               >
                 Update{' '}
               </button>
-              Price: ${product.price}
+              <span className='font-bold'>Price: $</span>
+              {product.price}
             </p>
             <p>
               {
@@ -157,7 +170,16 @@ const AdminFoodCard: FC = () => {
                   Toggle
                 </button>
               }
-              Status: {product.sold_out ? 'Sold Out' : 'Available'}
+              <span
+                className='text-black'
+              >
+                <span className='font-bold'>Status: </span>
+                <span
+                  className={product.sold_out ? 'text-[#DB162F] font-bold' : 'text-black'}
+                >
+                  {product.sold_out ? 'Sold Out!' : 'Available'}
+                </span>
+              </span>
             </p>
             <button
               className='button-std'
@@ -167,9 +189,9 @@ const AdminFoodCard: FC = () => {
             </button>
             {/* <button
               className="button-std"
-            >
+              >
               Update Product
-            </button> */}
+              </button> */}
           </div>
         ))}
       </div>
