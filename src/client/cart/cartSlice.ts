@@ -9,7 +9,7 @@ const initialState: CartState = {
   items: {},
   quantity: 0,
 };
-//items : {apple: [2, 4, 8]}, 
+//items : {apple: [2, 4, 8]},
 //item quantity = apple[0]
 //item price = apple[1]
 //item total = apple[2]
