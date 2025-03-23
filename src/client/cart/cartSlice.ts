@@ -62,6 +62,14 @@ const cartSlice = createSlice({
         console.log('Decremented Item', item[0]);
       }
     },
+    deleteFromCart(
+      state,
+      action: PayloadAction<{ product_name: string; price: number }>
+    ) {
+      const item = state.items[action.payload.product_name];
+      //if items is already quantity of 0 - just set to 0
+        delete state.items[action.payload.product_name];
+    },
     updateQuantity(
       state,
       action: PayloadAction<{ id: string; quantity: number }>
@@ -86,5 +94,6 @@ export const {
   updateQuantity,
   removeFromCart,
   selectTotalQuantity,
+  deleteFromCart
 } = cartSlice.actions;
 export default cartSlice.reducer;
