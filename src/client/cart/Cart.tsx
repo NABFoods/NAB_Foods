@@ -100,11 +100,14 @@ export function Cart() {
       {/* <Link to='/'>
           <button>BACK</button>
         </Link> */}
+
+      <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'>
+
       <TaskBar />
       {Object.entries(items).map((item, idx) => (
         <div
-          className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
-          key={idx}
+          // className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
+          // key={idx}
         >
           {/* // Products Container */}
           <div className='flex items-center justify-between mb-4'>
@@ -139,6 +142,7 @@ export function Cart() {
           </div>
         </div>
       ))}
+      </div>
       {/* Payments Container */}
       <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6'>
         <div>
