@@ -8,7 +8,7 @@ import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router';
 
-import { addToCart, removeFromCart, selectTotalQuantity } from './cartSlice';
+import { addToCart, removeFromCart, deleteFromCart, selectTotalQuantity } from './cartSlice';
 
 import { updateAmount } from '../home/homeSlice';
 import TaskBar from '../home/components/TaskBar';
@@ -19,6 +19,10 @@ export function Cart() {
     'Content-type': 'application/json',
   };
   const items = useAppSelector((state) => state.cart.items);
+  console.log("ITEMS", items)
+  console.log("ITEMS OBJECT ENTRIES", Object.entries(items))
+
+
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     address: '',
@@ -31,6 +35,16 @@ export function Cart() {
     return state.cart.quantity;
   });
   const itemNumber = useSelector((state: RootState) => state.cart.items);
+
+  const currentSubtotal = () => {
+    const itemsArray = Object.entries(items)
+    let currentSubtotal = 0;
+  
+    for (let i = 0; i < itemsArray.length; i++) {
+      currentSubtotal += itemsArray[i][1][2]
+    }
+    return currentSubtotal
+  }
 
   //Every time items update we get fresh quantity information
   useEffect(() => {
@@ -75,6 +89,7 @@ export function Cart() {
     makePayment();
   };
 
+
   // for getting total price
   // const totalPrice = useAppSelector(getTotalPrice);
   // Use to know if customer has ordered....??
@@ -85,11 +100,14 @@ export function Cart() {
       {/* <Link to='/'>
           <button>BACK</button>
         </Link> */}
+
+      <div className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'>
+
       <TaskBar />
       {Object.entries(items).map((item, idx) => (
         <div
-          className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
-          key={idx}
+          // className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
+          // key={idx}
         >
           {/* // Products Container */}
           <div className='flex items-center justify-between mb-4'>
@@ -99,8 +117,7 @@ export function Cart() {
             </div>
             {/* Price of Individual Item */}
             <h2 className='font-bold'>{item[1][2]}</h2>
-            <button className='cursor-pointer'>X</button>
-            {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
+            <button className='cursor-pointer' onClick={()=> dispatch(deleteFromCart({product_name: item[0],price: item[1][0]}))}>X</button>
             <button
               className='cursor-pointer'
               onClick={() =>
@@ -125,6 +142,7 @@ export function Cart() {
           </div>
         </div>
       ))}
+      </div>
       {/* Payments Container */}
       <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6'>
         <div>
@@ -190,7 +208,7 @@ export function Cart() {
         </div>
         <div className='flex justify-between'>
           <span>Subtotal({quantity})</span>
-          <span>$15.99</span>
+          <span>${currentSubtotal()}</span>
         </div>
         <div className='flex justify-between'>
           <span>Service Cost({quantity})</span>
@@ -203,7 +221,7 @@ export function Cart() {
         <hr className='my-2' />
         <div className='flex justify-between'>
           <span>TOTAL (INCL.VAT)({quantity})</span>
-          <span className='font-bold'>$81.70</span>
+          <span className='font-bold'>${currentSubtotal()}</span>
         </div>
         <button
           onClick={checkoutButton}
