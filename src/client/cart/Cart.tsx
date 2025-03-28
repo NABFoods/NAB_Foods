@@ -86,48 +86,47 @@ export function Cart() {
           <button>BACK</button>
         </Link> */}
       <TaskBar />
-      <div className=' flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'>
-        {Object.entries(items).map((item, idx) => (
-          <div
-            className=' p-4 flex flex-col justify-center overflow-scroll lg:h-full  2xl:w-1/2 xl:px-40'
-            key={idx}
-          >
-            {/* // Products Container */}
-            <div className='flex items-center justify-between mb-4'>
-              <button className='cursor-pointer'>X</button>
-              <img src={icon} alt='' width={100} height={100} />
-              <div>
-                <h1 className='uppercase text-xl font-bold'>{item[0]} </h1>
-              </div>
-              {/* Price of Individual Item */}
-              <h2 className='font-bold'>${item[1][2]}</h2>
-
-              {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
-              <button
-                className='cursor-pointer'
-                onClick={() =>
-                  dispatch(
-                    addToCart({ product_name: item[0], price: item[1][0] })
-                  )
-                }
-              >
-                +
-              </button>
-              <span>{item[1][0]}</span>
-              <button
-                className='cursor-pointer'
-                onClick={() =>
-                  dispatch(
-                    removeFromCart({ product_name: item[0], price: item[1][0] })
-                  )
-                }
-              >
-                -
-              </button>
+      <div></div>
+      {Object.entries(items).map((item, idx) => (
+        <div
+          className='h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40'
+          key={idx}
+        >
+          {/* // Products Container */}
+          <div className='flex items-center justify-between mb-4 overflow-scroll'>
+            <button className='cursor-pointer'>X</button>
+            <img src={icon} alt='' width={100} height={100} />
+            <div>
+              <h1 className='uppercase text-xl font-bold'>{item[0]} </h1>
             </div>
+            {/* Price of Individual Item */}
+            <h2 className='font-bold'>{item[1][2]}</h2>
+
+            {/* price:item is not quite right - currently this is the quantity of the item not the price of the item */}
+            <button
+              className='cursor-pointer'
+              onClick={() =>
+                dispatch(
+                  addToCart({ product_name: item[0], price: item[1][0] })
+                )
+              }
+            >
+              +
+            </button>
+            <span>{item[1][0]}</span>
+            <button
+              className='cursor-pointer'
+              onClick={() =>
+                dispatch(
+                  removeFromCart({ product_name: item[0], price: item[1][0] })
+                )
+              }
+            >
+              -
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
       {/* Payments Container */}
       <div className='h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6'>
         <div>
