@@ -44,6 +44,11 @@ const cartSlice = createSlice({
       } else {
         // Otherwise, set qty to 1
         state.items[action.payload.product_name] = [1, action.payload.price];
+        const newTotal =
+          state.items[action.payload.product_name][0] *
+          state.items[action.payload.product_name][1];
+
+        state.items[action.payload.product_name][2] = newTotal;
       }
     },
     removeFromCart(
@@ -68,7 +73,7 @@ const cartSlice = createSlice({
     ) {
       const item = state.items[action.payload.product_name];
       //if items is already quantity of 0 - just set to 0
-        delete state.items[action.payload.product_name];
+      delete state.items[action.payload.product_name];
     },
     updateQuantity(
       state,
@@ -94,6 +99,6 @@ export const {
   updateQuantity,
   removeFromCart,
   selectTotalQuantity,
-  deleteFromCart
+  deleteFromCart,
 } = cartSlice.actions;
 export default cartSlice.reducer;
