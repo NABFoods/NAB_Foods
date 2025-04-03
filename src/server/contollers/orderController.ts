@@ -75,10 +75,12 @@ export const orderController = {
     if (!req.body || !products || quantity === 0) {
       return next();
     }
+    console.log("products",req.body.products)
     const filteredProducts = (Object.values(products) as Product[]).filter(
-      (product: Product) => product.quantity != null
+      (product: Product) => !product.sold_out
     );
     console.log(defaultImage);
+    console.log("filtered products",filteredProducts)
     const lineItems = filteredProducts.map((product: any) => ({
       price_data: {
         currency: 'USD',
@@ -86,9 +88,9 @@ export const orderController = {
           name: product.product_name,
           images: [`${product.img_url ? product.img_url : defaultImage}`],
         },
-        unit_amount: Math.round(product.price * 100),
+        unit_amount: Math.round(product.price),
       },
-      quantity: Number(product.quantity[0]),
+      quantity: Number(quantity),
     }));
     //console.log(JSON.stringify(lineItems, null, 2));
     const session = await stripe.checkout.sessions.create({
