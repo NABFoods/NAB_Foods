@@ -2,36 +2,90 @@ import { Request, Response, NextFunction } from 'express';
 import { Product } from '../../types';
 const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 export const orderController = {
   createOrder: async (req: Request, res: Response, next: NextFunction) => {
-    const { name, address, phone } = req.body;
+    const {
+      name,
+      address,
+      phone,
+      order_date,
+      order_status,
+      order_price,
+      products,
+    } = req.body;
+    console.log('Request body:', req.body);
+    if (!Array.isArray(products)) {
+      return res.status(400).json({ error: 'Products must be an array' });
+    }
     try {
+      // Step 1: Insert customer info (if needed)
       const insertCustomerInfo =
-        'INSERT into customer (address, phone, name) VALUES ($1, $2, $3) RETURNING *';
+        'INSERT INTO customer (address, phone, name) VALUES ($1, $2, $3) RETURNING id';
+      const customerResult = await db.query(insertCustomerInfo, [
+        address,
+        phone,
+        name,
+      ]);
+      const customerId = customerResult.rows[0].id; // Get the customer ID from the inserted row
 
-      const result = await db.query(insertCustomerInfo, [address, phone, name]);
-      res.locals.customerInfo = result.rows[0];
-      console.log('result.rows[0] = ', result.rows[0]);
-      next();
+      // Step 2: Insert order info and link it to the customer
+      const insertOrderQuery =
+        'INSERT INTO "order" (order_date, order_status, order_price, customer_id) VALUES ($1, $2, $3, $4) RETURNING id';
+      const orderResult = await db.query(insertOrderQuery, [
+        order_date,
+        order_status,
+        order_price,
+        customerId,
+      ]);
+
+      const orderId = orderResult.rows[0].id; // Get the new order ID
+
+      // Step 3: Insert the products associated with this order into the order_product table
+      for (const product of products) {
+        const { product_id, product_quantity, product_subtotal } = product;
+        const insertProductQuery =
+          'INSERT INTO order_product (order_id, product_id, product_quantity, product_subtotal) VALUES ($1, $2, $3, $4)';
+        await db.query(insertProductQuery, [
+          orderId,
+          product_id,
+          product_quantity,
+          product_subtotal,
+        ]);
+      }
+
+      // Step 4: Return the order information
+      res.locals.order = {
+        order_id: orderId,
+        customer_name: name,
+        order_date,
+        order_status,
+        order_price,
+        products,
+      };
+      return next(); // Proceed to the next middleware
     } catch (err) {
-      console.error('Error in getOrders:', err);
+      console.error('Error in createOrder:', err);
       next({
-        log: 'Error occurred in getOrders',
+        log: 'Error occurred in createOrder',
       });
     }
-    console.log('THIS IS CUSTOMER INFO', name, address, phone);
-
-    return next();
   },
+
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
-    const { products, quantity, defaultImage } = req.body;
-    if (!req.body || !products || quantity === 0) {
+    // --- UPDATED: Use each product's individual quantity ---
+    const { products, defaultImage } = req.body;
+    if (!req.body || !products || products.length === 0) {
       return next();
     }
-    const filteredProducts = (Object.values(products) as Product[]).filter(
-      (product: Product) => product.quantity != null
+    console.log('products', req.body.products);
+    // Filter out sold-out products (if applicable)
+    const filteredProducts = (products as Product[]).filter(
+      (product: Product) => !product.sold_out
     );
-    console.log(defaultImage);
+    console.log('defaultImage:', defaultImage);
+    console.log('filtered products', filteredProducts);
+    // Create line items using each product's own quantity
     const lineItems = filteredProducts.map((product: any) => ({
       price_data: {
         currency: 'USD',
@@ -41,9 +95,10 @@ export const orderController = {
         },
         unit_amount: Math.round(product.price * 100),
       },
-      quantity: Number(product.quantity[0]),
+      quantity: Number(product.quantity),
     }));
-    //console.log(JSON.stringify(lineItems, null, 2));
+
+    // Create the Stripe session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -57,6 +112,7 @@ export const orderController = {
     res.locals.paymentSession = session.id;
     return next();
   },
+
   getOrders: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const getOrdersQuery = `

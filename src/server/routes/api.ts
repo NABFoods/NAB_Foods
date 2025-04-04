@@ -19,7 +19,9 @@ router.get('/getOrders', orderController.getOrders, (req, res) => {
 router.post('/createCheckout', orderController.createCheckout, (req, res) => {
   res.json({ id: res.locals.paymentSession });
 });
-router.post('/createOrder', orderController.createOrder, (req, res) => {});
+router.post('/createOrder', orderController.createOrder, (req, res) => {
+  res.status(200).json(res.locals.order);
+});
 router.get('/', menuController.getMenuItems, (req, res) => {
   // console.log(
   //   'api.ts - made it back to router.get w/ res.locals.menu = ',
