@@ -66,9 +66,11 @@ export function Cart() {
       body: JSON.stringify(body),
     });
     const session = await response.json();
-    const result = stripe?.redirectToCheckout({
+    const result = await stripe?.redirectToCheckout({
       sessionId: session.id,
     });
+
+    console.log(session);
   };
 
   const handleCustomerInfo = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -25,37 +25,41 @@ export const orderController = {
   },
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
     const { products, quantity, defaultImage } = req.body;
-    if (!req.body || !products || quantity === 0) {
-      return next();
-    }
-    const filteredProducts = (Object.values(products) as Product[]).filter(
-      (product: Product) => product.quantity != null
-    );
-    console.log(defaultImage);
-    const lineItems = filteredProducts.map((product: any) => ({
-      price_data: {
-        currency: 'USD',
-        product_data: {
-          name: product.product_name,
-          images: [`${product.img_url ? product.img_url : defaultImage}`],
-        },
-        unit_amount: Math.round(product.price * 100),
-      },
-      quantity: Number(product.quantity[0]),
-    }));
-    //console.log(JSON.stringify(lineItems, null, 2));
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url:
-        'https://www.google.com/search?sca_esv=8528ae50a243c1b7&rlz=1C5CHFA_enUS1122US1122&sxsrf=AHTn8zqzV9A4L8rxQBGOyQr-XGzqx9T4cg:1742351367945&q=success&spell=1&sa=X&ved=2ahUKEwiu0PDSjJWMAxUTg4kEHVpiLYEQBSgAegQIDhAB&biw=724&bih=758&dpr=2',
-      cancel_url:
-        'https://www.google.com/search?q=failure&rlz=1C5CHFA_enUS1122US1122&oq=fail&gs_lcrp=EgZjaHJvbWUqDwgAEAAYQxixAxiABBiKBTIPCAAQABhDGLEDGIAEGIoFMhYIARBFGDkYQxhGGPkBGLEDGIAEGIoFMg8IAhAAGEMYsQMYgAQYigUyDAgDEAAYQxiABBiKBTIMCAQQABhDGIAEGIoFMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg80gEIMjY1N2owajmoAgCwAgDxBUIWTnLj_i4N&sourceid=chrome&ie=UTF-8',
-    });
 
-    res.locals.paymentSession = session.id;
-    return next();
+    try {
+      if (!req.body || !products || quantity === 0) {
+        return next();
+      }
+      const filteredProducts = (Object.values(products) as Product[]).filter(
+        (product: Product) => product.quantity != null
+      );
+      console.log(defaultImage);
+      const lineItems = filteredProducts.map((product: any) => ({
+        price_data: {
+          currency: 'USD',
+          product_data: {
+            name: product.product_name,
+            images: [`${product.img_url ? product.img_url : defaultImage}`],
+          },
+          unit_amount: Math.round(product.price * 100),
+        },
+        quantity: Number(product.quantity[0]),
+      }));
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: lineItems,
+        mode: 'payment',
+        success_url:
+          'https://www.google.com/search?sca_esv=8528ae50a243c1b7&rlz=1C5CHFA_enUS1122US1122&sxsrf=AHTn8zqzV9A4L8rxQBGOyQr-XGzqx9T4cg:1742351367945&q=success&spell=1&sa=X&ved=2ahUKEwiu0PDSjJWMAxUTg4kEHVpiLYEQBSgAegQIDhAB&biw=724&bih=758&dpr=2',
+        cancel_url:
+          'https://www.google.com/search?q=failure&rlz=1C5CHFA_enUS1122US1122&oq=fail&gs_lcrp=EgZjaHJvbWUqDwgAEAAYQxixAxiABBiKBTIPCAAQABhDGLEDGIAEGIoFMhYIARBFGDkYQxhGGPkBGLEDGIAEGIoFMg8IAhAAGEMYsQMYgAQYigUyDAgDEAAYQxiABBiKBTIMCAQQABhDGIAEGIoFMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg80gEIMjY1N2owajmoAgCwAgDxBUIWTnLj_i4N&sourceid=chrome&ie=UTF-8',
+      });
+
+      res.locals.paymentSession = session.id;
+      return next();
+    } catch (err: any) {
+      console.log(err.type);
+    }
   },
   getOrders: async (req: Request, res: Response, next: NextFunction) => {
     try {
