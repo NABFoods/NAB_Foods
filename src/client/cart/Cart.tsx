@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import icon from '../home/assets/restaurant.png';
 import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of userSelector & useDispatch from hooks.ts
-import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router';
@@ -26,13 +25,12 @@ export function Cart() {
   });
   const [unhide, setUnhide] = useState(false);
   const [pickup, setPickup] = useState(false);
-  const fullItems = useAppSelector((state) => state.cart);
-  const product = useSelector((state: RootState) => state.home.foodCard);
-  const quantity = useSelector((state: RootState) => {
-    return state.cart.quantity;
-  });
-  const itemNumber = useSelector((state: RootState) => state.cart.items);
 
+  // Retrieve other cart and menu state.
+  const quantity = useAppSelector((state: RootState) => state.cart.quantity);
+  const foodCard = useAppSelector((state: RootState) => state.home.foodCard);
+
+  // Compute current subtotal based on items in cart.
   const currentSubtotal = () => {
     const itemsArray = Object.entries(items);
     let currentSubtotal = 0;
@@ -43,29 +41,45 @@ export function Cart() {
     return currentSubtotal;
   };
 
-  //Every time items update we get fresh quantity information
+  // Update total quantity whenever items change.
   useEffect(() => {
     dispatch(selectTotalQuantity());
-  }, [itemNumber, quantity, dispatch]);
+  }, [items, quantity, dispatch]);
 
-  // console.log('ITEMS FULL CART', fullItems);
-  const StripeKey: string | undefined =
-    'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F'; /*process.env.STRIPE_KEY*/
+  // Stripe key for payment (adjust as needed).
+  const StripeKey =
+    'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F';
+
+  // Payment function using Stripe.
   const makePayment = async () => {
-    // console.log('This is product', product);
-    const stripe = await loadStripe(StripeKey!);
-    // console.log(StripeKey);
+    // Convert foodCard to an array if it isn't already
+    const foodCardArray = Array.isArray(foodCard)
+      ? foodCard
+      : Object.values(foodCard);
+    const cartProductIds = Object.keys(items);
+    // Filter to only include products that are in the cart
+    const selectedProducts = foodCardArray.filter((product: any) =>
+      cartProductIds.includes(product.id)
+    );
+    console.log('selected products', selectedProducts);
+    // Attach the quantity from the cart to each selected product
+    const productsWithQuantity = selectedProducts.map((product: any) => ({
+      ...product,
+      quantity: items[product.id][0], // cart quantity stored at index 0
+    }));
+
+    const stripe = await loadStripe(StripeKey);
     const body = {
-      products: product,
-      quantity: quantity,
+      products: productsWithQuantity, // send only the selected cart items
       defaultImage: `../home/assets/restaurant.png`,
     };
     const response = await fetch(`http://localhost:3000/api/createCheckout`, {
       method: 'POST',
-      headers: header,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
     const session = await response.json();
+
     const result = await stripe?.redirectToCheckout({
       sessionId: session.id,
     });
@@ -73,9 +87,9 @@ export function Cart() {
     console.log(session);
   };
 
+  // Handle customer info form changes.
   const handleCustomerInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setCustomerInfo((prev) => ({ ...prev, [name]: value }));
   };
   const handleHide = () => {
@@ -228,7 +242,7 @@ export function Cart() {
               DELIVERY
             </button>
           </div>
-          {!pickup && (
+          {!pickup ? (
             <div className='flex flex-col'>
               <h1>Delivery Details</h1>
               <input
@@ -254,8 +268,7 @@ export function Cart() {
                 onChange={handleCustomerInfo}
               />
             </div>
-          )}
-          {pickup && (
+          ) : (
             <div className='flex flex-col'>
               <h1>Pickup Details</h1>
               <input
