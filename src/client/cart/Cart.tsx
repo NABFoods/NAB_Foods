@@ -5,15 +5,11 @@ import icon from '../home/assets/restaurant.png';
 import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of userSelector & useDispatch from hooks.ts
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
-import { Link } from 'react-router';
-
+import { Link } from 'react-router-dom';
 import { addToCart, removeFromCart, selectTotalQuantity } from './cartSlice';
 
 export function Cart() {
   const dispatch = useAppDispatch();
-  const header = {
-    'Content-type': 'application/json',
-  };
   const items = useAppSelector((state) => state.cart.items);
   // console.log('ITEMS', items);
   // console.log('ITEMS OBJECT ENTRIES', Object.entries(items));
@@ -31,22 +27,26 @@ export function Cart() {
   const foodCard = useAppSelector((state: RootState) => state.home.foodCard);
 
   // Compute current subtotal based on items in cart.
+
+  // Compute current subtotal based on items in cart.
   const currentSubtotal = () => {
     const itemsArray = Object.entries(items);
-    let currentSubtotal = 0;
-
+    let subtotal = 0;
     for (let i = 0; i < itemsArray.length; i++) {
-      currentSubtotal += itemsArray[i][1][2];
+      // item[1] is assumed to be an array: [quantity, price, total]
+      subtotal += itemsArray[i][1][2];
     }
-    return currentSubtotal;
+    return subtotal;
   };
 
+  // Update total quantity whenever items change.
   // Update total quantity whenever items change.
   useEffect(() => {
     dispatch(selectTotalQuantity());
   }, [items, quantity, dispatch]);
 
   // Stripe key for payment (adjust as needed).
+
   const StripeKey =
     'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F';
 
@@ -69,6 +69,7 @@ export function Cart() {
     }));
 
     const stripe = await loadStripe(StripeKey);
+
     const body = {
       products: productsWithQuantity, // send only the selected cart items
       defaultImage: `../home/assets/restaurant.png`,
@@ -79,14 +80,10 @@ export function Cart() {
       body: JSON.stringify(body),
     });
     const session = await response.json();
-
-    const result = await stripe?.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    console.log(session);
+    await stripe?.redirectToCheckout({ sessionId: session.id });
   };
 
+  // Handle customer info form changes.
   // Handle customer info form changes.
   const handleCustomerInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -100,7 +97,9 @@ export function Cart() {
     }, 3000);
   };
 
+  // Checkout function constructs order data and posts it to the API.
   const checkoutButton = async () => {
+    console.log(items);
     if (customerInfo.name.trim() === '') {
       handleHide();
       setMissingInfo('name');
@@ -117,12 +116,39 @@ export function Cart() {
       setMissingInfo('phone');
       return;
     } else {
+      const orderProducts = Object.entries(items).map(
+        ([productID, productData]) => ({
+          product_id: productID, // productID as key
+          product_quantity: productData[0], // quantity stored in index 0
+          product_subtotal: productData[2], // subtotal stored in index 2
+        })
+      );
+
+      const orderData = {
+        name: customerInfo.name,
+        address: customerInfo.address,
+        phone: customerInfo.phone,
+        order_date: new Date().toISOString(),
+        order_status: 'Pending',
+        order_price: currentSubtotal(),
+        pickup: pickup,
+        products: orderProducts,
+      };
+
       const response = await fetch('http://localhost:3000/api/createOrder', {
         method: 'POST',
-        headers: header,
-        body: JSON.stringify(customerInfo),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
       });
-      makePayment();
+
+      const result = await response.json();
+      console.log('result', result);
+      if (result) {
+        // If order creation is successful, proceed to payment.
+        makePayment();
+      } else {
+        console.error('Failed to create order');
+      }
     }
   };
 
@@ -172,25 +198,13 @@ export function Cart() {
                       ${Math.round(item[1][2] * 100) / 100}
                     </p>
                   </div>
-                  {/* <button
-                  className='cursor-pointer'
-                  onClick={() =>
-                    dispatch(
-                      deleteFromCart({
-                        product_name: item[0],
-                        price: item[1][0],
-                      })
-                    )
-                  }
-                >
-                  X
-                </button> */}
                   <div className='flex flex-col md:flex-row md:justify-between lg:gap-5'>
                     <button
                       className='cursor-pointer lg:text-xl'
                       onClick={() =>
                         dispatch(
                           addToCart({
+                            product_id: item[0],
                             product_name: item[0],
                             price: item[1][0],
                           })
@@ -207,6 +221,7 @@ export function Cart() {
                       onClick={() =>
                         dispatch(
                           removeFromCart({
+                            product_id: item[0],
                             product_name: item[0],
                             price: item[1][0],
                           })
@@ -242,6 +257,7 @@ export function Cart() {
               DELIVERY
             </button>
           </div>
+
           {!pickup ? (
             <div className='flex flex-col'>
               <h1>Delivery Details</h1>
