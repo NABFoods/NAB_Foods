@@ -12,16 +12,18 @@ const Home: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch('http://localhost:3000/api')
-      .then((response) => response.json())
-      .then((data) => {
-        //console.log(data.menu);
-        dispatch(getFoodInfo(data.menu));
-      })
-      .catch((error) => {
-        console.error('Error fetching products: ', error);
-      });
-  }, [dispatch]);
+    if (Object.keys(foodCard).length === 0) {
+      fetch('http://localhost:3000/api')
+        .then((response) => response.json())
+        .then((data) => {
+          //console.log(data.menu);
+          dispatch(getFoodInfo(data.menu));
+        })
+        .catch((error) => {
+          console.error('Error fetching products: ', error);
+        });
+    }
+  }, [dispatch, foodCard]);
 
   return (
     <>
