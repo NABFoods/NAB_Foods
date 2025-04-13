@@ -157,6 +157,8 @@ export function Cart() {
   // Use to know if customer has ordered....??
   // const checkoutState = useAppSelector((state) => state.cart.checkoutState);
 
+  console.log('THIS IS ITEMS', items);
+
   return (
     <>
       <div className='h-[100vh] md:h-calc(100vh-9rem)] flex flex-col text-[#DB162F] lg:flex-row'>
@@ -186,13 +188,13 @@ export function Cart() {
                   <div className='w-12 h-12 flex-shrink-0 lg:w-20 lg:h-20'>
                     <img
                       src={icon}
-                      alt={item[0]}
+                      alt={item[1][3]}
                       className='w-full h-full object-contain'
                     />
                   </div>
                   <div className='flex-grow'>
                     <h2 className='text-lg font-semibold uppercase'>
-                      {item[0]}
+                      {item[1][3]}
                     </h2>
                     <p className='text-gray-600'>
                       ${Math.round(item[1][2] * 100) / 100}
@@ -205,7 +207,7 @@ export function Cart() {
                         dispatch(
                           addToCart({
                             product_id: item[0],
-                            product_name: item[0],
+                            product_name: item[1][3],
                             price: item[1][0],
                           })
                         )
@@ -222,7 +224,7 @@ export function Cart() {
                         dispatch(
                           removeFromCart({
                             product_id: item[0],
-                            product_name: item[0],
+                            product_name: 'Needs to be fixed',
                             price: item[1][0],
                           })
                         )

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartState {
   // Now keys are product_id
-  items: { [productID: string]: number[] };
+  items: { [productID: string]: [number, number, number, string] };
   quantity: number;
 }
 
@@ -30,7 +30,12 @@ const cartSlice = createSlice({
         // Recalculate total: quantity * price
         state.items[id][2] = state.items[id][0] * state.items[id][1];
       } else {
-        state.items[id] = [1, action.payload.price, action.payload.price];
+        state.items[id] = [
+          1,
+          action.payload.price,
+          action.payload.price,
+          action.payload.product_name,
+        ];
       }
     },
     removeFromCart(

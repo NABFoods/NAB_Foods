@@ -70,7 +70,7 @@ const FoodCard: FC = () => {
   }, [itemNumber, quantity, dispatch]);
 
   return (
-    <div className='flex flex-wrap my-14 lg:my-20'>
+    <div className='flex flex-wrap my-14 md:my-20'>
       <TaskBar />
       {Object.values(products).map((product: any) => (
         <div
