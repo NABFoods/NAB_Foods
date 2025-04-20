@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import {
   removeProduct,
@@ -12,6 +12,10 @@ const AdminFoodCard: FC = () => {
   const products = useAppSelector((state) => state.products.products);
   const dispatch = useAppDispatch();
 
+  // const handleCategory = (e: any) => {
+  //   console.log('Running handle category');
+  //   setCategory('styles');
+  // };
   const handleRemoveProduct = async (id: number) => {
     console.log('handleRemoveProduct button clicked');
     try {
@@ -65,9 +69,16 @@ const AdminFoodCard: FC = () => {
     field: keyof Product,
     currentValue: any
   ) => {
+    let newValue;
     console.log('Update Product button clicked!');
-    const newValue = prompt(`Enter a new value for ${field}:`, currentValue);
+    if (field != 'type') {
+      newValue = prompt(`Enter a new value for ${field}:`, currentValue);
+    } else {
+      console.log('THIS IS CATEGORY', currentValue);
+      newValue = currentValue;
+    }
     if (newValue === null) return; // exits out
+
     try {
       const response = await fetch(
         `http://localhost:3000/api/update-product/${id}`,
@@ -121,6 +132,27 @@ const AdminFoodCard: FC = () => {
               </span>
             </h3>
             <p>
+              <label className='flex text-lg p-2 gap-2'>
+                {' '}
+                Category: {product.type}
+                <select
+                  name='category'
+                  id='category'
+                  defaultValue=''
+                  className=' bg-gray-400'
+                  onChange={(e) => {
+                    const selectedCategory = e.target.value;
+                    handleUpdateProduct(product.id, 'type', selectedCategory);
+                  }}
+                >
+                  <option value=''>Select Change</option>
+                  <option value='Entree'>Entree</option>
+                  <option value='Side'>Side</option>
+                  <option value='Prep'>Preprep</option>
+                </select>
+              </label>
+            </p>
+            <p>
               <button
                 className='button-std'
                 onClick={() =>
@@ -170,12 +202,12 @@ const AdminFoodCard: FC = () => {
                   Toggle
                 </button>
               }
-              <span
-                className='text-black'
-              >
+              <span className='text-black'>
                 <span className='font-bold'>Status: </span>
                 <span
-                  className={product.sold_out ? 'text-[#DB162F] font-bold' : 'text-black'}
+                  className={
+                    product.sold_out ? 'text-[#DB162F] font-bold' : 'text-black'
+                  }
                 >
                   {product.sold_out ? 'Sold Out!' : 'Available'}
                 </span>

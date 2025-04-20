@@ -6,7 +6,7 @@ const Entrees: FC = () => {
   return (
     <>
       <TaskBar />
-      <FoodCard />
+      <FoodCard type={'Entree'} />
     </>
   );
 };

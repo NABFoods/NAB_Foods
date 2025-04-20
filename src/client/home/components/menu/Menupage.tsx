@@ -60,7 +60,7 @@ const Menupage: FC = () => {
                   className={` max-md:hidden 2xl:block bg-${
                     category[1].color === 'black' ? 'black' : 'white'
                   } text-${
-                    category[1].color === 'black' ? 'white' : 'red-500'
+                    category[1].color === 'black' ? 'white' : '[#DB162F]'
                   } py-2 px-4 rounded-md`}
                 >
                   Explore

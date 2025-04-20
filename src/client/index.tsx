@@ -37,9 +37,9 @@ root.render(
             <Route path='/adminHome' element={<AdminHome />} />
             <Route path='/menu' element={<Menupage />} />
             <Route path='/cart' element={<Cart />} />
-            <Route path='/entree' element={<Entrees />} />
-            <Route path='/side' element={<Sides />} />
-            <Route path='/cart' element={<Preprep />} />
+            <Route path='/menu/entree' element={<Entrees />} />
+            <Route path='/menu/side' element={<Sides />} />
+            <Route path='/menu/preprep' element={<Preprep />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>

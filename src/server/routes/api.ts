@@ -58,11 +58,11 @@ router.patch(
   }
 );
 
-router.put('/', menuController.updateMenuItem, (req, res) => {
-  res.status(200).json({
-    menu: res.locals.updatedMenuItem,
-  });
-});
+// router.put('/', menuController.updateMenuItem, (req, res) => {
+//   res.status(200).json({
+//     menu: res.locals.updatedMenuItem,
+//   });
+// });
 
 router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
   console.log('api.ts - made it to router.delete response w/ status 200');
