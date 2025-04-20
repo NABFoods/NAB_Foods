@@ -29,8 +29,8 @@ const Home: FC = () => {
     <>
       <TaskBar />
       <Slider />
-      {/* <Featured />
-      <Offer /> */}
+      <Featured />
+      <Offer />
       <Footer />
     </>
   );
