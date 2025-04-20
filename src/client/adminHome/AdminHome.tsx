@@ -19,6 +19,7 @@ const AdminHome: FC = () => {
     sold_out: false,
     description: '',
     img_url: '',
+    //potentially put category here?
   });
 
   useEffect(() => {
@@ -125,7 +126,7 @@ const AdminHome: FC = () => {
   return (
     <div className='bg-gray-200'>
       <AdminNavbar />
-      <div className="flex flex-col">
+      <div className='flex flex-col'>
         <button
           className='w-fit bg-[#DB162F] text-white px-2 ml-4 mb-0 mt-2  py-2 rounded hover:bg-blue-700'
           onClick={handleAddProductClick}

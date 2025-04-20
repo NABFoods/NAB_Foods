@@ -12,6 +12,10 @@ import Orders from './adminOrders/Orders';
 import Cart from './cart/Cart';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FoodCard from './home/components/FoodCard';
+import Menupage from './home/components/menu/Menupage';
+import Entrees from './home/components/menu/Entrees';
+import Sides from './home/components/menu/Sides';
+import Preprep from './home/components/menu/Preprep';
 
 const root = createRoot(document.getElementById('root')!);
 
@@ -31,8 +35,11 @@ root.render(
             <Route path='/orders' element={<Orders />} />
             <Route path='/adminLogin' element={<AdminLogin />} />
             <Route path='/adminHome' element={<AdminHome />} />
-            <Route path='/menu' element={<FoodCard />} />
+            <Route path='/menu' element={<Menupage />} />
             <Route path='/cart' element={<Cart />} />
+            <Route path='/entree' element={<Entrees />} />
+            <Route path='/side' element={<Sides />} />
+            <Route path='/cart' element={<Preprep />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>

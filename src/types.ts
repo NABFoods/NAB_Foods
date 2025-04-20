@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 declare module 'express-session' {
   interface Session {
-    user?: { email: string };  
+    user?: { email: string };
   }
 }
 // Represents a product & its details/properties
@@ -35,6 +35,16 @@ export interface Order {
   phone?: string; // Optional, if exists
   products: OrderProduct[];
 }
+
+export type MenuPage = {
+  categoryLink: string;
+  title: string;
+  desc?: string;
+  img?: string;
+  color: string;
+  bgcol: string;
+};
+
 export interface Links {
   id: number;
   link: string;
