@@ -4,11 +4,19 @@ export interface CartState {
   // Now keys are product_id
   items: { [productID: string]: [number, number, number, string] };
   quantity: number;
+  customerData: {
+    name: string;
+    address: string;
+    phone: number;
+  };
+  pickup: boolean;
 }
 
 const initialState: CartState = {
   items: {},
   quantity: 0,
+  customerData: { name: '', address: '', phone: 0 },
+  pickup: true,
 };
 
 const cartSlice = createSlice({
@@ -68,26 +76,49 @@ const cartSlice = createSlice({
       //if items is already quantity of 0 - just set to 0
       delete state.items[action.payload.product_name];
     },
-    updateQuantity(
-      state,
-      action: PayloadAction<{ id: string; quantity: number }>
-    ) {
-      // Implementation if needed
-    },
+
     selectTotalQuantity(state) {
       state.quantity = 0;
       Object.values(state.items).forEach((itemAmount) => {
         state.quantity += itemAmount[0];
       });
     },
+    updatePickup(state, action: PayloadAction<boolean>) {
+      state.pickup = action.payload;
+    },
+    updateCustomerInfo(
+      state,
+      action: PayloadAction<{ field: string; value: string | number }>
+    ) {
+      if (
+        action.payload.field === 'name' &&
+        typeof action.payload.value === 'string'
+      ) {
+        state.customerData.name = action.payload.value;
+        console.log(state.customerData.name);
+      } else if (
+        action.payload.field === 'address' &&
+        typeof action.payload.value === 'string'
+      ) {
+        state.customerData.address = action.payload.value;
+        console.log(state.customerData.address);
+      } else if (
+        action.payload.field === 'phone' &&
+        typeof action.payload.value === 'string'
+      ) {
+        state.customerData.phone = Number(action.payload.value);
+        console.log(state.customerData.phone);
+      }
+    },
   },
 });
 
 export const {
   addToCart,
-  updateQuantity,
   removeFromCart,
+  updateCustomerInfo,
   selectTotalQuantity,
   deleteFromCart,
+  updatePickup,
 } = cartSlice.actions;
 export default cartSlice.reducer;

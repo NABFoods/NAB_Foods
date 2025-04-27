@@ -69,6 +69,9 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
     dispatch(updateAmount(itemNumber));
   }, [itemNumber, quantity, dispatch]);
 
+  if (Object.values(products).length === 0) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <div className='flex flex-wrap my-14 md:my-20'>
       <TaskBar />

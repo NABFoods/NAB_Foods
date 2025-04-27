@@ -44,7 +44,7 @@ export const orderController = {
       // Step 3: Insert the products associated with this order into the order_product table
       for (const product of products) {
         const { product_id, product_quantity, product_subtotal } = product;
-        console.log('THIS IS PRODUCT ID,', product_id);
+        // console.log('THIS IS PRODUCT ID,', product_id);
         const insertProductQuery =
           'INSERT INTO order_product (order_id, product_id, product_quantity, product_subtotal) VALUES ($1, $2, $3, $4)';
         await db.query(insertProductQuery, [
@@ -79,13 +79,13 @@ export const orderController = {
     if (!req.body || !products || products.length === 0) {
       return next();
     }
-    console.log('products', req.body.products);
+    //console.log('products', req.body.products);
     // Filter out sold-out products (if applicable)
     const filteredProducts = (products as Product[]).filter(
       (product: Product) => !product.sold_out
     );
-    console.log('defaultImage:', defaultImage);
-    console.log('filtered products', filteredProducts);
+    // console.log('defaultImage:', defaultImage);
+    //console.log('filtered products', filteredProducts);
     // Create line items using each product's own quantity
     const lineItems = filteredProducts.map((product: any) => ({
       price_data: {
@@ -104,12 +104,10 @@ export const orderController = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url:
-        'https://www.google.com/search?sca_esv=8528ae50a243c1b7&rlz=1C5CHFA_enUS1122US1122&sxsrf=AHTn8zqzV9A4L8rxQBGOyQr-XGzqx9T4cg:1742351367945&q=success&spell=1&sa=X&ved=2ahUKEwiu0PDSjJWMAxUTg4kEHVpiLYEQBSgAegQIDhAB&biw=724&bih=758&dpr=2',
-      cancel_url:
-        'https://www.google.com/search?q=failure&rlz=1C5CHFA_enUS1122US1122&oq=fail&gs_lcrp=EgZjaHJvbWUqDwgAEAAYQxixAxiABBiKBTIPCAAQABhDGLEDGIAEGIoFMhYIARBFGDkYQxhGGPkBGLEDGIAEGIoFMg8IAhAAGEMYsQMYgAQYigUyDAgDEAAYQxiABBiKBTIMCAQQABhDGIAEGIoFMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg80gEIMjY1N2owajmoAgCwAgDxBUIWTnLj_i4N&sourceid=chrome&ie=UTF-8',
+      success_url: 'http://localhost:8081/successpage',
+      cancel_url: 'http://localhost:8081/failurepage',
     });
-
+    //console.log('SESSION  INFO', session);
     res.locals.paymentSession = session.id;
     return next();
   },
@@ -143,9 +141,9 @@ export const orderController = {
         GROUP BY "order".id, customer.id;
       `;
 
-      console.log('Executing Query:', getOrdersQuery);
+      //console.log('Executing Query:', getOrdersQuery);
       const orderResults = await db.query(getOrdersQuery);
-      console.log('Query Results:', orderResults.rows);
+      //console.log('Query Results:', orderResults.rows);
 
       res.locals.orders = orderResults.rows;
       next();
@@ -153,6 +151,66 @@ export const orderController = {
       console.error('Error in getOrders:', err);
       next({
         log: 'Error occurred in getOrders',
+      });
+    }
+  },
+  deleteOrder: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      const deleteQuery1 = `DELETE FROM "order_product" WHERE order_id = $1`;
+      const deleteQuery2 = `DELETE FROM "order" WHERE id = $1`;
+      const result = await db.query(deleteQuery1, [id]);
+      const result2 = await db.query(deleteQuery2, [id]);
+
+      if (result.rowCount === 0) {
+        return next({
+          log: 'orderController.deleteOrder - Product not found',
+          status: 404,
+          message: 'Product not found',
+        });
+      }
+
+      res.locals.deletedOrder = result2.rows[0];
+
+      return next();
+    } catch (err) {
+      next({
+        log: 'Error in deleteOrder middleware',
+        status: 500,
+        message: { err: 'deleteOrder database deletion failed' },
+      });
+    }
+  },
+
+  updateOrderStatus: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req.params;
+      const { order_status } = req.body;
+
+      const updateQuery = `UPDATE "order" SET order_status = $1 WHERE id = $2 RETURNING *`;
+      const result = await db.query(updateQuery, [order_status, id]);
+
+      if (result.rowCount === 0) {
+        return next({
+          log: 'orderController.updateStatus - Product not found',
+          status: 404,
+          message: 'Product not found',
+        });
+      }
+
+      res.locals.updatedOrderStatus = result.rows[0];
+
+      return next();
+    } catch (err) {
+      next({
+        log: 'Error in updateStatus middleware',
+        status: 500,
+        message: { err: 'updateStatus database update failed' },
       });
     }
   },

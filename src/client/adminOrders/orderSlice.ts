@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import type { Order } from '../../types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { Order } from '../../types';
 interface OrdersState {
   orders: { [id: number]: Order };
 }
@@ -14,7 +14,7 @@ const ordersSlice = createSlice({
       action.payload.forEach((order) => {
         // Adding each order to the orders object with its id as the key
         state.orders[order.order_id] = order;
-        console.log('Updated Orders State: ', Object.values(state.orders));
+        //console.log('Updated Orders State: ', Object.values(state.orders));
       });
     },
     updateOrderStatus: (
@@ -26,7 +26,16 @@ const ordersSlice = createSlice({
         state.orders[orderId].order_status = newStatus;
       }
     },
+    deleteOrderSlice: (
+      state,
+      action: PayloadAction<{ id: number; response: any }>
+    ) => {
+      if (action.payload.response.ok) {
+        delete state.orders[action.payload.id];
+      }
+    },
   },
 });
-export const { getOrders, updateOrderStatus } = ordersSlice.actions;
+export const { getOrders, updateOrderStatus, deleteOrderSlice } =
+  ordersSlice.actions;
 export default ordersSlice.reducer;

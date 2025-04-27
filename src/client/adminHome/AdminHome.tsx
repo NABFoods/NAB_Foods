@@ -8,7 +8,6 @@ import AdminFoodCard from './components/AdminFoodCard';
 import { receivedProducts, addProduct } from '../product/productsSlice';
 
 const AdminHome: FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState(false);
   // lock submit button to only 1 click until submission is complete
@@ -27,7 +26,7 @@ const AdminHome: FC = () => {
     fetch('http://localhost:3000/api')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.menu);
+        //console.log(data.menu);
         // Dispatch the action to update the products state
         dispatch(receivedProducts(data.menu)); // Assuming data.menu is the array of products
       })

@@ -25,6 +25,10 @@ interface OrderProduct {
   quantity: number;
   subtotal: number;
 }
+export interface ProtectedProviderComponent {
+  isAllowed: { success: boolean; email: string };
+  children: React.ReactNode;
+}
 export interface Order {
   order_id: number; // Update to match the field in your data
   order_date: string;
