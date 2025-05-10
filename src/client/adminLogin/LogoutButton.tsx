@@ -4,9 +4,14 @@ import axios from 'axios';
 const LogoutButton = () => {
   const handleLogout = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/logout', {}, { withCredentials: true });
+      const res = await axios.post(
+        'http://localhost:3000/api/auth/logout',
+        {},
+        { withCredentials: true }
+      );
       if (res.data.success) {
         // Redirect user to login page or home page
+        localStorage.removeItem('authInfo');
         window.location.href = '/adminLogin'; // Redirect to login
       } else {
         alert('Logout failed!');
@@ -17,7 +22,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <button onClick={handleLogout} className="button-std">
+    <button onClick={handleLogout} className='button-std'>
       Logout
     </button>
   );

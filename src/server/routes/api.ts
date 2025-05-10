@@ -47,6 +47,18 @@ router.patch('/:id/sold-out', menuController.toggleSoldOut, (req, res) => {
 });
 
 router.patch(
+  '/:id/order-status',
+  orderController.updateOrderStatus,
+  (req, res) => {
+    console.log(
+      'api router.patch for order_status - got response back to route handler. res.locals = ',
+      res.locals
+    );
+    res.status(200).json({ order: res.locals.updatedOrderStatus });
+  }
+);
+
+router.patch(
   '/update-product/:id',
   menuController.updateProduct,
   (req, res) => {
@@ -58,11 +70,11 @@ router.patch(
   }
 );
 
-router.put('/', menuController.updateMenuItem, (req, res) => {
-  res.status(200).json({
-    menu: res.locals.updatedMenuItem,
-  });
-});
+// router.put('/', menuController.updateMenuItem, (req, res) => {
+//   res.status(200).json({
+//     menu: res.locals.updatedMenuItem,
+//   });
+// });
 
 router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
   console.log('api.ts - made it to router.delete response w/ status 200');
@@ -71,4 +83,10 @@ router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
   });
 });
 
+router.delete('/:id/deleteOrder', orderController.deleteOrder, (req, res) => {
+  console.log('api.ts - made it to router.delete response w/ status 200');
+  res.status(200).json({
+    menu: res.locals.deletedOrder,
+  });
+});
 module.exports = router;

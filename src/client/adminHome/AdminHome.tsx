@@ -8,7 +8,6 @@ import AdminFoodCard from './components/AdminFoodCard';
 import { receivedProducts, addProduct } from '../product/productsSlice';
 
 const AdminHome: FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState(false);
   // lock submit button to only 1 click until submission is complete
@@ -19,6 +18,7 @@ const AdminHome: FC = () => {
     sold_out: false,
     description: '',
     img_url: '',
+    //potentially put category here?
   });
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const AdminHome: FC = () => {
     fetch('http://localhost:3000/api')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.menu);
+        //console.log(data.menu);
         // Dispatch the action to update the products state
         dispatch(receivedProducts(data.menu)); // Assuming data.menu is the array of products
       })
@@ -125,7 +125,7 @@ const AdminHome: FC = () => {
   return (
     <div className='bg-gray-200'>
       <AdminNavbar />
-      <div className="flex flex-col">
+      <div className='flex flex-col'>
         <button
           className='w-fit bg-[#DB162F] text-white px-2 ml-4 mb-0 mt-2  py-2 rounded hover:bg-blue-700'
           onClick={handleAddProductClick}

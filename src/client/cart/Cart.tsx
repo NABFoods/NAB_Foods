@@ -6,21 +6,24 @@ import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of 
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router-dom';
-import { addToCart, removeFromCart, selectTotalQuantity } from './cartSlice';
+import {
+  addToCart,
+  removeFromCart,
+  selectTotalQuantity,
+  updateCustomerInfo,
+  updatePickup,
+} from './cartSlice';
 
 export function Cart() {
   const dispatch = useAppDispatch();
-  const items = useAppSelector((state) => state.cart.items);
-  // console.log('ITEMS', items);
-  // console.log('ITEMS OBJECT ENTRIES', Object.entries(items));
+  const items = useAppSelector((state: RootState) => state.cart.items);
+  const products = useAppSelector((state: RootState) => state.home.foodCard);
+  const customerInfo = useAppSelector(
+    (state: RootState) => state.cart.customerData
+  );
   const [missingInfo, setMissingInfo] = useState('');
-  const [customerInfo, setCustomerInfo] = useState({
-    name: '',
-    address: '',
-    phone: 0,
-  });
   const [unhide, setUnhide] = useState(false);
-  const [pickup, setPickup] = useState(false);
+  const pickup = useAppSelector((state: RootState) => state.cart.pickup);
 
   // Retrieve other cart and menu state.
   const quantity = useAppSelector((state: RootState) => state.cart.quantity);
@@ -61,7 +64,7 @@ export function Cart() {
     const selectedProducts = foodCardArray.filter((product: any) =>
       cartProductIds.includes(product.id)
     );
-    console.log('selected products', selectedProducts);
+    //console.log('selected products', selectedProducts);
     // Attach the quantity from the cart to each selected product
     const productsWithQuantity = selectedProducts.map((product: any) => ({
       ...product,
@@ -80,15 +83,13 @@ export function Cart() {
       body: JSON.stringify(body),
     });
     const session = await response.json();
+
     await stripe?.redirectToCheckout({ sessionId: session.id });
   };
 
   // Handle customer info form changes.
   // Handle customer info form changes.
-  const handleCustomerInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
-  };
+
   const handleHide = () => {
     setUnhide(true);
 
@@ -99,7 +100,7 @@ export function Cart() {
 
   // Checkout function constructs order data and posts it to the API.
   const checkoutButton = async () => {
-    console.log(items);
+    // console.log(items);
     if (customerInfo.name.trim() === '') {
       handleHide();
       setMissingInfo('name');
@@ -124,31 +125,33 @@ export function Cart() {
         })
       );
 
-      const orderData = {
-        name: customerInfo.name,
-        address: customerInfo.address,
-        phone: customerInfo.phone,
-        order_date: new Date().toISOString(),
-        order_status: 'Pending',
-        order_price: currentSubtotal(),
-        pickup: pickup,
-        products: orderProducts,
-      };
+      // const orderData = {
+      //   name: customerInfo.name,
+      //   address: customerInfo.address,
+      //   phone: customerInfo.phone,
+      //   order_date: new Date().toISOString(),
+      //   order_status: 'Pending',
+      //   order_price: currentSubtotal(),
+      //   pickup: pickup,
+      //   products: orderProducts,
+      // };
 
-      const response = await fetch('http://localhost:3000/api/createOrder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData),
-      });
+      // const response = await fetch('http://localhost:3000/api/createOrder', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(orderData),
+      // });
 
-      const result = await response.json();
-      console.log('result', result);
-      if (result) {
-        // If order creation is successful, proceed to payment.
-        makePayment();
-      } else {
-        console.error('Failed to create order');
-      }
+      // const result = await response.json();
+      // console.log('result', result);
+      // // If order creation is successful, proceed to payment.
+      // if (result) {
+      localStorage.setItem('customerDetails', JSON.stringify(customerInfo));
+      localStorage.setItem('products', JSON.stringify(orderProducts));
+      makePayment();
+      // } else {
+      //   console.error('Failed to create order');
+      // }
     }
   };
 
@@ -156,8 +159,6 @@ export function Cart() {
   // const totalPrice = useAppSelector(getTotalPrice);
   // Use to know if customer has ordered....??
   // const checkoutState = useAppSelector((state) => state.cart.checkoutState);
-
-  console.log('THIS IS ITEMS', items);
 
   return (
     <>
@@ -187,7 +188,11 @@ export function Cart() {
                 <div className='flex items-center justify-between gap-5'>
                   <div className='w-12 h-12 flex-shrink-0 lg:w-20 lg:h-20'>
                     <img
-                      src={icon}
+                      src={
+                        products[Number(item[0])].img_url
+                          ? products[Number(item[0])].img_url
+                          : icon
+                      }
                       alt={item[1][3]}
                       className='w-full h-full object-contain'
                     />
@@ -215,6 +220,7 @@ export function Cart() {
                     >
                       +
                     </button>
+
                     <span className=' bg-fuchsia-50 p-2 rounded-md lg:text-xl'>
                       {item[1][0]}
                     </span>
@@ -246,7 +252,7 @@ export function Cart() {
               className={`${
                 !pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
               } text-white p-1 rounded-md w-1/2 self-end`}
-              onClick={() => setPickup(true)}
+              onClick={() => dispatch(updatePickup(true))}
             >
               PICKUP
             </button>
@@ -254,7 +260,7 @@ export function Cart() {
               className={`${
                 pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
               } text-white p-1 rounded-md w-1/2 self-end`}
-              onClick={() => setPickup(false)}
+              onClick={() => dispatch(updatePickup(false))}
             >
               DELIVERY
             </button>
@@ -268,14 +274,25 @@ export function Cart() {
                 className='input-field text-black'
                 name='name'
                 placeholder='Name'
-                onChange={handleCustomerInfo}
+                onChange={(e) =>
+                  dispatch(
+                    updateCustomerInfo({ field: 'name', value: e.target.value })
+                  )
+                }
               />
               <input
                 type='text'
                 className='input-field text-black'
                 name='address'
                 placeholder='Address'
-                onChange={handleCustomerInfo}
+                onChange={(e) =>
+                  dispatch(
+                    updateCustomerInfo({
+                      field: 'address',
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
               <input
                 type='number'
@@ -283,7 +300,14 @@ export function Cart() {
                 name='phone'
                 pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
                 placeholder='Phone'
-                onChange={handleCustomerInfo}
+                onChange={(e) =>
+                  dispatch(
+                    updateCustomerInfo({
+                      field: 'phone',
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
             </div>
           ) : (
@@ -294,14 +318,25 @@ export function Cart() {
                 className='input-field text-black'
                 name='name'
                 placeholder='Name'
-                onChange={handleCustomerInfo}
+                onChange={(e) =>
+                  dispatch(
+                    updateCustomerInfo({ field: 'name', value: e.target.value })
+                  )
+                }
               />
               <input
                 type='text'
                 className='input-field text-black'
                 name='phone'
                 placeholder='Phone'
-                onChange={handleCustomerInfo}
+                onChange={(e) =>
+                  dispatch(
+                    updateCustomerInfo({
+                      field: 'phone',
+                      value: e.target.value,
+                    })
+                  )
+                }
               />
             </div>
           )}

@@ -12,6 +12,7 @@ module.exports = {
     filename: 'bundle.js',
     clean: true,
     assetModuleFilename: '[name][ext]',
+    publicPath: '/',
   },
   devtool: 'source-map',
   devServer: {

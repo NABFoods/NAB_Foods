@@ -1,20 +1,60 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks'; // Access Redux state and actions
-import { updateOrderStatus } from '../../adminOrders/orderSlice'; // Action to update order status
+import {
+  updateOrderStatus,
+  deleteOrderSlice,
+} from '../../adminOrders/orderSlice'; // Action to update order status
 
 const OrderCard: FC = () => {
   const orders = useAppSelector((state) => state.orders.orders);
   const dispatch = useAppDispatch();
 
-  console.log('Orders:', orders);
+  //console.log('Orders:', orders);
 
   if (!orders || Object.keys(orders).length === 0) {
     return <p>No orders available</p>;
   }
 
   // Function to update order status
-  const handleStatusChange = (orderId: number, newStatus: string) => {
-    dispatch(updateOrderStatus({ orderId, newStatus }));
+  const deleteOrder = async (orderId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/${orderId}/deleteOrder`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      if (!response.ok) {
+        console.error(
+          'OrderCard deleteOrder- failed to delete order status in database'
+        );
+      }
+      dispatch(deleteOrderSlice({ id: orderId, response: response }));
+    } catch (err) {
+      console.error('OrderCard deleteOrder - failed to delete card');
+    }
+  };
+  const handleStatusChange = async (orderId: number, newStatus: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/${orderId}/order-status`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_status: newStatus }),
+        }
+      );
+      if (!response.ok) {
+        console.error(
+          'OrderCard handleStatusChange - failed to update order status in database'
+        );
+      }
+
+      dispatch(updateOrderStatus({ orderId, newStatus }));
+    } catch (err) {
+      console.error('OrderCard handleStatusChange - failed to update status');
+    }
   };
 
   return (
@@ -22,9 +62,25 @@ const OrderCard: FC = () => {
       <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {Object.values(orders).map((order) => (
           <li
-            key={order.order_id}
+            key={`${order.customer_name}&${order.order_id}`}
             className='m-2 bg-slate-100 border border-gray-300 rounded-lg p-4 shadow-xl'
           >
+            {(order.order_status === 'declined' && (
+              <button
+                className='text-xl text-red-500 bold'
+                onClick={() => deleteOrder(order.order_id)}
+              >
+                X
+              </button>
+            )) ||
+              (order.order_status === 'done' && (
+                <button
+                  className='text-xl text-red-500 bold'
+                  onClick={() => deleteOrder(order.order_id)}
+                >
+                  X
+                </button>
+              ))}
             <h3 className='text-[#DB162F] font-extrabold text-2xl flex justify-center items-center'>
               <span>Order ID:</span> &nbsp; {order.order_id}
             </h3>
@@ -38,8 +94,7 @@ const OrderCard: FC = () => {
               <span className='font-bold'>Phone:</span> {order.phone}
             </p>
             <p>
-              <span className='font-bold'>Status:</span>{' '}
-              {order.order_status}
+              <span className='font-bold'>Status:</span> {order.order_status}
             </p>
             <p>
               <span className='font-bold'>Total:</span> ${order.order_price}
@@ -49,7 +104,7 @@ const OrderCard: FC = () => {
             </p>
             <ul>
               {order.products.map((product) => (
-                <li key={product.product_id}>
+                <li key={`${product.subtotal}&${product.product_id}`}>
                   {product.product_name} x {product.quantity} = $
                   {product.subtotal}
                 </li>

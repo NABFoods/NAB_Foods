@@ -54,7 +54,7 @@ export const menuController: menu = {
       ]);
       //console.log('RESULT ROWS', result.rows);
       res.locals.addedItem = result.rows[0];
-      console.log("result.rows[0] = ", result.rows[0]);
+      console.log('result.rows[0] = ', result.rows[0]);
       next();
     } catch (err) {
       next({
@@ -63,45 +63,47 @@ export const menuController: menu = {
     }
   },
 
-  updateMenuItem: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const {
-        id,
-        product_name,
-        price,
-        sold_out,
-        img_url,
-        description,
-      }: {
-        id: number;
-        product_name: string;
-        price: number;
-        sold_out: boolean;
-        img_url: string;
-        description: string;
-      } = req.body;
-      const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out}, img_url = ${img_url}, description = ${description} WHERE id=${id}`;
+  // updateMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const {
+  //       id,
+  //       product_name,
+  //       price,
+  //       sold_out,
+  //       img_url,
+  //       description,
+  //       type,
+  //     }: {
+  //       id: number;
+  //       product_name: string;
+  //       price: number;
+  //       sold_out: boolean;
+  //       img_url: string;
+  //       description: string;
+  //       type: string;
+  //     } = req.body;
+  //     const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out}, img_url = ${img_url}, description = ${description}, type = ${type} WHERE id=${id}`;
 
-      const result = await db.query(updateMenuItemsString);
-      console.log('RESULT: ', result);
-      res.locals.updatedMenuItem = result.rows;
-      next();
+  //     const result = await db.query(updateMenuItemsString);
+  //     console.log('RESULT: ', result);
+  //     res.locals.updatedMenuItem = result.rows;
+  //     next();
 
-      /**
-       * Example request body: 
-       *    {
-                "id":1,
-                "product_name": "baNAYNAY",
-                "price": 50,
-                "sold_out":true
-            }
-       */
-    } catch (err) {
-      next({
-        log: 'updateMenuItems',
-      });
-    }
-  },
+  //     /**
+  //      * Example request body:
+  //      *    {
+  //               "id":1,
+  //               "product_name": "baNAYNAY",
+  //               "price": 50,
+  //               "sold_out":true
+  //           }
+  //      */
+  //   } catch (err) {
+  //     next({
+  //       log: 'updateMenuItems',
+  //     });
+  //   }
+  // },
 
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -141,7 +143,10 @@ export const menuController: menu = {
         'UPDATE product SET sold_out = $1 WHERE id = $2 RETURNING *';
       const values = [sold_out, id];
       const result = await db.query(updateQuery, values);
-      console.log('menuController.toggleSoldOut - db.query result.rows = ', result.rows);
+      console.log(
+        'menuController.toggleSoldOut - db.query result.rows = ',
+        result.rows
+      );
 
       if (result.rowCount === 0) {
         return next({
@@ -152,7 +157,10 @@ export const menuController: menu = {
       }
 
       res.locals.updatedMenuItemSoldOut = result.rows[0];
-      console.log("menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ", res.locals.updateMenuItemSoldOut);
+      console.log(
+        'menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ',
+        res.locals.updateMenuItemSoldOut
+      );
       return next();
     } catch (err) {
       next({
@@ -163,45 +171,58 @@ export const menuController: menu = {
     }
   },
 
-  updateProduct: async(req: Request, res: Response, next: NextFunction) => {
+  updateProduct: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log("menuController.updateProduct - req.params = ", req.params)
-      const { field, value } = req.body
-      console.log("menuController.updateProduct - req.body = ", req.body)
+      console.log('menuController.updateProduct - req.params = ', req.params);
+      const { field, value } = req.body;
+      console.log('menuController.updateProduct - req.body = ', req.body);
       console.log(`Updating product ${id}: field=${field}, value=${value}`);
       // Lock down/explicitly define what fields will be permitted
-      const allowedFields = ["product_name", "price", "sold_out", "img_url", "description"];
+      const allowedFields = [
+        'product_name',
+        'price',
+        'sold_out',
+        'img_url',
+        'description',
+        'type',
+      ];
       // Validate field from client against allowed fields to prevent SQL injection into the string literal since SQL won't allow parameterizing a column/field name.
       if (!allowedFields.includes(field)) {
         return next({
-          log: "menuController.updateProduct - Invalid field update attempt",
+          log: 'menuController.updateProduct - Invalid field update attempt',
           status: 400,
-          message: "Invalid field update",
+          message: 'Invalid field update',
         });
       }
       const updateQuery = `UPDATE product SET ${field} = $1 WHERE id = $2 RETURNING *`;
       const values = [value, id];
-  
+
       const result = await db.query(updateQuery, values);
-  
-      if(result.rowCount === 0) {
+
+      if (result.rowCount === 0) {
         return next({
           log: `menuController.updateProduct - No product found with id = ${id}`,
           status: 404,
           message: `No product found with id = ${id}`,
-        })
+        });
       }
-      console.log("menuController.updateProduct - result.rows[0] = ", result.rows[0])
+      console.log(
+        'menuController.updateProduct - result.rows[0] = ',
+        result.rows[0]
+      );
       res.locals.updatedProduct = result.rows[0];
-      console.log("menuController.updateProduct - res.locals.updatedProduct = ", res.locals.updatedProduct)
+      console.log(
+        'menuController.updateProduct - res.locals.updatedProduct = ',
+        res.locals.updatedProduct
+      );
       return next();
     } catch (error) {
       return next({
         log: `menuController.updateProduct - Database error: ${error}`,
         status: 500,
-        message: "Error updating product",
-      })
+        message: 'Error updating product',
+      });
     }
-  }
+  },
 };

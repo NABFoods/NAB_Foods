@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 declare module 'express-session' {
   interface Session {
-    user?: { email: string };  
+    user?: { email: string };
   }
 }
 // Represents a product & its details/properties
@@ -14,6 +14,7 @@ export interface Product {
   price: number;
   sold_out: boolean; // availability.  True if sold out.
   description: string;
+  type: string;
   quantity?: number;
 }
 // used this put products inside of an array
@@ -23,6 +24,10 @@ interface OrderProduct {
   price: number;
   quantity: number;
   subtotal: number;
+}
+export interface ProtectedProviderComponent {
+  isAllowed: { success: boolean; email: string };
+  children: React.ReactNode;
 }
 export interface Order {
   order_id: number; // Update to match the field in your data
@@ -35,6 +40,16 @@ export interface Order {
   phone?: string; // Optional, if exists
   products: OrderProduct[];
 }
+
+export type MenuPage = {
+  categoryLink: string;
+  title: string;
+  desc?: string;
+  img?: string;
+  color: string;
+  bgcol: string;
+};
+
 export interface Links {
   id: number;
   link: string;
@@ -52,11 +67,11 @@ export interface menu {
     res: Response,
     next: NextFunction
   ) => Promise<void>;
-  updateMenuItem: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>;
+  // updateMenuItem: (
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ) => Promise<void>;
   deleteMenuItem: (
     req: Request,
     res: Response,
