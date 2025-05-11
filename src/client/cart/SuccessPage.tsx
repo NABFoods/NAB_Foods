@@ -1,28 +1,19 @@
 import React, { FC, useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../hooks';
+import { useAppSelector } from '../hooks';
 import { RootState } from '../store';
 import { Link } from 'react-router';
+let count = 0;
 const SuccessPage: FC = () => {
-  const items = useAppSelector((state: RootState) => state.cart.items);
   const customerInfo: any = JSON.parse(
     localStorage.getItem('customerDetails')!
   );
+  const total: number = JSON.parse(localStorage.getItem('Total')!);
   const orderProducts: any = JSON.parse(localStorage.getItem('products')!);
-  const pickup = useAppSelector((state: RootState) => state.cart.pickup);
+  const pickup = useAppSelector((state: RootState) => state.cart.status[0]);
   useEffect(() => {
     if (!customerInfo || typeof customerInfo != 'object') {
       return;
     }
-
-    const currentSubtotal = () => {
-      const itemsArray = Object.entries(items);
-      let subtotal = 0;
-      for (let i = 0; i < itemsArray.length; i++) {
-        // item[1] is assumed to be an array: [quantity, price, total]
-        subtotal += itemsArray[i][1][2];
-      }
-      return subtotal;
-    };
 
     const orderData = {
       name: customerInfo.name,
@@ -30,7 +21,7 @@ const SuccessPage: FC = () => {
       phone: customerInfo.phone,
       order_date: new Date().toISOString(),
       order_status: 'Pending',
-      order_price: currentSubtotal(),
+      order_price: total,
       pickup: pickup,
       products: orderProducts,
     };
@@ -59,6 +50,7 @@ const SuccessPage: FC = () => {
     };
 
     fetchFunction();
+
     localStorage.clear();
   }, []);
   return (
@@ -69,7 +61,7 @@ const SuccessPage: FC = () => {
         </div>
         <div className='flex h-[50vh] justify-center'>
           <p className='text-xl bold text-green-800'>
-            Payment successfully process waiting for approval
+            Payment successfully processed waiting for approval
           </p>
         </div>
       </div>

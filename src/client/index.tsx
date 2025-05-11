@@ -29,39 +29,38 @@ const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 // Wrapping App w/ Provider to give access to Redux store
 root.render(
   // Using React.StrictMode as best practice for assisting w/ development w/out impacting production
-  <React.StrictMode>
-    <Provider store={store}>
-      <GoogleOAuthProvider clientId={clientId!}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route
-              path='/orders'
-              element={
-                <ProtectedProvider isAllowed={auth}>
-                  <Orders />
-                </ProtectedProvider>
-              }
-            />
-            <Route path='/adminLogin' element={<AdminLogin />} />
-            <Route
-              path='/adminHome'
-              element={
-                <ProtectedProvider isAllowed={auth}>
-                  <AdminHome />
-                </ProtectedProvider>
-              }
-            />
-            <Route path='/menu' element={<Menupage />} />
-            <Route path='/cart' element={<Cart />} />
-            <Route path='/menu/entree' element={<Entrees />} />
-            <Route path='/menu/side' element={<Sides />} />
-            <Route path='/menu/preprep' element={<Preprep />} />
-            <Route path='/successpage' element={<SuccessPage />} />
-            <Route path='/failurepage' element={<FailurePage />} />
-          </Routes>
-        </BrowserRouter>
-      </GoogleOAuthProvider>
-    </Provider>
-  </React.StrictMode>
+
+  <Provider store={store}>
+    <GoogleOAuthProvider clientId={clientId!}>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route
+            path='/orders'
+            element={
+              <ProtectedProvider isAllowed={auth}>
+                <Orders />
+              </ProtectedProvider>
+            }
+          />
+          <Route path='/adminLogin' element={<AdminLogin />} />
+          <Route
+            path='/adminHome'
+            element={
+              <ProtectedProvider isAllowed={auth}>
+                <AdminHome />
+              </ProtectedProvider>
+            }
+          />
+          <Route path='/menu' element={<Menupage />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/menu/entree' element={<Entrees />} />
+          <Route path='/menu/side' element={<Sides />} />
+          <Route path='/menu/preprep' element={<Preprep />} />
+          <Route path='/successpage' element={<SuccessPage />} />
+          <Route path='/failurepage' element={<FailurePage />} />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+  </Provider>
 );

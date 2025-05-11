@@ -9,14 +9,14 @@ export interface CartState {
     address: string;
     phone: number;
   };
-  pickup: boolean;
+  status: [boolean, boolean, boolean];
 }
 
 const initialState: CartState = {
   items: {},
   quantity: 0,
   customerData: { name: '', address: '', phone: 0 },
-  pickup: true,
+  status: [true, false, false],
 };
 
 const cartSlice = createSlice({
@@ -83,9 +83,25 @@ const cartSlice = createSlice({
         state.quantity += itemAmount[0];
       });
     },
-    updatePickup(state, action: PayloadAction<boolean>) {
-      state.pickup = action.payload;
+    updateStatus(state, action: PayloadAction<number>) {
+      const status = state.status;
+      for (let i = 0; i < status.length; i++) {
+        if (i != action.payload) {
+          status[i] = status[i] ? false : true;
+        } else {
+          status[i] = status[i] ? false : true;
+        }
+      }
     },
+    // updatePickup(state, action: PayloadAction<boolean>) {
+    //   state.status.pickup = action.payload;
+    // },
+    // updateShipping(state, action: PayloadAction<boolean>) {
+    //   state.status.shipping = action.payload;
+    // },
+    // updateDelivery(state, action: PayloadAction<boolean>) {
+    //   state.status.delivery = action.payload;
+    // },
     updateCustomerInfo(
       state,
       action: PayloadAction<{ field: string; value: string | number }>
@@ -119,6 +135,6 @@ export const {
   updateCustomerInfo,
   selectTotalQuantity,
   deleteFromCart,
-  updatePickup,
+  updateStatus,
 } = cartSlice.actions;
 export default cartSlice.reducer;

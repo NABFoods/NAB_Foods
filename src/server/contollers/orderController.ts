@@ -40,7 +40,7 @@ export const orderController = {
       ]);
 
       const orderId = orderResult.rows[0].id; // Get the new order ID
-
+      console.log('This is order Price', order_price);
       // Step 3: Insert the products associated with this order into the order_product table
       for (const product of products) {
         const { product_id, product_quantity, product_subtotal } = product;
@@ -75,7 +75,7 @@ export const orderController = {
 
   createCheckout: async (req: Request, res: Response, next: NextFunction) => {
     // --- UPDATED: Use each product's individual quantity ---
-    const { products, defaultImage } = req.body;
+    const { products, defaultImage, shipping } = req.body;
     if (!req.body || !products || products.length === 0) {
       return next();
     }
@@ -84,6 +84,19 @@ export const orderController = {
     const filteredProducts = (products as Product[]).filter(
       (product: Product) => !product.sold_out
     );
+    console.log('FILTERED', shipping);
+    if (shipping.shippingCheck === true) {
+      filteredProducts.push({
+        id: 1000,
+        product_name: 'shipping & Handling',
+        price: shipping.shippingCost,
+        sold_out: false,
+        img_url: defaultImage,
+        description: 'shipping and handling fee',
+        type: 'Prep',
+        quantity: 1,
+      });
+    }
     // console.log('defaultImage:', defaultImage);
     //console.log('filtered products', filteredProducts);
     // Create line items using each product's own quantity

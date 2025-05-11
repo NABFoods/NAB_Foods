@@ -11,7 +11,7 @@ import {
   removeFromCart,
   selectTotalQuantity,
   updateCustomerInfo,
-  updatePickup,
+  updateStatus,
 } from './cartSlice';
 
 export function Cart() {
@@ -23,8 +23,14 @@ export function Cart() {
   );
   const [missingInfo, setMissingInfo] = useState('');
   const [unhide, setUnhide] = useState(false);
-  const pickup = useAppSelector((state: RootState) => state.cart.pickup);
-
+  const status = useAppSelector((state: RootState) => state.cart.status);
+  // const pickup = useAppSelector((state: RootState) => state.cart.status.pickup);
+  // const shipping = useAppSelector(
+  //   (state: RootState) => state.cart.status.shipping
+  // );
+  // const delivery = useAppSelector(
+  //   (state: RootState) => state.cart.status.delivery
+  // );
   // Retrieve other cart and menu state.
   const quantity = useAppSelector((state: RootState) => state.cart.quantity);
   const foodCard = useAppSelector((state: RootState) => state.home.foodCard);
@@ -32,7 +38,7 @@ export function Cart() {
   // Compute current subtotal based on items in cart.
 
   // Compute current subtotal based on items in cart.
-  const currentSubtotal = () => {
+  const currentSubtotal = (): number => {
     const itemsArray = Object.entries(items);
     let subtotal = 0;
     for (let i = 0; i < itemsArray.length; i++) {
@@ -41,6 +47,30 @@ export function Cart() {
     }
     return subtotal;
   };
+
+  const shippedSubtotal = (): number => {
+    const itemsArray = Object.entries(items);
+    let subtotal = 0;
+    for (let i = 0; i < itemsArray.length; i++) {
+      console.log('ITEMS ARRAY ELEMENTS: ', itemsArray[i][0]);
+      console.log('Products: ', products);
+      if (products[Number(itemsArray[i][0])].type === 'Prep') {
+        subtotal += itemsArray[i][1][2];
+      }
+    }
+    console.log('SHIPPING SUBTOTAL: ', subtotal);
+    return subtotal;
+  };
+
+  const shippingPrice = (subtotal: number): number => {
+    if (subtotal <= 10 && subtotal != 0) {
+      return 1.5;
+    } else {
+      return Math.ceil((((subtotal * 10) / 100) * 100) / 100);
+    }
+  };
+
+  const shipping = shippingPrice(shippedSubtotal());
 
   // Update total quantity whenever items change.
   // Update total quantity whenever items change.
@@ -76,6 +106,7 @@ export function Cart() {
     const body = {
       products: productsWithQuantity, // send only the selected cart items
       defaultImage: `../home/assets/restaurant.png`,
+      shipping: { shippingCost: shipping, shippingCheck: status[2] },
     };
     const response = await fetch(`http://localhost:3000/api/createCheckout`, {
       method: 'POST',
@@ -105,7 +136,7 @@ export function Cart() {
       handleHide();
       setMissingInfo('name');
       return;
-    } else if (customerInfo.address.trim() === '' && !pickup) {
+    } else if (customerInfo.address.trim() === '' && !status[0]) {
       handleHide();
       setMissingInfo('address');
       return;
@@ -148,6 +179,10 @@ export function Cart() {
       // if (result) {
       localStorage.setItem('customerDetails', JSON.stringify(customerInfo));
       localStorage.setItem('products', JSON.stringify(orderProducts));
+      localStorage.setItem(
+        'Total',
+        JSON.stringify(currentSubtotal() + shipping)
+      );
       makePayment();
       // } else {
       //   console.error('Failed to create order');
@@ -248,25 +283,33 @@ export function Cart() {
         {/* Payments Container */}
         <div className='max-h-2/3 p-4 bg-fuchsia-50 flex flex-col gap-2 justify-center lg:px-20 lg:h-full lg:w-[40%] 2xl:w-1/2 2xl:text-xl 2xl:gap-6'>
           <div className='flex gap-2 items-start'>
-            <button
+            {/* <button
               className={`${
-                !pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
-              } text-white p-1 rounded-md w-1/2 self-end`}
-              onClick={() => dispatch(updatePickup(true))}
+                !status[0] ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
+              } text-white p-1 rounded-md w-full self-end`}
+              onClick={() => dispatch(updateStatus(0))}
             >
               PICKUP
-            </button>
-            <button
+            </button> */}
+            {/* <button
               className={`${
-                pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
+                !status[1] ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
               } text-white p-1 rounded-md w-1/2 self-end`}
-              onClick={() => dispatch(updatePickup(false))}
+              onClick={() => dispatch(updateStatus(1))}
             >
               DELIVERY
-            </button>
-          </div>
+            </button> */}
 
-          {!pickup ? (
+            {/* {shippedSubtotal() != 0 && (
+              <button
+                className={`${
+                  !status[2] ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
+                } text-white p-1 rounded-md w-[50px] self-end`}
+                onClick={() => dispatch(updateStatus(2))}
+              ></button>
+            )} */}
+          </div>
+          {/* {status[1] === true && (
             <div className='flex flex-col'>
               <h1>Delivery Details</h1>
               <input
@@ -310,54 +353,94 @@ export function Cart() {
                 }
               />
             </div>
-          ) : (
-            <div className='flex flex-col'>
-              <h1>Pickup Details</h1>
+          )} */}
+
+          <div className='flex flex-col'>
+            <h1>Pickup Details</h1>
+            <input
+              type='text'
+              className='input-field text-black'
+              name='name'
+              placeholder='Name'
+              onChange={(e) =>
+                dispatch(
+                  updateCustomerInfo({ field: 'name', value: e.target.value })
+                )
+              }
+            />
+            <input
+              type='text'
+              className='input-field text-black'
+              name='phone'
+              placeholder='Phone'
+              onChange={(e) =>
+                dispatch(
+                  updateCustomerInfo({
+                    field: 'phone',
+                    value: e.target.value,
+                  })
+                )
+              }
+            />
+            {status[2] && (
               <input
                 type='text'
                 className='input-field text-black'
-                name='name'
-                placeholder='Name'
-                onChange={(e) =>
-                  dispatch(
-                    updateCustomerInfo({ field: 'name', value: e.target.value })
-                  )
-                }
-              />
-              <input
-                type='text'
-                className='input-field text-black'
-                name='phone'
-                placeholder='Phone'
+                name='address'
+                placeholder='Address'
                 onChange={(e) =>
                   dispatch(
                     updateCustomerInfo({
-                      field: 'phone',
+                      field: 'address',
                       value: e.target.value,
                     })
                   )
                 }
               />
+            )}
+          </div>
+
+          {shippedSubtotal() != 0 && (
+            <div className='flex justify-between'>
+              <span>Shipping?</span>
+              <button
+                className={`${
+                  !status[2] ? 'border-2 border-red-500' : 'bg-red-500'
+                } text-white p-1 rounded-md w-[20px] h-[20px]`}
+                onClick={() => dispatch(updateStatus(2))}
+              ></button>
             </div>
           )}
           <div className='flex justify-between'>
             <span>Subtotal({quantity})</span>
+
             <span>${Math.round(currentSubtotal() * 100) / 100}</span>
           </div>
           <div className='flex justify-between'>
             <span>Service Cost({quantity})</span>
             <span>$0.00</span>
           </div>
-          <div className={`flex justify-between ${pickup ? 'hidden' : ''}`}>
-            <span>Delivery Cost({quantity})</span>
-            <span className='text-green-500'>Free</span>
+          <div
+            className={`flex justify-between ${
+              !status[2] || shippedSubtotal() === 0 ? 'hidden' : ''
+            }`}
+          >
+            <span>Shipping & Handling</span>
+            <span className='text-gray-500'>${shipping}</span>
           </div>
           <hr className='my-2' />
           <div className='flex justify-between'>
             <span>TOTAL({quantity})</span>
-            <span className='font-bold'>
-              ${Math.round(currentSubtotal() * 100) / 100}
-            </span>
+            {status[0] && (
+              <span className='font-bold'>
+                $ {Math.round(currentSubtotal() * 100) / 100}
+              </span>
+            )}
+            {status[2] && (
+              <span className='font-bold'>
+                ${shipping + Math.round(currentSubtotal() * 100) / 100}
+              </span>
+            )}
           </div>
           <button
             onClick={checkoutButton}
