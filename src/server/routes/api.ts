@@ -14,6 +14,10 @@ router.post('/createMessage', smsController.createMessage, (req, res) => {
   res.status(200).json({ message: res.locals.message });
 });
 
+router.get('/secureStripe', orderController.secureStripe, (req, res) => {
+  res.status(200).json({ stripe: res.locals.stripe });
+});
+
 router.post('/sms', smsController.smsResponse, (req, res) => {
   res.status(200).send('SMS response sent');
 });

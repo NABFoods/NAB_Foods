@@ -5,8 +5,10 @@ import icon from '../home/assets/restaurant.png';
 import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of userSelector & useDispatch from hooks.ts
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion, useAnimationControls } from 'motion/react';
+import { motion, useAnimationControls } from 'motion/react';
 import {
   addToCart,
   removeFromCart,
@@ -45,7 +47,7 @@ export function Cart() {
   const shake = async () => {
     await errorControls.start({
       x: [0, -10, 10, -10, 10, 0],
-      transition: { duration: 0.6 },
+      transition: { duration: 0.3 },
     });
   };
 
@@ -57,11 +59,13 @@ export function Cart() {
 
   // Stripe key for payment (adjust as needed).
 
-  const StripeKey =
-    'pk_test_51R4BAm4GalmXqpbjXbMWtRvaxsHke16qEuJEEWZc8KblTZrB88vYN8wyaDlJ1dPV045a4R7FlqRPrjRmYouQZcfO00WlfTE16F';
-
   // Payment function using Stripe.
   const makePayment = async () => {
+    const StripeKeyUnpacked = await fetch(
+      'http://localhost:3000/api/secureStripe'
+    );
+    const StripeKey = await StripeKeyUnpacked.json();
+
     // Convert foodCard to an array if it isn't already
     const foodCardArray = Array.isArray(foodCard)
       ? foodCard
@@ -78,7 +82,7 @@ export function Cart() {
       quantity: items[product.id][0], // cart quantity stored at index 0
     }));
 
-    const stripe = await loadStripe(StripeKey);
+    const stripe = await loadStripe(StripeKey.stripe);
 
     const body = {
       products: productsWithQuantity, // send only the selected cart items
@@ -116,12 +120,9 @@ export function Cart() {
       handleHide();
       setMissingInfo('address');
       return;
-    } else if (
-      customerInfo.phone === 0 &&
-      customerInfo.toString().trim().length >= 10
-    ) {
+    } else if (!customerInfo.phone || !isValidPhoneNumber(customerInfo.phone)) {
       handleHide();
-      setMissingInfo('phone');
+      setMissingInfo('a valid phone number');
       return;
     } else {
       const orderProducts = Object.entries(items).map(
@@ -271,7 +272,8 @@ export function Cart() {
         </div>
         {/* Payments Container */}
         <div className='max-h-2/3 p-4 bg-fuchsia-50 flex flex-col gap-2 justify-center lg:px-20 lg:h-full lg:w-[40%] 2xl:w-1/2 2xl:text-xl 2xl:gap-6'>
-          <div className='flex gap-2 items-start'>
+          {/** For future update that includes delivery. For this I would need to integrate google places API for auto complete as well as radius limiting. look at B.O.Bs list for help */}
+          {/* <div className='flex gap-2 items-start'>
             <motion.button
               className={`${
                 !pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
@@ -288,7 +290,7 @@ export function Cart() {
             >
               DELIVERY
             </button>
-          </div>
+          </div> */}
 
           {!pickup ? (
             <div className='flex flex-col'>
@@ -318,21 +320,26 @@ export function Cart() {
                   )
                 }
               />
-              <input
-                type='number'
-                className='input-field text-black'
-                name='phone'
-                pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
-                placeholder='Phone'
-                onChange={(e) =>
+              <PhoneInput
+                defaultCountry='US'
+                international={true}
+                countryCallingCodeEditable={false}
+                value={customerInfo.phone || '+1'}
+                placeholder='+1 123 456 7890'
+                onChange={(value) =>
                   dispatch(
                     updateCustomerInfo({
                       field: 'phone',
-                      value: e.target.value,
+                      value: value || '',
                     })
                   )
                 }
+                className='input-field text-black'
               />
+              {customerInfo.phone &&
+                !isValidPhoneNumber(customerInfo.phone) && (
+                  <p className='text-red-500 text-sm'>Invalid phone number</p>
+                )}
             </div>
           ) : (
             <div className='flex flex-col'>
@@ -348,19 +355,21 @@ export function Cart() {
                   )
                 }
               />
-              <input
-                type='text'
-                className='input-field text-black'
-                name='phone'
-                placeholder='Phone'
-                onChange={(e) =>
+              <PhoneInput
+                defaultCountry='US'
+                international={true}
+                countryCallingCodeEditable={false}
+                value={customerInfo.phone || '+1'}
+                placeholder='+1 123 456 7890'
+                onChange={(value) =>
                   dispatch(
                     updateCustomerInfo({
                       field: 'phone',
-                      value: e.target.value,
+                      value: value || '',
                     })
                   )
                 }
+                className='input-field text-black'
               />
             </div>
           )}

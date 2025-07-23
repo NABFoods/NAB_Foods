@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from '../../types';
+import { loadStripe } from '@stripe/stripe-js';
 const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -182,7 +183,20 @@ export const orderController = {
       });
     }
   },
+  secureStripe: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const StripeKey = process.env.STRIPE_KEY!;
 
+      res.locals.stripe = StripeKey;
+      next();
+    } catch (err) {
+      next({
+        log: 'Error in secureStripe middleware',
+        status: 500,
+        message: { err: 'secureStripe failed to load Stripe' },
+      });
+    }
+  },
   updateOrderStatus: async (
     req: Request,
     res: Response,

@@ -7,7 +7,7 @@ export interface CartState {
   customerData: {
     name: string;
     address: string;
-    phone: number;
+    phone: string;
   };
   pickup: boolean;
 }
@@ -15,7 +15,7 @@ export interface CartState {
 const initialState: CartState = {
   items: {},
   quantity: 0,
-  customerData: { name: '', address: '', phone: 0 },
+  customerData: { name: '', address: '', phone: '' },
   pickup: true,
 };
 
@@ -106,7 +106,7 @@ const cartSlice = createSlice({
         action.payload.field === 'phone' &&
         typeof action.payload.value === 'string'
       ) {
-        state.customerData.phone = Number(action.payload.value);
+        state.customerData.phone = action.payload.value.toString();
         console.log(state.customerData.phone);
       }
     },
