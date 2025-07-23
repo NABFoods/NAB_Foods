@@ -58,6 +58,22 @@ const SuccessPage: FC = () => {
       return false;
     };
 
+    const createMessage = async () => {
+      const response = await fetch('http://localhost:3000/createMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: orderData.phone,
+          message: `Your order has been placed successfully and is now waiting for confirmation.`,
+        }),
+      });
+      if (await response.json()) {
+        return true;
+      }
+      console.error('failed to create message');
+      return false;
+    };
+    createMessage();
     fetchFunction();
     localStorage.clear();
   }, []);

@@ -37,6 +37,7 @@
     "express-session": "^1.18.1",
     "google-auth-library": "^9.15.1",
     "html-webpack-plugin": "^5.6.3",
+    "ngrok": "^5.0.0-beta.2",
     "nodemon": "^3.1.9",
     "pg": "^8.14.0",
     "pg-pool": "^3.8.0",
@@ -51,6 +52,7 @@
     "stripe": "^17.7.0",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
+    "twilio": "^5.7.3",
     "typescript": "^5.8.2"
   },
   "devDependencies": {

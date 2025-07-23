@@ -3,12 +3,20 @@ import express from 'express';
 import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
 import { authController } from '../contollers/authController';
+import { smsController } from '../contollers/smsController';
 
 const router = express.Router();
 
 // Route for admin login using Google
 router.post('/auth/google', authController.googleLogin);
 
+router.post('/createMessage', smsController.createMessage, (req, res) => {
+  res.status(200).json({ message: res.locals.message });
+});
+
+router.post('/sms', smsController.smsResponse, (req, res) => {
+  res.status(200).send('SMS response sent');
+});
 router.post('/auth/logout', authController.logout);
 
 router.get('/getOrders', orderController.getOrders, (req, res) => {
