@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { motion } from 'motion/react';
 import {
   addToCart,
   removeFromCart,
@@ -78,7 +79,16 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
       {Object.values(products).map(
         (product: any) =>
           product.type === type && (
-            <div
+            <motion.div
+              initial={{
+                borderColor: '#ccc',
+                boxShadow: '0px 0px 0px rgba(0,0,0,0)',
+              }}
+              whileHover={{
+                borderColor: '#DB162F',
+                boxShadow: '0px 0px 10px rgba(219,22,47,0.5)',
+                transition: { duration: 0.8 },
+              }}
               key={product.id}
               className='flex w-full h-auto border-b-2 border-r-2 sm:w-1/2 lg:w-1/3 bg-white justify-between items-stretch gap-4 p-4 rounded-md'
             >
@@ -110,7 +120,9 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
                   />
                 )}
                 <div className='absolute bottom-[0.80rem] right-2 flex gap-2 lg:bottom-2'>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() =>
                       addFoodItem({
                         id: product.id,
@@ -121,8 +133,10 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
                     className='text-sm uppercase bg-[#E3B505] text-white p-[0.2rem] lg:p-2 rounded-full z-5 hover:bg-[#e3d391] active:bg-[#746112]'
                   >
                     +
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() =>
                       removeFoodItem({
                         id: product.id,
@@ -133,10 +147,10 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
                     className='text-sm uppercase bg-[#ef7e32] text-white p-[0.2rem] lg:p-2 rounded-full z-5 hover:bg-[#dfa37b] active:bg-[#DB162F]'
                   >
                     -
-                  </button>
+                  </motion.button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )
       )}
     </div>

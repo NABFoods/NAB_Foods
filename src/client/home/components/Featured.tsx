@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Product } from '../../../types';
 import { addToCart, selectTotalQuantity } from '../../cart/cartSlice';
+import { motion } from 'motion/react';
 const Featured: FC = () => {
   const featuredItems = useSelector((state: RootState) => state.home.foodCard);
   const dispatch = useDispatch();
@@ -48,7 +49,9 @@ const Featured: FC = () => {
               </p>
               <div className='flex flex-col items-center'>
                 <span className='text-gray-600 text-xl'>${product.price}</span>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() =>
                     addFoodItem({
                       id: String(product.id),
@@ -59,7 +62,7 @@ const Featured: FC = () => {
                   className='bg-[#E3B505] text-white p-2 rounded-md w-1/2'
                 >
                   Add to Cart
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>

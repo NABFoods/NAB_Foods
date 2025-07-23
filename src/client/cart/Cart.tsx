@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../hooks'; // typed versions of 
 import { RootState } from '../store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion, useAnimationControls } from 'motion/react';
 import {
   addToCart,
   removeFromCart,
@@ -24,7 +25,7 @@ export function Cart() {
   const [missingInfo, setMissingInfo] = useState('');
   const [unhide, setUnhide] = useState(false);
   const pickup = useAppSelector((state: RootState) => state.cart.pickup);
-
+  const errorControls = useAnimationControls();
   // Retrieve other cart and menu state.
   const quantity = useAppSelector((state: RootState) => state.cart.quantity);
   const foodCard = useAppSelector((state: RootState) => state.home.foodCard);
@@ -40,6 +41,12 @@ export function Cart() {
       subtotal += itemsArray[i][1][2];
     }
     return subtotal;
+  };
+  const shake = async () => {
+    await errorControls.start({
+      x: [0, -10, 10, -10, 10, 0],
+      transition: { duration: 0.6 },
+    });
   };
 
   // Update total quantity whenever items change.
@@ -163,21 +170,34 @@ export function Cart() {
   return (
     <>
       <div className='h-[100vh] md:h-calc(100vh-9rem)] flex flex-col text-[#DB162F] lg:flex-row'>
-        <div
-          className={`flex flex-row justify-center w-full top-0 fixed ${
-            unhide ? '' : 'hidden'
-          } lg:text-xl`}
-        >
-          <p className='bg-red-400 text-white rounded-sm p-2 z-10'>
-            Please provide {`${missingInfo}`}
-          </p>
-        </div>
+        {unhide && (
+          <div
+            className={`flex flex-row justify-center w-full top-12 fixed lg:text-xl`}
+          >
+            <motion.p
+              // transition={{ type: 'spring', duration: 0.3 }}
+              initial={{ y: -100 }}
+              animate={{
+                y: 0,
+                transition: { type: 'spring', damping: 15, stiffness: 1000 },
+              }}
+              exit={{ y: -100 }}
+              onAnimationComplete={() => {
+                unhide && shake();
+              }}
+              className='bg-red-400 text-white rounded-sm p-2 z-10'
+            >
+              Please provide {`${missingInfo}`}
+            </motion.p>
+          </div>
+        )}
+
         <div className='h-1/2 p-4 flex flex-col overflow-scroll lg:h-full lg:w-full 2xl:w-1/2'>
-          <div className='w-full h-12 p-2'>
+          <motion.div className='w-full h-12 p-2'>
             <Link to='/'>
               <button>{'<BACK'}</button>
             </Link>
-          </div>
+          </motion.div>
           {Object.entries(items).map((item, idx) => (
             <>
               <div
@@ -206,7 +226,9 @@ export function Cart() {
                     </p>
                   </div>
                   <div className='flex flex-col md:flex-row md:justify-between lg:gap-5'>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.8 }}
                       className='cursor-pointer lg:text-xl'
                       onClick={() =>
                         dispatch(
@@ -219,12 +241,14 @@ export function Cart() {
                       }
                     >
                       +
-                    </button>
+                    </motion.button>
 
                     <span className=' bg-fuchsia-50 p-2 rounded-md lg:text-xl'>
                       {item[1][0]}
                     </span>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.8 }}
                       className='cursor-pointer lg:text-xl'
                       onClick={() =>
                         dispatch(
@@ -237,7 +261,7 @@ export function Cart() {
                       }
                     >
                       {item[1][0] <= 1 ? 'X' : '-'}
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
               </div>
@@ -248,14 +272,14 @@ export function Cart() {
         {/* Payments Container */}
         <div className='max-h-2/3 p-4 bg-fuchsia-50 flex flex-col gap-2 justify-center lg:px-20 lg:h-full lg:w-[40%] 2xl:w-1/2 2xl:text-xl 2xl:gap-6'>
           <div className='flex gap-2 items-start'>
-            <button
+            <motion.button
               className={`${
                 !pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
               } text-white p-1 rounded-md w-1/2 self-end`}
               onClick={() => dispatch(updatePickup(true))}
             >
               PICKUP
-            </button>
+            </motion.button>
             <button
               className={`${
                 pickup ? 'bg-[#DB162F]' : 'bg-[#e7939e]'
@@ -359,12 +383,14 @@ export function Cart() {
               ${Math.round(currentSubtotal() * 100) / 100}
             </span>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
             onClick={checkoutButton}
             className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
           >
             CHECKOUT
-          </button>
+          </motion.button>
         </div>
       </div>
     </>

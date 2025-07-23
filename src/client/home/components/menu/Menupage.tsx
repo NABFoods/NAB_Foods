@@ -6,6 +6,7 @@ import side from '../../assets/springroll2.png';
 import entree from '../../assets/ricestew.png';
 import togo from '../../assets/togo.png';
 import Footer from '../Footer';
+import { motion } from 'motion/react';
 
 const Menupage: FC = () => {
   const categories: { [id: number]: MenuPage } = {
@@ -56,16 +57,21 @@ const Menupage: FC = () => {
                   {category[1].title}
                 </h1>
                 <p className='text-sm my-4'>{category[1].desc}</p>
-                <Link
-                  to={`${category[1].categoryLink}`}
-                  className={` max-md:hidden 2xl:block bg-${
-                    category[1].color === 'black' ? 'black' : 'white'
-                  } text-${
-                    category[1].color === 'black' ? 'white' : '[#DB162F]'
-                  } py-2 px-4 rounded-md`}
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  Explore
-                </Link>
+                  <Link
+                    to={`${category[1].categoryLink}`}
+                    className={` max-md:hidden 2xl:block bg-${
+                      category[1].color === 'black' ? 'black' : 'white'
+                    } text-${
+                      category[1].color === 'black' ? 'white' : '[#DB162F]'
+                    } py-2 px-4 rounded-md`}
+                  >
+                    Explore
+                  </Link>
+                </motion.div>
               </div>
               <div className='w-1/2 py-4 md:py-8'>
                 <img

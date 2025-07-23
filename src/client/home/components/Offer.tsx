@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import icon from '../assets/JollofWorking.webp';
+import { motion } from 'motion/react';
 import { Link } from 'react-router';
 const Offer: FC = () => {
   return (
@@ -12,12 +13,21 @@ const Offer: FC = () => {
           Jollof rice is a popular West African dish characterized by its
           flavorful, tomato-based sauce and long-grain rice.
         </p>
-        <button className='bg-[#E3B505] text-white rounded-md py-3 px-6'>
+        <motion.button
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
+          className='bg-[#E3B505] text-white rounded-md py-3 px-6'
+        >
           <Link to='/menu'>ORDER NOW</Link>
-        </button>
+        </motion.button>
       </div>
       <div className='flex-1 w-full relative'>
-        <img src={`${icon}`} alt='' className='object-contain' />
+        <motion.img
+          whileHover={{ rotate: 360 }}
+          src={`${icon}`}
+          alt=''
+          className='object-contain'
+        />
       </div>
     </div>
   );
