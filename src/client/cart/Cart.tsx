@@ -19,6 +19,7 @@ import {
 
 export function Cart() {
   const dispatch = useAppDispatch();
+  const [[opentime, closetime], setTime] = useState([0, 0]);
   const items = useAppSelector((state: RootState) => state.cart.items);
   const products = useAppSelector((state: RootState) => state.home.foodCard);
   const customerInfo = useAppSelector(
@@ -31,7 +32,7 @@ export function Cart() {
   // Retrieve other cart and menu state.
   const quantity = useAppSelector((state: RootState) => state.cart.quantity);
   const foodCard = useAppSelector((state: RootState) => state.home.foodCard);
-
+  const date = new Date();
   // Compute current subtotal based on items in cart.
 
   // Compute current subtotal based on items in cart.
@@ -57,6 +58,16 @@ export function Cart() {
     dispatch(selectTotalQuantity());
   }, [items, quantity, dispatch]);
 
+  useEffect(() => {
+    fetch('http://localhost:3000/api/getHours')
+      .then((response) => response.json())
+      .then((data) => {
+        setTime([
+          Number(data.time.opentime.substring(0, 2)),
+          Number(data.time.closetime.substring(0, 2)),
+        ]);
+      });
+  }, [currentSubtotal]);
   // Stripe key for payment (adjust as needed).
 
   // Payment function using Stripe.
@@ -395,10 +406,20 @@ export function Cart() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.95 }}
-            onClick={checkoutButton}
-            className='bg-[#DB162F] text-white p-3 rounded-md w-1/2 self-end'
+            onClick={
+              date.getHours() >= opentime && date.getHours() <= closetime
+                ? checkoutButton
+                : undefined
+            }
+            className={`${
+              date.getHours() >= opentime && date.getHours() <= closetime
+                ? 'bg-[#DB162F]'
+                : 'bg-[#ad8187] '
+            } text-white p-3 rounded-md w-1/2 self-end`}
           >
-            CHECKOUT
+            {date.getHours() >= opentime && date.getHours() <= closetime
+              ? 'Checkout'
+              : 'Store Closed'}
           </motion.button>
         </div>
       </div>

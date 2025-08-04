@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
 // import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
 // import ( useDispatch ) from 'react-redux';
 import { useAppDispatch } from '../hooks'; // import typed useDispatch from hooks.ts
 import AdminNavbar from './components/AdminNavbar';
@@ -9,8 +8,10 @@ import { receivedProducts, addProduct } from '../product/productsSlice';
 
 const AdminHome: FC = () => {
   const dispatch = useAppDispatch();
+
   const [showForm, setShowForm] = useState(false);
   // lock submit button to only 1 click until submission is complete
+  const [[opentime, closetime], setTime] = useState(['00:00', '00:00']);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newProduct, setNewProduct] = useState({
     product_name: '',
@@ -20,6 +21,58 @@ const AdminHome: FC = () => {
     img_url: '',
     //potentially put category here?
   });
+
+  const handleUpdateOpenTime = async (openTime: string) => {
+    let updatedOpenTime = openTime;
+    try {
+      const response = await fetch('http://localhost:3000/api/updateOpen', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ opentime: updatedOpenTime }),
+      });
+
+      if (response.ok) {
+      } else {
+        console.error(
+          'AdminHome.tsx handleUpdateOpenTime - Failed to update open time'
+        );
+      }
+    } catch (error) {
+      console.error(
+        'AdminHome handleUpdateOpenTime catch block - Error updating open time: '
+      );
+    }
+  };
+
+  const handleUpdateCloseTime = async (closeTime: string) => {
+    let updatedCloseTime = closeTime;
+    try {
+      const response = await fetch('http://localhost:3000/api/updateClose', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ closetime: updatedCloseTime }),
+      });
+
+      if (response.ok) {
+      } else {
+        console.error(
+          'AdminHome.tsx handleUpdateCloseTime - Failed to update close time'
+        );
+      }
+    } catch (error) {
+      console.error(
+        'AdminHome handleUpdateCloseTime catch block - Error updating close time: '
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/getHours')
+      .then((response) => response.json())
+      .then((data) => {
+        setTime([data.time.opentime, data.time.closetime]);
+      });
+  }, [handleUpdateOpenTime, handleUpdateCloseTime]);
 
   useEffect(() => {
     // Fetching data from the API and dispatching action to store it in Redux state
@@ -125,13 +178,42 @@ const AdminHome: FC = () => {
   return (
     <div className='bg-gray-200'>
       <AdminNavbar />
-      <div className='flex flex-col'>
+      <div className='flex max-md:flex-col gap-3 max-md:items-center'>
         <button
           className='w-fit bg-[#DB162F] text-white px-2 ml-4 mb-0 mt-2  py-2 rounded hover:bg-blue-700'
           onClick={handleAddProductClick}
         >
           Add New Product
         </button>
+        <span className='flex max-md:flex-col items-center'>
+          <h1>Open time</h1>
+          <input
+            type='time'
+            id='storeOpenTime'
+            name='storeOpenTime'
+            min='00:00'
+            max='23:59'
+            onChange={(e) => {
+              handleUpdateOpenTime(e.target.value);
+            }}
+            value={opentime}
+            required
+          />
+
+          <h1>Close time</h1>
+          <input
+            type='time'
+            id='storeCloseTime'
+            name='storeCloseTime'
+            min='00:00'
+            max='23:59'
+            onChange={(e) => {
+              handleUpdateCloseTime(e.target.value);
+            }}
+            value={closetime}
+            required
+          />
+        </span>
       </div>
       {/* Render add new products form if showForm = true from clicking add product button */}
       {showForm && (

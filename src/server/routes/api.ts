@@ -4,6 +4,7 @@ import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
 import { authController } from '../contollers/authController';
 import { smsController } from '../contollers/smsController';
+import { storeController } from '../contollers/storeController';
 
 const router = express.Router();
 
@@ -14,10 +15,19 @@ router.post('/createMessage', smsController.createMessage, (req, res) => {
   res.status(200).json({ message: res.locals.message });
 });
 
+router.patch('/updateOpen', storeController.updateOpen, (req, res) => {
+  res.status(200).json({ time: res.locals.time });
+});
+
+router.patch('/updateClose', storeController.updateClose, (req, res) => {
+  res.status(200).json({ time: res.locals.time });
+});
 router.get('/secureStripe', orderController.secureStripe, (req, res) => {
   res.status(200).json({ stripe: res.locals.stripe });
 });
-
+router.get('/getHours', storeController.getHours, (req, res) => {
+  res.status(200).json({ time: res.locals.hours });
+});
 router.post('/sms', smsController.smsResponse, (req, res) => {
   res.status(200).send('SMS response sent');
 });
