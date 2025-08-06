@@ -16,6 +16,10 @@ module.exports = {
   },
   devtool: 'source-map',
   devServer: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups', // ✅ allow popup closing
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+    },
     static: {
       directory: path.resolve(__dirname, 'dist'),
     },
@@ -37,10 +41,6 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
-      },
-      {
-        test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
 
       {

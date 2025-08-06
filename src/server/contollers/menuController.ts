@@ -54,7 +54,7 @@ export const menuController: menu = {
       ]);
       //console.log('RESULT ROWS', result.rows);
       res.locals.addedItem = result.rows[0];
-      console.log('result.rows[0] = ', result.rows[0]);
+      //console.log('result.rows[0] = ', result.rows[0]);
       next();
     } catch (err) {
       next({
@@ -108,15 +108,15 @@ export const menuController: menu = {
   deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log(
-        'menuController.deleteMenuItem - contents of req.params: ',
-        req.params
-      );
+      // console.log(
+      //   'menuController.deleteMenuItem - contents of req.params: ',
+      //   req.params
+      // );
 
       const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
       const result = await db.query(deleteMenuItemString);
 
-      console.log(result);
+      // console.log(result);
       res.locals.deletedMenuItem = result.rows;
       return next();
     } catch (err) {
@@ -135,18 +135,18 @@ export const menuController: menu = {
   toggleSoldOut: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log('menuController.toggleSoldOut - req.params: ', req.params);
+      //console.log('menuController.toggleSoldOut - req.params: ', req.params);
       const { sold_out } = req.body;
-      console.log('menuController.toggleSoldOut - req.body: ', req.body);
+      //console.log('menuController.toggleSoldOut - req.body: ', req.body);
 
       const updateQuery =
         'UPDATE product SET sold_out = $1 WHERE id = $2 RETURNING *';
       const values = [sold_out, id];
       const result = await db.query(updateQuery, values);
-      console.log(
-        'menuController.toggleSoldOut - db.query result.rows = ',
-        result.rows
-      );
+      // console.log(
+      //   'menuController.toggleSoldOut - db.query result.rows = ',
+      //   result.rows
+      // );
 
       if (result.rowCount === 0) {
         return next({
@@ -157,10 +157,10 @@ export const menuController: menu = {
       }
 
       res.locals.updatedMenuItemSoldOut = result.rows[0];
-      console.log(
-        'menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ',
-        res.locals.updateMenuItemSoldOut
-      );
+      // console.log(
+      //   'menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ',
+      //   res.locals.updateMenuItemSoldOut
+      // );
       return next();
     } catch (err) {
       next({
@@ -174,16 +174,17 @@ export const menuController: menu = {
   updateProduct: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      console.log('menuController.updateProduct - req.params = ', req.params);
+      // console.log('menuController.updateProduct - req.params = ', req.params);
       const { field, value } = req.body;
-      console.log('menuController.updateProduct - req.body = ', req.body);
-      console.log(`Updating product ${id}: field=${field}, value=${value}`);
+      // console.log('menuController.updateProduct - req.body = ', req.body);
+      // console.log(`Updating product ${id}: field=${field}, value=${value}`);
       // Lock down/explicitly define what fields will be permitted
       const allowedFields = [
         'product_name',
         'price',
         'sold_out',
         'img_url',
+        'filename',
         'description',
         'type',
       ];
@@ -207,15 +208,15 @@ export const menuController: menu = {
           message: `No product found with id = ${id}`,
         });
       }
-      console.log(
-        'menuController.updateProduct - result.rows[0] = ',
-        result.rows[0]
-      );
+      // console.log(
+      //   'menuController.updateProduct - result.rows[0] = ',
+      //   result.rows[0]
+      // );
       res.locals.updatedProduct = result.rows[0];
-      console.log(
-        'menuController.updateProduct - res.locals.updatedProduct = ',
-        res.locals.updatedProduct
-      );
+      // console.log(
+      //   'menuController.updateProduct - res.locals.updatedProduct = ',
+      //   res.locals.updatedProduct
+      // );
       return next();
     } catch (error) {
       return next({

@@ -15,11 +15,11 @@ import { getFoodInfo } from '../homeSlice';
 const FoodCard: FC<{ type: string }> = ({ type }) => {
   const [fullText, setFullText] = useState(false);
   const itemNumber = useSelector((state: RootState) => state.cart.items);
-  console.log('cart items', itemNumber);
+  // console.log('cart items', itemNumber);
   const products = useSelector((state: RootState) => state.home.foodCard);
-  console.log('foodCard products', products);
+  // console.log('foodCard products', products);
   const quantity = useSelector((state: RootState) => state.cart.quantity);
-  console.log('quantity selected in cart', quantity);
+  // console.log('quantity selected in cart', quantity);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

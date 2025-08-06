@@ -16,8 +16,9 @@ const AdminFoodCard: FC = () => {
   //   console.log('Running handle category');
   //   setCategory('styles');
   // };
+
   const handleRemoveProduct = async (id: number) => {
-    console.log('handleRemoveProduct button clicked');
+    // console.log('handleRemoveProduct button clicked');
     try {
       const response = await fetch(`http://localhost:3000/api/${id}`, {
         method: 'DELETE',
@@ -40,9 +41,9 @@ const AdminFoodCard: FC = () => {
 
   //Toggle sold out state for the product
   const handleToggleSoldOut = async (id: number, currentValue: any) => {
-    console.log(
-      'AdminFoodCard handleUpdateProduct - Toggle Sold Out button clicked!'
-    );
+    // console.log(
+    //   'AdminFoodCard handleUpdateProduct - Toggle Sold Out button clicked!'
+    // );
     //Dispatch toggleSoldout action prior to API call to update UI w/out waiting
     dispatch(toggleSoldOut({ id, sold_out: !currentValue }));
     try {
@@ -70,16 +71,17 @@ const AdminFoodCard: FC = () => {
     currentValue: any
   ) => {
     let newValue;
-    console.log('Update Product button clicked!');
+    // console.log('Update Product button clicked!');
     if (field != 'type') {
       newValue = prompt(`Enter a new value for ${field}:`, currentValue);
     } else {
-      console.log('THIS IS CATEGORY', currentValue);
+      // console.log('THIS IS CATEGORY', currentValue);
       newValue = currentValue;
     }
     if (newValue === null) return; // exits out
 
     try {
+      // console.log('CURRENT VALUE = ', currentValue);
       const response = await fetch(
         `http://localhost:3000/api/update-product/${id}`,
         {
@@ -168,17 +170,69 @@ const AdminFoodCard: FC = () => {
               <span className='font-bold'>Description:</span>{' '}
               {product.description}
             </p>
-            <p>
-              <button
-                className='button-std'
-                onClick={() =>
-                  handleUpdateProduct(product.id, 'img_url', product.img_url)
-                }
-              >
-                Update{' '}
-              </button>
+            <div className='flex flex-col line-clamp-2 overflow-hidden text-wrap'>
+              <input
+                type='file'
+                accept='image/*'
+                onChange={async (e) => {
+                  const deleteImage = async (filename: string) => {
+                    try {
+                      const response = await fetch(
+                        'http://localhost:3000/api/deleteImage',
+                        {
+                          method: 'DELETE',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ filename: filename }),
+                        }
+                      );
+                      if (!response.ok) {
+                        throw new Error('Failed to delete image');
+                      }
+                    } catch (error) {
+                      console.error('Error deleting image:', error);
+                    }
+                  };
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  if (product.filename) {
+                    // console.log('Deleting old image:', product.filename);
+                    await deleteImage(product.filename);
+                  }
+                  // console.log('Uploading new image:', file.name);
+                  const formData = new FormData();
+                  formData.append('image', file);
+
+                  try {
+                    const res = await fetch(
+                      'http://localhost:3000/api/upload',
+                      {
+                        method: 'POST',
+                        body: formData,
+                      }
+                    );
+                    const data = await res.json();
+                    if (data.imageUrl) {
+                      await handleUpdateProduct(
+                        product.id,
+                        'img_url',
+                        data.imageUrl
+                      );
+                      await handleUpdateProduct(
+                        product.id,
+                        'filename',
+                        data.filename
+                      );
+                    }
+                  } catch (err) {
+                    console.error('Image upload failed', err);
+                  }
+                }}
+              />
               <span className='font-bold'>Image:</span> {product.img_url}
-            </p>
+            </div>
             <p>
               <button
                 className='button-std'
