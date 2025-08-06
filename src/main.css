@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Re-usable styling using Tailwind's @apply directive.  In element use: className="input-field" */
+.input-field {
+  @apply border border-gray-300 rounded px-3 py-2 m-1 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+.button-std {
+  @apply bg-[#DB162F] text-white px-2 m-1 py-1 rounded hover:bg-blue-700;
+}
+/*
+#000000 (Black): Use this for text, icons, and other elements that require high contrast. It’s perfect for headings, body text, and navigation menus to ensure readability and a sleek, modern look.
+
+#DB162F (Red): This vibrant red can be used for call-to-action buttons, alerts, and important notifications. It will draw attention to key actions like “Order Now” or “Special Offers.”
+
+#E3B505 (Gold): This warm gold can be used for accents, highlights, and secondary buttons. It’s great for indicating premium features, user ratings, or to add a touch of elegance.
+
+#1098F7 (Blue): This bright blue is ideal for links, secondary call-to-action buttons, and informational icons. It conveys trust and can be used for elements like “Contact Us” or “Help.”
+
+#FFFFFF (White): Use white for backgrounds, card surfaces, and any area where you need a clean, minimalist look. It helps to keep the design open and airy, making the app feel more spacious and user-friendly.
+*/
+html {
+  font-family: 'Poppins', sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+p {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  font: inherit;
+  color: inherit;
+}

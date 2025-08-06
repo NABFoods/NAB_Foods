@@ -1,0 +1,229 @@
+import { menu } from '../../types';
+import { Request, Response, NextFunction } from 'express';
+
+const db = require('../models/nabModel');
+
+export const menuController: menu = {
+  getMenuItems: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const getMenuItemsString = 'SELECT * FROM product';
+      //console.log('QUERIED', getMenuItemsString);
+      const menuResults = await db.query(getMenuItemsString);
+      //console.log('QUERIED MENU RESULTS', menuResults);
+      const menuItems = menuResults.rows;
+      //console.log('menuItems- heading into res locals!!', menuItems);
+      res.locals.menu = menuItems;
+      next();
+    } catch (err) {
+      console.error('console.error in getMenuItems -', err);
+      next({
+        log: 'Error in getMenuItems',
+      });
+    }
+  },
+
+  addMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //pull all of the variables from the request body
+      const {
+        product_name,
+        price,
+        sold_out,
+        img_url,
+        description,
+      }: {
+        product_name: string;
+        price: number;
+        sold_out: boolean;
+        img_url: string;
+        description: string;
+      } = req.body;
+
+      //create a query that inserts into the product table with all of those values
+      const addMenuItemsString =
+        'INSERT into product (product_name, price, sold_out, img_url, description) VALUES ($1,$2,$3,$4,$5) RETURNING *';
+
+      //return the newest value
+
+      const result = await db.query(addMenuItemsString, [
+        product_name,
+        price,
+        sold_out,
+        img_url,
+        description,
+      ]);
+      //console.log('RESULT ROWS', result.rows);
+      res.locals.addedItem = result.rows[0];
+      //console.log('result.rows[0] = ', result.rows[0]);
+      next();
+    } catch (err) {
+      next({
+        log: 'addMenuItems',
+      });
+    }
+  },
+
+  // updateMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const {
+  //       id,
+  //       product_name,
+  //       price,
+  //       sold_out,
+  //       img_url,
+  //       description,
+  //       type,
+  //     }: {
+  //       id: number;
+  //       product_name: string;
+  //       price: number;
+  //       sold_out: boolean;
+  //       img_url: string;
+  //       description: string;
+  //       type: string;
+  //     } = req.body;
+  //     const updateMenuItemsString = `UPDATE product SET product_name = '${product_name}', price = ${price}, sold_out = ${sold_out}, img_url = ${img_url}, description = ${description}, type = ${type} WHERE id=${id}`;
+
+  //     const result = await db.query(updateMenuItemsString);
+  //     console.log('RESULT: ', result);
+  //     res.locals.updatedMenuItem = result.rows;
+  //     next();
+
+  //     /**
+  //      * Example request body:
+  //      *    {
+  //               "id":1,
+  //               "product_name": "baNAYNAY",
+  //               "price": 50,
+  //               "sold_out":true
+  //           }
+  //      */
+  //   } catch (err) {
+  //     next({
+  //       log: 'updateMenuItems',
+  //     });
+  //   }
+  // },
+
+  deleteMenuItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      // console.log(
+      //   'menuController.deleteMenuItem - contents of req.params: ',
+      //   req.params
+      // );
+
+      const deleteMenuItemString = `DELETE FROM product WHERE id=${id}`;
+      const result = await db.query(deleteMenuItemString);
+
+      // console.log(result);
+      res.locals.deletedMenuItem = result.rows;
+      return next();
+    } catch (err) {
+      next({
+        log: 'deleteMenuItems',
+      });
+    }
+    /**
+       * Example request body: 
+       *    {
+            "id":16
+            }
+       */
+  },
+
+  toggleSoldOut: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      //console.log('menuController.toggleSoldOut - req.params: ', req.params);
+      const { sold_out } = req.body;
+      //console.log('menuController.toggleSoldOut - req.body: ', req.body);
+
+      const updateQuery =
+        'UPDATE product SET sold_out = $1 WHERE id = $2 RETURNING *';
+      const values = [sold_out, id];
+      const result = await db.query(updateQuery, values);
+      // console.log(
+      //   'menuController.toggleSoldOut - db.query result.rows = ',
+      //   result.rows
+      // );
+
+      if (result.rowCount === 0) {
+        return next({
+          log: 'menuController.toggleSoldOut - Product not found',
+          status: 404,
+          message: 'Product not found',
+        });
+      }
+
+      res.locals.updatedMenuItemSoldOut = result.rows[0];
+      // console.log(
+      //   'menuController.toggleSoldOut - res.locals.updateMenuItemSoldOut = ',
+      //   res.locals.updateMenuItemSoldOut
+      // );
+      return next();
+    } catch (err) {
+      next({
+        log: 'Error in toggleSoldOut middleware',
+        status: 500,
+        message: { err: 'toggleSoldOut database update failed' },
+      });
+    }
+  },
+
+  updateProduct: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      // console.log('menuController.updateProduct - req.params = ', req.params);
+      const { field, value } = req.body;
+      // console.log('menuController.updateProduct - req.body = ', req.body);
+      // console.log(`Updating product ${id}: field=${field}, value=${value}`);
+      // Lock down/explicitly define what fields will be permitted
+      const allowedFields = [
+        'product_name',
+        'price',
+        'sold_out',
+        'img_url',
+        'filename',
+        'description',
+        'type',
+      ];
+      // Validate field from client against allowed fields to prevent SQL injection into the string literal since SQL won't allow parameterizing a column/field name.
+      if (!allowedFields.includes(field)) {
+        return next({
+          log: 'menuController.updateProduct - Invalid field update attempt',
+          status: 400,
+          message: 'Invalid field update',
+        });
+      }
+      const updateQuery = `UPDATE product SET ${field} = $1 WHERE id = $2 RETURNING *`;
+      const values = [value, id];
+
+      const result = await db.query(updateQuery, values);
+
+      if (result.rowCount === 0) {
+        return next({
+          log: `menuController.updateProduct - No product found with id = ${id}`,
+          status: 404,
+          message: `No product found with id = ${id}`,
+        });
+      }
+      // console.log(
+      //   'menuController.updateProduct - result.rows[0] = ',
+      //   result.rows[0]
+      // );
+      res.locals.updatedProduct = result.rows[0];
+      // console.log(
+      //   'menuController.updateProduct - res.locals.updatedProduct = ',
+      //   res.locals.updatedProduct
+      // );
+      return next();
+    } catch (error) {
+      return next({
+        log: `menuController.updateProduct - Database error: ${error}`,
+        status: 500,
+        message: 'Error updating product',
+      });
+    }
+  },
+};
