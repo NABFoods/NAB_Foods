@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from '../../types';
-import { loadStripe } from '@stripe/stripe-js';
+
 const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
+const NODE_ENV = process.env.NODE_ENV || 'DEV';
 export const orderController = {
   createOrder: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -15,7 +15,7 @@ export const orderController = {
       order_price,
       products,
     } = req.body;
-    console.log('Request body:', req.body);
+    // console.log('Request body:', req.body);
     if (!Array.isArray(products)) {
       return res.status(400).json({ error: 'Products must be an array' });
     }
@@ -105,8 +105,14 @@ export const orderController = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'http://localhost:8081/successpage',
-      cancel_url: 'http://localhost:8081/failurepage',
+      success_url:
+        NODE_ENV === 'PROD'
+          ? `http://localhost:3000/successpage`
+          : 'http://localhost:8081/successpage',
+      cancel_url:
+        NODE_ENV === 'PROD'
+          ? `http://localhost:3000/failurepage`
+          : 'http://localhost:8081/failurepage',
     });
     //console.log('SESSION  INFO', session);
     res.locals.paymentSession = session.id;

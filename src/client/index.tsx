@@ -31,7 +31,11 @@ root.render(
   // Using React.StrictMode as best practice for assisting w/ development w/out impacting production
   <React.StrictMode>
     <Provider store={store}>
-      <GoogleOAuthProvider clientId={clientId!}>
+      <GoogleOAuthProvider
+        clientId={
+          '515062605865-c9l5hs6rgbqudeh7dfuaijp9d703sv78.apps.googleusercontent.com'
+        }
+      >
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Home />} />

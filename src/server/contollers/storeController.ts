@@ -23,7 +23,7 @@ export const storeController = {
     const { opentime } = req.body;
     try {
       const updateOpenQuery = 'UPDATE "storeinfo" SET opentime=$1 WHERE id = 1';
-      console.log('This is the open time:', opentime);
+      // console.log('This is the open time:', opentime);
       const result = await db.query(updateOpenQuery, [opentime]);
       res.locals.time = opentime;
       return next();

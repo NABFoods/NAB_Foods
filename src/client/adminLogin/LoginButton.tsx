@@ -3,11 +3,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch } from '../hooks';
 import { login } from './authSlice';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
 
 const LoginButton = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   // const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;  // For React
 
   const handleSuccess = async (response: any) => {

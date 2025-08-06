@@ -1,4 +1,6 @@
 import express from 'express';
+import { createClient } from '@supabase/supabase-js';
+import multer from 'multer';
 // const menuController = require('../contollers/menuController')
 import { menuController } from '../contollers/menuController';
 import { orderController } from '../contollers/orderController';
@@ -6,7 +8,65 @@ import { authController } from '../contollers/authController';
 import { smsController } from '../contollers/smsController';
 import { storeController } from '../contollers/storeController';
 
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
+
+const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_KEY!);
+
+//routes for image uploads
+router.post('/upload', upload.single('image'), async (req, res) => {
+  const file = req.file;
+  // console.log('SUPABASE URL:', SUPABASE_URL);
+  // console.log('Received file:', file);
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  const fileExt = file.originalname.split('.').pop();
+  const filename = `${Date.now()}.${fileExt}`;
+  const bucketName = 'food-images';
+
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .upload(filename, file.buffer, {
+      contentType: file.mimetype,
+    });
+
+  if (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to upload image' });
+  }
+
+  const { data: signedURLData, error: signedUrlError } = await supabase.storage
+    .from(bucketName)
+    .createSignedUrl(filename, 7889400);
+
+  if (signedUrlError) {
+    console.error(signedUrlError);
+    return res.status(500).json({ error: 'Failed to generate signed URL' });
+  }
+  return res.json({ imageUrl: signedURLData.signedUrl, filename: filename });
+});
+
+router.delete('/deleteImage', async (req, res) => {
+  console.log('this is the filename', req.body.filename);
+
+  const { data, error } = await supabase.storage
+    .from('food-images')
+    .remove([req.body.filename]);
+
+  if (error) {
+    console.error('Error deleting image:', error);
+  }
+
+  if (data) {
+    return res.status(200).json({ message: 'Image deleted successfully' });
+  } else {
+    return res.status(404).json({ error: 'Image not found' });
+  }
+});
 
 // Route for admin login using Google
 router.post('/auth/google', authController.googleLogin);

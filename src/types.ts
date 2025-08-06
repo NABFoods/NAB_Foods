@@ -9,12 +9,14 @@ declare module 'express-session' {
 // Represents a product & its details/properties
 export interface Product {
   img_url: string;
+
   id: number; // unique identifier for each product
   product_name: string;
   price: number;
   sold_out: boolean; // availability.  True if sold out.
   description: string;
   type: string;
+  filename?: string;
   quantity?: number;
 }
 // used this put products inside of an array

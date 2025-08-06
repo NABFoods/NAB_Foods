@@ -144,33 +144,9 @@ export function Cart() {
         })
       );
 
-      // const orderData = {
-      //   name: customerInfo.name,
-      //   address: customerInfo.address,
-      //   phone: customerInfo.phone,
-      //   order_date: new Date().toISOString(),
-      //   order_status: 'Pending',
-      //   order_price: currentSubtotal(),
-      //   pickup: pickup,
-      //   products: orderProducts,
-      // };
-
-      // const response = await fetch('http://localhost:3000/api/createOrder', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(orderData),
-      // });
-
-      // const result = await response.json();
-      // console.log('result', result);
-      // // If order creation is successful, proceed to payment.
-      // if (result) {
       localStorage.setItem('customerDetails', JSON.stringify(customerInfo));
       localStorage.setItem('products', JSON.stringify(orderProducts));
       makePayment();
-      // } else {
-      //   console.error('Failed to create order');
-      // }
     }
   };
 
@@ -407,17 +383,17 @@ export function Cart() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.95 }}
             onClick={
-              date.getHours() >= opentime && date.getHours() <= closetime
+              date.getHours() >= opentime && date.getHours() < closetime
                 ? checkoutButton
                 : undefined
             }
             className={`${
-              date.getHours() >= opentime && date.getHours() <= closetime
+              date.getHours() >= opentime && date.getHours() < closetime
                 ? 'bg-[#DB162F]'
                 : 'bg-[#ad8187] '
             } text-white p-3 rounded-md w-1/2 self-end`}
           >
-            {date.getHours() >= opentime && date.getHours() <= closetime
+            {date.getHours() >= opentime && date.getHours() < closetime
               ? 'Checkout'
               : 'Store Closed'}
           </motion.button>

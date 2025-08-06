@@ -72,7 +72,7 @@ const AdminHome: FC = () => {
       .then((data) => {
         setTime([data.time.opentime, data.time.closetime]);
       });
-  }, [handleUpdateOpenTime, handleUpdateCloseTime]);
+  }, []);
 
   useEffect(() => {
     // Fetching data from the API and dispatching action to store it in Redux state
