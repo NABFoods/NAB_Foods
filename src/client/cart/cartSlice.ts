@@ -95,19 +95,19 @@ const cartSlice = createSlice({
         typeof action.payload.value === 'string'
       ) {
         state.customerData.name = action.payload.value;
-        console.log(state.customerData.name);
+        // console.log(state.customerData.name);
       } else if (
         action.payload.field === 'address' &&
         typeof action.payload.value === 'string'
       ) {
         state.customerData.address = action.payload.value;
-        console.log(state.customerData.address);
+        // console.log(state.customerData.address);
       } else if (
         action.payload.field === 'phone' &&
         typeof action.payload.value === 'string'
       ) {
         state.customerData.phone = action.payload.value.toString();
-        console.log(state.customerData.phone);
+        // console.log(state.customerData.phone);
       }
     },
   },

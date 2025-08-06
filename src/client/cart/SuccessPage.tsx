@@ -41,7 +41,7 @@ const SuccessPage: FC = () => {
         orderData.phone === 0 ||
         orderData.products.length === 0
       ) {
-        console.log(orderData);
+        // console.log(orderData);
         console.error('Failed to create order, there is an empty field');
         return false;
       }

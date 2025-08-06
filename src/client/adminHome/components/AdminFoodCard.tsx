@@ -18,7 +18,7 @@ const AdminFoodCard: FC = () => {
   // };
 
   const handleRemoveProduct = async (id: number) => {
-    console.log('handleRemoveProduct button clicked');
+    // console.log('handleRemoveProduct button clicked');
     try {
       const response = await fetch(`http://localhost:3000/api/${id}`, {
         method: 'DELETE',
@@ -41,9 +41,9 @@ const AdminFoodCard: FC = () => {
 
   //Toggle sold out state for the product
   const handleToggleSoldOut = async (id: number, currentValue: any) => {
-    console.log(
-      'AdminFoodCard handleUpdateProduct - Toggle Sold Out button clicked!'
-    );
+    // console.log(
+    //   'AdminFoodCard handleUpdateProduct - Toggle Sold Out button clicked!'
+    // );
     //Dispatch toggleSoldout action prior to API call to update UI w/out waiting
     dispatch(toggleSoldOut({ id, sold_out: !currentValue }));
     try {
@@ -71,17 +71,17 @@ const AdminFoodCard: FC = () => {
     currentValue: any
   ) => {
     let newValue;
-    console.log('Update Product button clicked!');
+    // console.log('Update Product button clicked!');
     if (field != 'type') {
       newValue = prompt(`Enter a new value for ${field}:`, currentValue);
     } else {
-      console.log('THIS IS CATEGORY', currentValue);
+      // console.log('THIS IS CATEGORY', currentValue);
       newValue = currentValue;
     }
     if (newValue === null) return; // exits out
 
     try {
-      console.log('CURRENT VALUE = ', currentValue);
+      // console.log('CURRENT VALUE = ', currentValue);
       const response = await fetch(
         `http://localhost:3000/api/update-product/${id}`,
         {
@@ -198,10 +198,10 @@ const AdminFoodCard: FC = () => {
                   if (!file) return;
 
                   if (product.filename) {
-                    console.log('Deleting old image:', product.filename);
+                    // console.log('Deleting old image:', product.filename);
                     await deleteImage(product.filename);
                   }
-                  console.log('Uploading new image:', file.name);
+                  // console.log('Uploading new image:', file.name);
                   const formData = new FormData();
                   formData.append('image', file);
 

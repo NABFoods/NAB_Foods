@@ -90,7 +90,7 @@ const AdminHome: FC = () => {
 
   // Shows add product form if clicked.
   const handleAddProductClick = () => {
-    console.log('Add Product Button Clicked!');
+    // console.log('Add Product Button Clicked!');
     // Toggle from default false to true to show add product form
     setShowForm(true);
   };
@@ -99,28 +99,28 @@ const AdminHome: FC = () => {
   const handleAddProductFormChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log('adminHome.tsx - handleProductFormChange invoked');
+    // console.log('adminHome.tsx - handleProductFormChange invoked');
     const { name, value } = e.target;
-    console.log(
-      `AdminHome handleAddProductForm - from e.target - name = ${name}, value= ${value}`
-    );
+    // console.log(
+    //   `AdminHome handleAddProductForm - from e.target - name = ${name}, value= ${value}`
+    // );
     setNewProduct((prev) => ({ ...prev, [name]: value }));
   };
 
   // Submits/POSTs new product based on provided form inputs
   const handleSubmitNewProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('AdminHome.tsx - handleSubmitNewProduct clicked');
-    console.log(
-      'adminHome handleSubmitNewProduct - Payload being sent = ',
-      newProduct
-    );
+    // console.log('AdminHome.tsx - handleSubmitNewProduct clicked');
+    // console.log(
+    //   'adminHome handleSubmitNewProduct - Payload being sent = ',
+    //   newProduct
+    // );
 
     // if 'is submitting' is true return/exit
     if (isSubmitting) {
-      console.log(
-        'AdminHome handleNewProductSubmit - only 1 click allowed (if submit button clicked more than once)'
-      );
+      // console.log(
+      //   'AdminHome handleNewProductSubmit - only 1 click allowed (if submit button clicked more than once)'
+      // );
       return;
     }
     // Toggle to true to lock form to allow only 1 click
@@ -143,10 +143,10 @@ const AdminHome: FC = () => {
 
       if (response.ok) {
         const createdProduct = await response.json();
-        console.log(
-          'Dispatching created product to Redux: ',
-          createdProduct.menu
-        );
+        // console.log(
+        //   'Dispatching created product to Redux: ',
+        //   createdProduct.menu
+        // );
         // dispatches addProdcut again replacing whats in slice for the product w/ what came from db for the product replacing temp id w/ id from db.
         dispatch(addProduct(createdProduct.menu));
         // **-> Tried creating a reducer to replace product's temp id w/ db's created & returned real id.

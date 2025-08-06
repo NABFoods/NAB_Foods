@@ -51,7 +51,7 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 });
 
 router.delete('/deleteImage', async (req, res) => {
-  console.log('this is the filename', req.body.filename);
+  // console.log('this is the filename', req.body.filename);
 
   const { data, error } = await supabase.storage
     .from('food-images')
@@ -121,10 +121,10 @@ router.post('/', menuController.addMenuItem, (req, res) => {
 });
 
 router.patch('/:id/sold-out', menuController.toggleSoldOut, (req, res) => {
-  console.log(
-    'api router.patch for sold_out - got response back to route handler. res.locals = ',
-    res.locals
-  );
+  // console.log(
+  //   'api router.patch for sold_out - got response back to route handler. res.locals = ',
+  //   res.locals
+  // );
   res.status(200).json({ menu: res.locals.updatedMenuItemSoldOut });
 });
 
@@ -132,10 +132,10 @@ router.patch(
   '/:id/order-status',
   orderController.updateOrderStatus,
   (req, res) => {
-    console.log(
-      'api router.patch for order_status - got response back to route handler. res.locals = ',
-      res.locals
-    );
+    // console.log(
+    //   'api router.patch for order_status - got response back to route handler. res.locals = ',
+    //   res.locals
+    // );
     res.status(200).json({ order: res.locals.updatedOrderStatus });
   }
 );
@@ -144,10 +144,10 @@ router.patch(
   '/update-product/:id',
   menuController.updateProduct,
   (req, res) => {
-    console.log(
-      'api router.patch - updating product field. res.locals = ',
-      res.locals
-    );
+    // console.log(
+    //   'api router.patch - updating product field. res.locals = ',
+    //   res.locals
+    // );
     res.status(200).json({ updatedProduct: res.locals.updatedProduct });
   }
 );
@@ -159,14 +159,14 @@ router.patch(
 // });
 
 router.delete('/:id', menuController.deleteMenuItem, (req, res) => {
-  console.log('api.ts - made it to router.delete response w/ status 200');
+  // console.log('api.ts - made it to router.delete response w/ status 200');
   res.status(200).json({
     menu: res.locals.deletedMenuItem,
   });
 });
 
 router.delete('/:id/deleteOrder', orderController.deleteOrder, (req, res) => {
-  console.log('api.ts - made it to router.delete response w/ status 200');
+  // console.log('api.ts - made it to router.delete response w/ status 200');
   res.status(200).json({
     menu: res.locals.deletedOrder,
   });

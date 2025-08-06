@@ -12,7 +12,7 @@ const pool = new Pool({
 module.exports = {
   // query: (text: string, params:params, callback: object) => {
   query: (text: string, params: params, callback: object) => {
-    console.log('executed query', text);
+    // console.log('executed query', text);
     // return pool.query(text, params, callback)
     return pool.query(text, params, callback);
   },
