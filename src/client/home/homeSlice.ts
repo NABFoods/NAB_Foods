@@ -12,7 +12,7 @@ import { Product } from '../../types';
 //     description: string;
 //   };
 // }
-
+const host = process.env.REACT_APP_API_BASE_URL;
 export interface HomeState {
   foodCard: { [id: number]: Product };
 }

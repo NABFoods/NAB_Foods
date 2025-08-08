@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        'http://localhost:3000/api/auth/logout',
+        `${host}/api/auth/logout`,
         {},
         { withCredentials: true }
       );

@@ -7,13 +7,15 @@ import { RootState } from '../store';
 import Featured from './components/Featured';
 import Slider from './components/Slider';
 import Offer from './components/Offer';
+
+const host = process.env.REACT_APP_API_BASE_URL;
 const Home: FC = () => {
   const foodCard = useSelector((state: RootState) => state.home.foodCard);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (Object.keys(foodCard).length === 0) {
-      fetch('http://localhost:3000/api')
+      fetch(`${host}/api`)
         .then((response) => response.json())
         .then((data) => {
           //console.log(data.menu);

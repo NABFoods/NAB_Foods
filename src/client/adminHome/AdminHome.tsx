@@ -5,7 +5,7 @@ import { useAppDispatch } from '../hooks'; // import typed useDispatch from hook
 import AdminNavbar from './components/AdminNavbar';
 import AdminFoodCard from './components/AdminFoodCard';
 import { receivedProducts, addProduct } from '../product/productsSlice';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const AdminHome: FC = () => {
   const dispatch = useAppDispatch();
 
@@ -25,7 +25,7 @@ const AdminHome: FC = () => {
   const handleUpdateOpenTime = async (openTime: string) => {
     let updatedOpenTime = openTime;
     try {
-      const response = await fetch('http://localhost:3000/api/updateOpen', {
+      const response = await fetch(`${host}/api/updateOpen`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ opentime: updatedOpenTime }),
@@ -47,7 +47,7 @@ const AdminHome: FC = () => {
   const handleUpdateCloseTime = async (closeTime: string) => {
     let updatedCloseTime = closeTime;
     try {
-      const response = await fetch('http://localhost:3000/api/updateClose', {
+      const response = await fetch(`${host}/api/updateClose`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ closetime: updatedCloseTime }),
@@ -67,7 +67,7 @@ const AdminHome: FC = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/getHours')
+    fetch(`${host}/api/getHours`)
       .then((response) => response.json())
       .then((data) => {
         setTime([data.time.opentime, data.time.closetime]);
@@ -76,7 +76,7 @@ const AdminHome: FC = () => {
 
   useEffect(() => {
     // Fetching data from the API and dispatching action to store it in Redux state
-    fetch('http://localhost:3000/api')
+    fetch(`${host}/api`)
       .then((response) => response.json())
       .then((data) => {
         //console.log(data.menu);
@@ -135,7 +135,7 @@ const AdminHome: FC = () => {
     // dispatch(addProduct(optimisticAddProduct));
 
     try {
-      const response = await fetch('http://localhost:3000/api', {
+      const response = await fetch(`${host}/api`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProduct),

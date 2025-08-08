@@ -9,7 +9,8 @@
     "dev": "webpack serve",
     "start": "webpack-dev-server",
     "start-server": "nodemon ./src/server/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startAll": "concurrently \"npm run start-server\" \"npm run start\""
   },
   "repository": {
     "type": "git",
@@ -67,6 +68,7 @@
     "@typescript-eslint/eslint-plugin": "^8.27.0",
     "@typescript-eslint/parser": "^8.27.0",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
     "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.1.0",
     "eslint-plugin-tailwindcss": "^3.18.0",

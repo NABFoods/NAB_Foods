@@ -11,11 +11,11 @@ const apiRouter = require('./routes/api');
 const root = '/usr/src/app/client/dist';
 const app = express();
 const NODE_ENV = process.env.NODE_ENV || 'DEV';
-
+const host = process.env.REACT_APP_API_BASE_URL;
+const host2 = process.env.REACT_APP_API_BASE_URL2;
 app.use(
   cors({
-    origin:
-      NODE_ENV === 'PROD' ? 'http://localhost:3000' : 'http://localhost:8081', //if Node_env is defined as PROD domain will be localhost:3000
+    origin: NODE_ENV === 'PROD' ? `${host}` : `${host2}`, //if Node_env is defined as PROD domain will be localhost:3000
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed  methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers

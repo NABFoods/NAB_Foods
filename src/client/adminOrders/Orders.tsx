@@ -4,13 +4,14 @@ import React, { FC, useEffect } from 'react';
 import { useAppDispatch } from '../hooks';
 import { getOrders } from './orderSlice';
 import AdminNavbar from '../adminHome/components/AdminNavbar';
+const host = process.env.REACT_APP_API_BASE_URL;
 
 const Orders: FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/getOrders');
+        const response = await fetch(`${host}/api/getOrders`);
         const data = await response.json();
         //console.log(data.orders);
         dispatch(getOrders(data.orders));

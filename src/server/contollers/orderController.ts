@@ -4,6 +4,8 @@ import { Product } from '../../types';
 const db = require('../models/nabModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const NODE_ENV = process.env.NODE_ENV || 'DEV';
+const host = process.env.REACT_APP_API_BASE_URL;
+const host2 = process.env.REACT_APP_API_BASE_URL2;
 export const orderController = {
   createOrder: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -106,13 +108,9 @@ export const orderController = {
       line_items: lineItems,
       mode: 'payment',
       success_url:
-        NODE_ENV === 'PROD'
-          ? `http://localhost:3000/successpage`
-          : 'http://localhost:8081/successpage',
+        NODE_ENV === 'PROD' ? `${host}/successpage` : `${host2}/successpage`,
       cancel_url:
-        NODE_ENV === 'PROD'
-          ? `http://localhost:3000/failurepage`
-          : 'http://localhost:8081/failurepage',
+        NODE_ENV === 'PROD' ? `${host}/failurepage` : `${host2}/failurepage`,
     });
     //console.log('SESSION  INFO', session);
     res.locals.paymentSession = session.id;

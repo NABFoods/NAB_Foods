@@ -16,7 +16,7 @@ import {
   updateCustomerInfo,
   updatePickup,
 } from './cartSlice';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 export function Cart() {
   const dispatch = useAppDispatch();
   const [[opentime, closetime], setTime] = useState([0, 0]);
@@ -59,7 +59,7 @@ export function Cart() {
   }, [items, quantity, dispatch]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/getHours')
+    fetch(`${host}/api/getHours`)
       .then((response) => response.json())
       .then((data) => {
         setTime([
@@ -72,9 +72,7 @@ export function Cart() {
 
   // Payment function using Stripe.
   const makePayment = async () => {
-    const StripeKeyUnpacked = await fetch(
-      'http://localhost:3000/api/secureStripe'
-    );
+    const StripeKeyUnpacked = await fetch(`${host}/api/secureStripe`);
     const StripeKey = await StripeKeyUnpacked.json();
 
     // Convert foodCard to an array if it isn't already
@@ -99,7 +97,7 @@ export function Cart() {
       products: productsWithQuantity, // send only the selected cart items
       defaultImage: `../home/assets/restaurant.png`,
     };
-    const response = await fetch(`http://localhost:3000/api/createCheckout`, {
+    const response = await fetch(`${host}/api/createCheckout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),

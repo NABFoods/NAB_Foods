@@ -11,7 +11,7 @@ import { useAppDispatch } from '../../hooks';
 import { updateAmount } from '../homeSlice';
 import TaskBar from './TaskBar';
 import { getFoodInfo } from '../homeSlice';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const FoodCard: FC<{ type: string }> = ({ type }) => {
   const [fullText, setFullText] = useState(false);
   const itemNumber = useSelector((state: RootState) => state.cart.items);
@@ -23,8 +23,9 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    //console.log('This is host ', host);
     if (Object.keys(products).length === 0) {
-      fetch('http://localhost:3000/api')
+      fetch(`${host}/api`)
         .then((response) => response.json())
         .then((data) => {
           dispatch(getFoodInfo(data.menu));
@@ -94,7 +95,7 @@ const FoodCard: FC<{ type: string }> = ({ type }) => {
             >
               <div className='flex flex-col flex-1'>
                 <h1 className='lg:text-lg uppercase font-semibold text-wrap'>
-                  {console.log('THIS IS PRODUCT', product)}
+                  {/* {console.log('THIS IS PRODUCT', product)} */}
                   {product.product_name}
                 </h1>
                 <p className='lg:text-base text-gray-400 font-bold mb-1'>

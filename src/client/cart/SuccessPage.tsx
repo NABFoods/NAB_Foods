@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { RootState } from '../store';
 import { Link } from 'react-router';
+const host = process.env.REACT_APP_API_BASE_URL;
 const SuccessPage: FC = () => {
   const items = useAppSelector((state: RootState) => state.cart.items);
   const customerInfo: any = JSON.parse(
@@ -45,7 +46,7 @@ const SuccessPage: FC = () => {
         console.error('Failed to create order, there is an empty field');
         return false;
       }
-      const response = await fetch('http://localhost:3000/api/createOrder', {
+      const response = await fetch(`${host}/api/createOrder`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
@@ -59,7 +60,7 @@ const SuccessPage: FC = () => {
     };
 
     const createMessage = async () => {
-      const response = await fetch('http://localhost:3000/createMessage', {
+      const response = await fetch(`${host}/createMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

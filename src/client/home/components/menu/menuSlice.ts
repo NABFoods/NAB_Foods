@@ -21,7 +21,7 @@ const menuSlice = createSlice({
       let isOpen = action.payload;
 
       isOpen === false ? (isOpen = true) : (isOpen = false);
-      console.log(isOpen);
+      //console.log(isOpen);
       state.isOpen = isOpen;
     },
     createLinks: (state, action: PayloadAction<any>) => {

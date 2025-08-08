@@ -6,7 +6,7 @@ import {
   updateProduct,
 } from '../../product/productsSlice';
 import { Product } from '../../../types';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const AdminFoodCard: FC = () => {
   //use typed useSelector from hooks.ts to pull products from store
   const products = useAppSelector((state) => state.products.products);
@@ -20,7 +20,7 @@ const AdminFoodCard: FC = () => {
   const handleRemoveProduct = async (id: number) => {
     // console.log('handleRemoveProduct button clicked');
     try {
-      const response = await fetch(`http://localhost:3000/api/${id}`, {
+      const response = await fetch(`${host}/api/${id}`, {
         method: 'DELETE',
       });
       // change to if(!response.ok) to trigger adding product back
@@ -47,7 +47,7 @@ const AdminFoodCard: FC = () => {
     //Dispatch toggleSoldout action prior to API call to update UI w/out waiting
     dispatch(toggleSoldOut({ id, sold_out: !currentValue }));
     try {
-      const response = await fetch(`http://localhost:3000/api/${id}/sold-out`, {
+      const response = await fetch(`${host}/api/${id}/sold-out`, {
         method: 'PATCH',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ sold_out: !currentValue }),
@@ -82,14 +82,11 @@ const AdminFoodCard: FC = () => {
 
     try {
       // console.log('CURRENT VALUE = ', currentValue);
-      const response = await fetch(
-        `http://localhost:3000/api/update-product/${id}`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ field, value: newValue }),
-        }
-      );
+      const response = await fetch(`${host}/api/update-product/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ field, value: newValue }),
+      });
       if (response.ok) {
         // const updatedProduct = await response.json(); // not using
         dispatch(updateProduct({ id, field, value: newValue }));
@@ -177,16 +174,13 @@ const AdminFoodCard: FC = () => {
                 onChange={async (e) => {
                   const deleteImage = async (filename: string) => {
                     try {
-                      const response = await fetch(
-                        'http://localhost:3000/api/deleteImage',
-                        {
-                          method: 'DELETE',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify({ filename: filename }),
-                        }
-                      );
+                      const response = await fetch(`${host}/api/deleteImage`, {
+                        method: 'DELETE',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ filename: filename }),
+                      });
                       if (!response.ok) {
                         throw new Error('Failed to delete image');
                       }
@@ -206,13 +200,10 @@ const AdminFoodCard: FC = () => {
                   formData.append('image', file);
 
                   try {
-                    const res = await fetch(
-                      'http://localhost:3000/api/upload',
-                      {
-                        method: 'POST',
-                        body: formData,
-                      }
-                    );
+                    const res = await fetch(`${host}/api/upload`, {
+                      method: 'POST',
+                      body: formData,
+                    });
                     const data = await res.json();
                     if (data.imageUrl) {
                       await handleUpdateProduct(

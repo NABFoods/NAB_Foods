@@ -4,7 +4,7 @@ import {
   updateOrderStatus,
   deleteOrderSlice,
 } from '../../adminOrders/orderSlice'; // Action to update order status
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const OrderCard: FC = () => {
   const orders = useAppSelector((state) => state.orders.orders);
   const dispatch = useAppDispatch();
@@ -18,13 +18,10 @@ const OrderCard: FC = () => {
   // Function to update order status
   const deleteOrder = async (orderId: number) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/${orderId}/deleteOrder`,
-        {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await fetch(`${host}/api/${orderId}/deleteOrder`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
       if (!response.ok) {
         console.error(
           'OrderCard deleteOrder- failed to delete order status in database'
@@ -37,14 +34,11 @@ const OrderCard: FC = () => {
   };
   const handleStatusChange = async (orderId: number, newStatus: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/${orderId}/order-status`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ order_status: newStatus }),
-        }
-      );
+      const response = await fetch(`${host}/api/${orderId}/order-status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_status: newStatus }),
+      });
       if (!response.ok) {
         console.error(
           'OrderCard handleStatusChange - failed to update order status in database'

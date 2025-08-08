@@ -3,7 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch } from '../hooks';
 import { login } from './authSlice';
 import axios from 'axios';
-
+const host = process.env.REACT_APP_API_BASE_URL;
 const LoginButton = () => {
   const dispatch = useAppDispatch();
   // const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;  // For React
@@ -13,7 +13,7 @@ const LoginButton = () => {
       const token = response.credential;
       //Send to Express to verify
       const res = await axios.post(
-        'http://localhost:3000/api/auth/google',
+        `${host}/api/auth/google`,
         { token },
         { withCredentials: true }
       );

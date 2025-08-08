@@ -43,9 +43,9 @@ const Featured: FC = () => {
                 {product.product_name}
               </h1>
               <p className='p-4 2xl:p-8'>
-                <div className='max-xl:line-clamp-2 max-xl:h-12 xl:h-[17vh]'>
+                <span className='max-xl:line-clamp-2 max-xl:h-12 xl:h-[17vh]'>
                   {product.description}
-                </div>
+                </span>
               </p>
               <div className='flex flex-col items-center'>
                 <span className='text-gray-600 text-xl'>${product.price}</span>

@@ -15,7 +15,7 @@ export const smsController = {
       from: `${process.env.TWILIO_PHONE_NUMBER}`,
       to: `+1${req.body.phone}`,
     });
-    console.log('Message sent successfully:', message.body);
+    //console.log('Message sent successfully:', message.body);
     res.locals!.message = message;
     return next();
   },
